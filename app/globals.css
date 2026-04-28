@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-ink-900 font-body antialiased;
+    font-feature-settings: "ss01", "cv01";
+  }
+
+  ::selection {
+    @apply bg-accent-500 text-white;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-bold tracking-tight text-ink-900;
+  }
+}
+
+@layer components {
+  .container-fluid {
+    @apply max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5
+           bg-brand-700 hover:bg-brand-800 active:bg-brand-900 text-white
+           font-semibold text-base rounded-lg transition-all duration-200
+           shadow-md hover:shadow-lg
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5
+           bg-accent-500 hover:bg-accent-600 active:bg-accent-700 text-white
+           font-semibold text-base rounded-lg transition-all duration-200
+           shadow-md hover:shadow-xl;
+  }
+
+  .btn-whatsapp {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5
+           bg-wa-500 hover:bg-wa-600 text-white font-semibold text-base
+           rounded-lg transition-all duration-200 shadow-md;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5
+           bg-white hover:bg-ink-50 text-brand-700 border-2 border-brand-200
+           hover:border-brand-300 font-semibold text-base rounded-lg
+           transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white border border-ink-200 rounded-xl
+           transition-all duration-300
+           hover:border-brand-300 hover:shadow-lg;
+  }
+
+  .input {
+    @apply w-full px-4 py-3 bg-white border border-ink-300 rounded-lg
+           text-ink-900 placeholder:text-ink-400
+           focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500
+           transition-all duration-200;
+  }
+
+  .select {
+    @apply input appearance-none bg-no-repeat bg-right pr-10;
+  }
+
+  .checkbox {
+    @apply w-5 h-5 rounded border-2 border-ink-300 text-brand-700
+           focus:ring-2 focus:ring-brand-500 focus:ring-offset-0
+           cursor-pointer;
+  }
+
+  .badge-accent {
+    @apply inline-flex items-center gap-1 px-2.5 py-1
+           bg-accent-500 text-white text-xs font-semibold rounded-full;
+  }
+
+  .badge-prime {
+    @apply inline-flex items-center gap-1 px-2.5 py-1
+           bg-prime-600 text-white text-xs font-semibold rounded-full;
+  }
+
+  .badge-brand {
+    @apply inline-flex items-center gap-1 px-2.5 py-1
+           bg-brand-100 text-brand-800 text-xs font-semibold rounded-full;
+  }
+
+  .section {
+    @apply py-12 md:py-20;
+  }
+
+  .section-title {
+    @apply text-display font-bold text-ink-900 mb-3;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-ink-600 max-w-2xl;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .mesh-brand {
+    background-color: #0E1F4D;
+    background-image:
+      radial-gradient(at 20% 20%, rgba(255, 107, 0, 0.15) 0px, transparent 50%),
+      radial-gradient(at 80% 30%, rgba(45, 78, 181, 0.35) 0px, transparent 50%),
+      radial-gradient(at 60% 80%, rgba(27, 58, 138, 0.4) 0px, transparent 50%);
+  }
+
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+}
