@@ -19,17 +19,28 @@ export async function POST(req: NextRequest) {
     const backendUrl = process.env.BACKEND_API_URL || 'https://api.internetbasvuru.com/lead.php';
     const secretKey = process.env.BACKEND_API_KEY || '';
 
+    // Cloudflare geo header'larını oku
+    const cfCountry = req.headers.get('cf-ipcountry') || '';
+    const cfCity = req.headers.get('cf-ipcity') || '';
+    const cfIp = req.headers.get('cf-connecting-ip') || '';
+
     // Forward to Turhost
     const upstream = await fetch(backendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Api-Key': secretKey,
+        // Cloudflare header'larını backend'e ilet
+        ...(cfCountry && { 'CF-IPCountry': cfCountry }),
+        ...(cfCity && { 'CF-IPCity': cfCity }),
+        ...(cfIp && { 'CF-Connecting-IP': cfIp }),
       },
       body: JSON.stringify({
         ...body,
-        // İstemci IP (KVKK için hash'lenecek backend tarafında)
-        ip: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '',
+        // Body'de de gönder (header'a güvenmek için iki yedek)
+        detected_country: body.detected_country || cfCountry || null,
+        detected_city: body.detected_city || cfCity || null,
+        ip: cfIp || req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || '',
         user_agent: req.headers.get('user-agent') || '',
         referer: req.headers.get('referer') || '',
       }),
@@ -44,7 +55,13 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await upstream.json();
-    return NextResponse.json({ ok: true, token: data.token });
+    return NextResponse.json({
+      ok: true,
+      token: data.token,
+      coverage_status: data.coverage_status,
+      is_covered: data.is_covered,
+      message: data.message,
+    });
   } catch (err) {
     console.error('API error:', err);
     return NextResponse.json(

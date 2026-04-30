@@ -4,9 +4,13 @@ import LeadForm from '@/components/LeadForm';
 import PackageCard from '@/components/PackageCard';
 import { featuredPackages, campaigns } from '@/data/packages';
 import { regions } from '@/data/regions';
+import { getDetectedLocation } from '@/lib/geo';
 
-export default function HomePage() {
+export const dynamic = 'force-dynamic';
+
+export default async function HomePage() {
   const antalyaRegions = regions.filter((r) => r.slug !== 'antalya').slice(0, 6);
+  const detected = await getDetectedLocation();
 
   return (
     <>
@@ -19,7 +23,7 @@ export default function HomePage() {
             <div className="animate-slide-up">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent-500/20 border border-accent-500/40 rounded-full text-xs font-semibold text-accent-200 mb-5">
                 <span className="w-1.5 h-1.5 bg-accent-400 rounded-full animate-pulse" />
-                Türk Telekom Yetkili Bayisi · Antalya
+                Türk Telekom Yetkili Bayisi · 14 İl Hizmet
               </div>
 
               <h1 className="text-hero font-extrabold text-balance mb-5">
@@ -27,7 +31,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-lg text-ink-200 leading-relaxed mb-8 max-w-xl">
-                Manavgat, Alanya, Muratpaşa ve tüm Antalya için <strong className="text-white">bölgesel kampanya fiyatları</strong>. Ücretsiz kurulum, yetkili bayi desteği, 15 dakikada dönüş.
+                Antalya, İzmir, Bursa, Muğla, Aydın ve <strong className="text-white">14 ilde fiber internet</strong>. Ücretsiz kurulum, yetkili bayi desteği, 15 dakikada dönüş.
               </p>
 
               <div className="grid grid-cols-3 gap-3 md:gap-4 mb-8 max-w-lg">
@@ -54,7 +58,12 @@ export default function HomePage() {
 
             {/* Sağ: FORM */}
             <div className="lg:pl-8">
-              <LeadForm variant="hero" sourceLabel="homepage-hero" />
+              <LeadForm
+                variant="hero"
+                sourceLabel="homepage-hero"
+                detectedCity={detected.cityName}
+                detectedCountry={detected.country}
+              />
             </div>
           </div>
         </div>
