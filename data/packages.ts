@@ -1,168 +1,174 @@
-// Görsellerdeki resmi TT bayi fiyat listelerinden alınmış veri
-// Son güncelleme: Nisan 2026
+// Türk Telekom Fiber İnternet Paketleri
+// Akıllı kampanya seçimi: il/ilçe + TV tercihine göre doğru fiyat
+// Son güncelleme: Mayıs 2026
 
-export type CampaignCategory =
-  | 'bolgesel-avantaj'   // Manavgat, Alanya, Kepez — 18 ay
-  | 'bolgesel-firsat'    // Muratpaşa — 24 ay, tek fiyat
-  | 'fiber-gucu-yasa'    // Ana kampanya — tüm iller, 18 ay
-  | 'tivibulu';          // TV+İnternet — 18 ay
+import { type CampaignZone } from './turkey';
 
 export interface Package {
   id: string;
   speedMbps: number;
-  campaignCategory: CampaignCategory;
-  isUnlimited: boolean;
-  // Fiyat yapısı
-  priceFirstPeriod?: number;    // İlk X ay fiyatı (null ise tek fiyat)
-  firstPeriodMonths?: number;
-  priceLastPeriod?: number;     // Son X ay fiyatı
-  priceMonthly?: number;         // Tek fiyat kampanyaları için
-  commitmentMonths: number;
-  modemFee: number;             // +90₺ veya +60₺
-  extraFee?: number;            // Tivibulu için IPTV modem kira
-  hasTv: boolean;
-  isFeatured?: boolean;
+  // Fiyat: ilk 9 ay (Hoş Geldin) + 10-18. ay
+  priceFirstPeriod: number;     // İlk 9 ay
+  priceSecondPeriod: number;    // 10-18. ay
+  // Bölgesel Fırsat'ta tek fiyat (24 ay)
+  priceMonthly?: number;
+  commitmentMonths: number;     // 18 veya 24
+  isPopular?: boolean;          // Vitrinde gösterilecek mi
+  badge?: string;               // "En Çok Tercih Edilen"
+  campaignName?: string;        // "Fiber Gücü Fırsat"
+  features?: string[];          // Vitrin için özellikler
 }
 
-// ============ BÖLGESEL AVANTAJ (Manavgat, Alanya, Kepez — 18 ay) ============
+// ============ STANDART (Fiber Gücü Yaşa - 81 il) - 18 ay ============
+export const standartPackages: Package[] = [
+  { id: 'std-16',   speedMbps: 16,   priceFirstPeriod: 800,  priceSecondPeriod: 900,  commitmentMonths: 18 },
+  { id: 'std-24',   speedMbps: 24,   priceFirstPeriod: 800,  priceSecondPeriod: 900,  commitmentMonths: 18 },
+  { id: 'std-50',   speedMbps: 50,   priceFirstPeriod: 850,  priceSecondPeriod: 950,  commitmentMonths: 18 },
+  { id: 'std-100',  speedMbps: 100,  priceFirstPeriod: 850,  priceSecondPeriod: 950,  commitmentMonths: 18,
+    isPopular: true, badge: 'Başlangıç', campaignName: 'Fiber Gücü Başlangıç',
+    features: ['Ücretsiz kurulum', '18 ay sabit fiyat sözü', 'Limitsiz yüksek hız'] },
+  { id: 'std-200',  speedMbps: 200,  priceFirstPeriod: 900,  priceSecondPeriod: 1000, commitmentMonths: 18 },
+  { id: 'std-300',  speedMbps: 300,  priceFirstPeriod: 950,  priceSecondPeriod: 1050, commitmentMonths: 18,
+    isPopular: true, badge: 'En Çok Tercih Edilen', campaignName: 'Fiber Gücü Fırsat',
+    features: ['4K Ultra HD kesintisiz yayın', 'Limitsiz yüksek hız', '18 ay enflasyon koruması'] },
+  { id: 'std-500',  speedMbps: 500,  priceFirstPeriod: 1050, priceSecondPeriod: 1150, commitmentMonths: 18 },
+  { id: 'std-750',  speedMbps: 750,  priceFirstPeriod: 1100, priceSecondPeriod: 1200, commitmentMonths: 18 },
+  { id: 'std-1000', speedMbps: 1000, priceFirstPeriod: 1150, priceSecondPeriod: 1250, commitmentMonths: 18,
+    isPopular: true, badge: 'En Hızlı', campaignName: 'GigaFiber Gücü',
+    features: ['Işık hızında download/upload', 'Profesyonel oyuncu ping', 'Kalabalık ev/ofis için ideal'] },
+];
+
+// ============ BÖLGESEL AVANTAJ (Manavgat, Alanya, Kepez) - 18 ay ============
 export const bolgeselAvantajPackages: Package[] = [
-  { id: 'ba-16', speedMbps: 16, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 750, firstPeriodMonths: 9, priceLastPeriod: 890, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'ba-24', speedMbps: 24, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 750, firstPeriodMonths: 9, priceLastPeriod: 890, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'ba-50', speedMbps: 50, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 775, firstPeriodMonths: 9, priceLastPeriod: 905, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'ba-100', speedMbps: 100, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 775, firstPeriodMonths: 9, priceLastPeriod: 905, commitmentMonths: 18, modemFee: 90, hasTv: false, isFeatured: true },
-  { id: 'ba-200', speedMbps: 200, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 825, firstPeriodMonths: 9, priceLastPeriod: 955, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'ba-300', speedMbps: 300, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 950, firstPeriodMonths: 9, priceLastPeriod: 1050, commitmentMonths: 18, modemFee: 90, hasTv: false, isFeatured: true },
-  { id: 'ba-500', speedMbps: 500, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 1050, firstPeriodMonths: 9, priceLastPeriod: 1150, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'ba-750', speedMbps: 750, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 1100, firstPeriodMonths: 9, priceLastPeriod: 1200, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'ba-1000', speedMbps: 1000, campaignCategory: 'bolgesel-avantaj', isUnlimited: true, priceFirstPeriod: 1150, firstPeriodMonths: 9, priceLastPeriod: 1250, commitmentMonths: 18, modemFee: 90, hasTv: false, isFeatured: true },
+  { id: 'ba-16',   speedMbps: 16,   priceFirstPeriod: 750,  priceSecondPeriod: 890,  commitmentMonths: 18 },
+  { id: 'ba-24',   speedMbps: 24,   priceFirstPeriod: 750,  priceSecondPeriod: 890,  commitmentMonths: 18 },
+  { id: 'ba-50',   speedMbps: 50,   priceFirstPeriod: 775,  priceSecondPeriod: 905,  commitmentMonths: 18 },
+  { id: 'ba-100',  speedMbps: 100,  priceFirstPeriod: 775,  priceSecondPeriod: 905,  commitmentMonths: 18,
+    isPopular: true, badge: 'Başlangıç', campaignName: 'Bölgesel Avantaj 100',
+    features: ['Bölgesel kampanya fiyatı', 'Ücretsiz kurulum', '18 ay sabit fiyat'] },
+  { id: 'ba-200',  speedMbps: 200,  priceFirstPeriod: 825,  priceSecondPeriod: 955,  commitmentMonths: 18 },
+  { id: 'ba-300',  speedMbps: 300,  priceFirstPeriod: 950,  priceSecondPeriod: 1050, commitmentMonths: 18,
+    isPopular: true, badge: 'En Çok Tercih Edilen', campaignName: 'Bölgesel Avantaj 300',
+    features: ['4K kesintisiz yayın', 'Bölgesel özel fiyat', '18 ay enflasyon koruması'] },
+  { id: 'ba-500',  speedMbps: 500,  priceFirstPeriod: 1050, priceSecondPeriod: 1150, commitmentMonths: 18 },
+  { id: 'ba-750',  speedMbps: 750,  priceFirstPeriod: 1100, priceSecondPeriod: 1200, commitmentMonths: 18 },
+  { id: 'ba-1000', speedMbps: 1000, priceFirstPeriod: 1150, priceSecondPeriod: 1250, commitmentMonths: 18,
+    isPopular: true, badge: 'En Hızlı', campaignName: 'Bölgesel Avantaj GigaFiber',
+    features: ['Işık hızında bölgesel fiyat', 'Profesyonel oyuncu ping', 'Kalabalık ev/ofis için'] },
 ];
 
-// ============ BÖLGESEL FIRSAT (Muratpaşa — 24 ay, tek fiyat) ============
+// ============ BÖLGESEL FIRSAT (Muratpaşa) - 24 ay TEK FİYAT ============
 export const bolgeselFirsatPackages: Package[] = [
-  { id: 'bf-24', speedMbps: 24, campaignCategory: 'bolgesel-firsat', isUnlimited: true, priceMonthly: 680, commitmentMonths: 24, modemFee: 90, hasTv: false },
-  { id: 'bf-50', speedMbps: 50, campaignCategory: 'bolgesel-firsat', isUnlimited: true, priceMonthly: 720, commitmentMonths: 24, modemFee: 90, hasTv: false },
-  { id: 'bf-100', speedMbps: 100, campaignCategory: 'bolgesel-firsat', isUnlimited: true, priceMonthly: 720, commitmentMonths: 24, modemFee: 90, hasTv: false, isFeatured: true },
-  { id: 'bf-200', speedMbps: 200, campaignCategory: 'bolgesel-firsat', isUnlimited: true, priceMonthly: 760, commitmentMonths: 24, modemFee: 90, hasTv: false },
-  { id: 'bf-300', speedMbps: 300, campaignCategory: 'bolgesel-firsat', isUnlimited: true, priceMonthly: 800, commitmentMonths: 24, modemFee: 90, hasTv: false, isFeatured: true },
-  { id: 'bf-500', speedMbps: 500, campaignCategory: 'bolgesel-firsat', isUnlimited: true, priceMonthly: 880, commitmentMonths: 24, modemFee: 90, hasTv: false },
-  { id: 'bf-750', speedMbps: 750, campaignCategory: 'bolgesel-firsat', isUnlimited: true, priceMonthly: 920, commitmentMonths: 24, modemFee: 90, hasTv: false },
-  { id: 'bf-1000', speedMbps: 1000, campaignCategory: 'bolgesel-firsat', isUnlimited: true, priceMonthly: 960, commitmentMonths: 24, modemFee: 90, hasTv: false, isFeatured: true },
+  { id: 'bf-24',   speedMbps: 24,   priceFirstPeriod: 680,  priceSecondPeriod: 680,  priceMonthly: 680,  commitmentMonths: 24 },
+  { id: 'bf-50',   speedMbps: 50,   priceFirstPeriod: 720,  priceSecondPeriod: 720,  priceMonthly: 720,  commitmentMonths: 24 },
+  { id: 'bf-100',  speedMbps: 100,  priceFirstPeriod: 720,  priceSecondPeriod: 720,  priceMonthly: 720,  commitmentMonths: 24,
+    isPopular: true, badge: 'Başlangıç', campaignName: 'Bölgesel Fırsat 100',
+    features: ['24 ay TEK fiyat (zam yok)', 'Ücretsiz kurulum', 'Bölgesel özel fiyat'] },
+  { id: 'bf-200',  speedMbps: 200,  priceFirstPeriod: 760,  priceSecondPeriod: 760,  priceMonthly: 760,  commitmentMonths: 24 },
+  { id: 'bf-300',  speedMbps: 300,  priceFirstPeriod: 800,  priceSecondPeriod: 800,  priceMonthly: 800,  commitmentMonths: 24,
+    isPopular: true, badge: 'En Çok Tercih Edilen', campaignName: 'Bölgesel Fırsat 300',
+    features: ['24 ay TEK fiyat (zam yok)', '4K kesintisiz yayın', 'Bölgesel özel fiyat'] },
+  { id: 'bf-500',  speedMbps: 500,  priceFirstPeriod: 880,  priceSecondPeriod: 880,  priceMonthly: 880,  commitmentMonths: 24 },
+  { id: 'bf-750',  speedMbps: 750,  priceFirstPeriod: 920,  priceSecondPeriod: 920,  priceMonthly: 920,  commitmentMonths: 24 },
+  { id: 'bf-1000', speedMbps: 1000, priceFirstPeriod: 960,  priceSecondPeriod: 960,  priceMonthly: 960,  commitmentMonths: 24,
+    isPopular: true, badge: 'En Hızlı', campaignName: 'Bölgesel Fırsat GigaFiber',
+    features: ['24 ay TEK fiyat', 'Işık hızında upload/download', 'Profesyonel oyuncu ping'] },
 ];
 
-// ============ FİBER GÜCÜ YAŞA (Ana kampanya — tüm iller, 18 ay) ============
-export const fiberGucuYasaPackages: Package[] = [
-  { id: 'fgy-16', speedMbps: 16, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 800, firstPeriodMonths: 9, priceLastPeriod: 900, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'fgy-24', speedMbps: 24, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 800, firstPeriodMonths: 9, priceLastPeriod: 900, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'fgy-50', speedMbps: 50, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 850, firstPeriodMonths: 9, priceLastPeriod: 950, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'fgy-100', speedMbps: 100, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 850, firstPeriodMonths: 9, priceLastPeriod: 950, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'fgy-200', speedMbps: 200, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 900, firstPeriodMonths: 9, priceLastPeriod: 1050, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'fgy-300', speedMbps: 300, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 950, firstPeriodMonths: 9, priceLastPeriod: 1150, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'fgy-500', speedMbps: 500, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 1050, firstPeriodMonths: 9, priceLastPeriod: 1200, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'fgy-750', speedMbps: 750, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 1100, firstPeriodMonths: 9, priceLastPeriod: 1250, commitmentMonths: 18, modemFee: 90, hasTv: false },
-  { id: 'fgy-1000', speedMbps: 1000, campaignCategory: 'fiber-gucu-yasa', isUnlimited: true, priceFirstPeriod: 1150, firstPeriodMonths: 9, priceLastPeriod: 1250, commitmentMonths: 18, modemFee: 90, hasTv: false },
-];
+// ============ TIVIBU (TV+İnternet ek seçeneği için fiyat farkı) ============
+export const TV_EXTRA_FEE = 250;        // Tivibu eklendiğinde aylık ek
+export const MODEM_RENTAL_FEE = 90;     // Modem kiralama (opsiyonel)
 
-// ============ TİVİBULU (TV+İnternet — 18 ay) ============
-export const tivibuluPackages: Package[] = [
-  { id: 'tv-16', speedMbps: 16, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 570, firstPeriodMonths: 3, priceLastPeriod: 1055, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true },
-  { id: 'tv-24', speedMbps: 24, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 570, firstPeriodMonths: 3, priceLastPeriod: 1055, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true },
-  { id: 'tv-50', speedMbps: 50, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 620, firstPeriodMonths: 3, priceLastPeriod: 1115, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true },
-  { id: 'tv-100', speedMbps: 100, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 620, firstPeriodMonths: 3, priceLastPeriod: 1115, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true },
-  { id: 'tv-200', speedMbps: 200, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 670, firstPeriodMonths: 3, priceLastPeriod: 1165, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true },
-  { id: 'tv-300', speedMbps: 300, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 720, firstPeriodMonths: 3, priceLastPeriod: 1215, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true, isFeatured: true },
-  { id: 'tv-500', speedMbps: 500, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 770, firstPeriodMonths: 3, priceLastPeriod: 1315, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true },
-  { id: 'tv-750', speedMbps: 750, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 820, firstPeriodMonths: 3, priceLastPeriod: 1365, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true },
-  { id: 'tv-1000', speedMbps: 1000, campaignCategory: 'tivibulu', isUnlimited: true, priceFirstPeriod: 820, firstPeriodMonths: 3, priceLastPeriod: 1425, commitmentMonths: 18, modemFee: 60, extraFee: 60, hasTv: true },
-];
+// ============ ANA FONKSİYONLAR ============
 
+/**
+ * il/ilçe ve TV tercihine göre doğru paket listesini döndürür
+ * Mockup mantığı: kullanıcı 9 hız görür ama fiyatlar bölgeye göre değişir
+ */
+export function getPackagesForLocation(zone: CampaignZone): Package[] {
+  switch (zone) {
+    case 'bolgesel-avantaj':
+      return bolgeselAvantajPackages;
+    case 'bolgesel-firsat':
+      return bolgeselFirsatPackages;
+    default:
+      return standartPackages;
+  }
+}
+
+/**
+ * Vitrinde gösterilecek 3 popüler paket
+ */
+export function getFeaturedPackages(zone: CampaignZone = 'standart'): Package[] {
+  return getPackagesForLocation(zone).filter(p => p.isPopular);
+}
+
+/**
+ * Belirli bir hız için paket bulur
+ */
+export function getPackageBySpeed(speedMbps: number, zone: CampaignZone = 'standart'): Package | undefined {
+  return getPackagesForLocation(zone).find(p => p.speedMbps === speedMbps);
+}
+
+/**
+ * Kullanım profiline göre önerilen hız
+ * hafif → 100, orta → 300, yoğun → 1000
+ */
+export function recommendSpeed(usage: 'hafif' | 'orta' | 'yogun'): number {
+  switch (usage) {
+    case 'hafif': return 100;
+    case 'orta':  return 300;
+    case 'yogun': return 1000;
+  }
+}
+
+/**
+ * Paket fiyatını TV ve modem ile birlikte hesaplar
+ */
+export function calcPackagePrices(
+  pkg: Package,
+  options: { tv: boolean; modem: boolean }
+): { firstPeriod: number; secondPeriod: number; isFlat: boolean } {
+  const tvAdd = options.tv ? TV_EXTRA_FEE : 0;
+  const modemAdd = options.modem ? MODEM_RENTAL_FEE : 0;
+
+  // Bölgesel Fırsat = tek fiyat
+  if (pkg.priceMonthly !== undefined) {
+    return {
+      firstPeriod: pkg.priceMonthly + tvAdd + modemAdd,
+      secondPeriod: pkg.priceMonthly + tvAdd + modemAdd,
+      isFlat: true,
+    };
+  }
+
+  return {
+    firstPeriod: pkg.priceFirstPeriod + tvAdd + modemAdd,
+    secondPeriod: pkg.priceSecondPeriod + tvAdd + modemAdd,
+    isFlat: false,
+  };
+}
+
+/**
+ * Kampanya zone'unun adını döndür (UI'da göstermek için)
+ */
+export function getCampaignDisplayName(zone: CampaignZone): string {
+  switch (zone) {
+    case 'bolgesel-avantaj': return 'Bölgesel Avantaj';
+    case 'bolgesel-firsat':  return 'Bölgesel Fırsat (24 ay tek fiyat)';
+    default: return 'Fiber Gücü Yaşa';
+  }
+}
+
+/**
+ * Ana sayfa için: standart fiyatlarla 3 popüler paket
+ * Kullanıcı il seçince Wizard'da gerçek bölgesel fiyat gelecek
+ */
+export const featuredPackages = getFeaturedPackages('standart');
+export const allStandartPackages = standartPackages;
+
+// Tüm paketler (legacy uyumluluk için)
 export const allPackages = [
+  ...standartPackages,
   ...bolgeselAvantajPackages,
   ...bolgeselFirsatPackages,
-  ...fiberGucuYasaPackages,
-  ...tivibuluPackages,
 ];
-
-// ============ KAMPANYA META BİLGİLERİ ============
-export interface Campaign {
-  slug: string;
-  name: string;
-  shortName: string;
-  description: string;
-  commitmentMonths: number;
-  applicableRegions: string[];
-  modemFee: number;
-  packages: Package[];
-  highlight?: string;
-}
-
-export const campaigns: Campaign[] = [
-  {
-    slug: 'bolgesel-avantaj',
-    name: 'Bölgesel Avantaj Kampanyası',
-    shortName: 'Bölgesel Avantaj',
-    description: 'Manavgat, Alanya ve Kepez bölgelerinde geçerli 18 ay taahhütlü avantajlı paketler.',
-    commitmentMonths: 18,
-    applicableRegions: ['Manavgat', 'Alanya', 'Kepez'],
-    modemFee: 90,
-    packages: bolgeselAvantajPackages,
-    highlight: 'Antalya bölgesi özel fiyatları',
-  },
-  {
-    slug: 'bolgesel-firsat',
-    name: 'Bölgesel Fırsat Kampanyası',
-    shortName: 'Bölgesel Fırsat',
-    description: 'Muratpaşa bölgesine özel 24 ay taahhütlü, tek fiyatla sabit kalan internet paketleri.',
-    commitmentMonths: 24,
-    applicableRegions: ['Muratpaşa'],
-    modemFee: 90,
-    packages: bolgeselFirsatPackages,
-    highlight: '24 ay tek fiyat — artış yok',
-  },
-  {
-    slug: 'fiber-gucu-yasa',
-    name: 'Fiber Gücü Yaşa Kampanyası',
-    shortName: 'Fiber Gücü Yaşa',
-    description: 'Türkiye genelinde tüm illerde geçerli, 18 ay taahhütlü ana fiber internet kampanyası.',
-    commitmentMonths: 18,
-    applicableRegions: ['Tüm İller'],
-    modemFee: 90,
-    packages: fiberGucuYasaPackages,
-    highlight: 'Tüm Türkiye geçerli',
-  },
-  {
-    slug: 'tivibulu',
-    name: 'Tivibu\'lu İnternet Kampanyası',
-    shortName: 'Tivibu\'lu İnternet',
-    description: 'Sinema, spor ve binlerce içerik için Tivibu TV ile birlikte internet paketleri.',
-    commitmentMonths: 18,
-    applicableRegions: ['Tüm İller'],
-    modemFee: 60,
-    packages: tivibuluPackages,
-    highlight: 'TV + İnternet birlikte',
-  },
-];
-
-// Öne çıkan paketler (ana sayfa için)
-export const featuredPackages = allPackages.filter(p => p.isFeatured);
-
-// Yardımcı: paket effective fiyatını hesapla
-export function getEffectivePrice(pkg: Package): { display: string; note: string } {
-  if (pkg.priceMonthly) {
-    return {
-      display: `${pkg.priceMonthly}₺`,
-      note: 'Aylık sabit',
-    };
-  }
-  if (pkg.priceFirstPeriod) {
-    return {
-      display: `${pkg.priceFirstPeriod}₺`,
-      note: `İlk ${pkg.firstPeriodMonths} ay`,
-    };
-  }
-  return { display: '—', note: '' };
-}
-
-// Paket slug oluşturucu
-export function getPackageSlug(pkg: Package): string {
-  return `${pkg.campaignCategory}-${pkg.speedMbps}-mbps`;
-}
