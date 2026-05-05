@@ -4,23 +4,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://internetbasvuru.com';
   const lastModified = new Date();
 
-  const staticPages = [
-    '',
-    '/basvuru',
-    '/iletisim',
-    '/hakkimizda',
-    '/sss',
-    '/rehber',
-    '/kvkk-aydinlatma',
-    '/cerez-politikasi',
-    '/gizlilik-politikasi',
-    '/kullanim-sartlari',
+  return [
+    {
+      url: base,
+      lastModified,
+      changeFrequency: 'weekly' as const,
+      priority: 1.0,
+    },
+    {
+      url: `${base}/rehber`,
+      lastModified,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${base}/iletisim`,
+      lastModified,
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
+    },
   ];
-
-  return staticPages.map((path) => ({
-    url: `${base}${path}`,
-    lastModified,
-    changeFrequency: 'weekly' as const,
-    priority: path === '' ? 1.0 : 0.7,
-  }));
 }

@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import WhatsAppFloat from '@/components/WhatsAppFloat';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://internetbasvuru.com'),
@@ -10,8 +9,8 @@ export const metadata: Metadata = {
     default: 'Türk Telekom Fiber İnternet Başvurusu | Yetkili Bayi',
     template: '%s | internetbasvuru.com',
   },
-  description: 'Türk Telekom fiber internet paketleri için online başvuru. Antalya, Manavgat, Alanya, Muratpaşa bölgesel kampanyaları. Yetkili bayiden hızlı kurulum.',
-  keywords: ['türk telekom', 'fiber internet', 'tt bayi', 'internet başvuru', 'manavgat internet', 'alanya fiber', 'antalya ttnet'],
+  description: 'Türk Telekom fiber internet paketleri için online başvuru. 81 il açık, bölgesel kampanyalar, ücretsiz kurulum, 18 ay sabit fiyat.',
+  keywords: ['türk telekom', 'fiber internet', 'tt bayi', 'internet başvuru', 'fiber gücü yaşa', 'manavgat internet', 'alanya fiber', 'antalya ttnet'],
   authors: [{ name: 'Göksoylar İletişim Ltd. Şti.' }],
   creator: 'Göksoylar İletişim Ltd. Şti.',
   publisher: 'Göksoylar İletişim Ltd. Şti.',
@@ -26,12 +25,12 @@ export const metadata: Metadata = {
     url: 'https://internetbasvuru.com',
     siteName: 'internetbasvuru.com',
     title: 'Türk Telekom Fiber İnternet Başvurusu | Yetkili Bayi',
-    description: 'Türk Telekom fiber internet paketleri için online başvuru. Antalya bölgesel kampanyaları.',
+    description: 'Türk Telekom fiber paketleri. 81 il açık, bölgesel kampanyalar, ücretsiz kurulum.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Türk Telekom Fiber İnternet Başvurusu',
-    description: 'Antalya ve Türkiye geneli Türk Telekom fiber başvurusu, yetkili bayiden hızlı kurulum.',
+    description: 'Türkiye geneli yetkili bayiden hızlı kurulum.',
   },
   robots: {
     index: true,
@@ -55,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     '@type': 'LocalBusiness',
     name: 'Göksoylar İletişim - Türk Telekom Yetkili Bayi',
     alternateName: 'internetbasvuru.com',
-    description: 'Türk Telekom fiber internet yetkili bayisi. Antalya bölgesi kampanyaları.',
+    description: 'Türk Telekom fiber internet yetkili bayisi. Türkiye geneli kampanyalar.',
     url: 'https://internetbasvuru.com',
     telephone: '+90-534-977-70-00',
     address: {
@@ -64,12 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       addressRegion: 'Antalya',
       addressCountry: 'TR',
     },
-    areaServed: [
-      { '@type': 'City', name: 'Manavgat' },
-      { '@type': 'City', name: 'Alanya' },
-      { '@type': 'City', name: 'Antalya' },
-      { '@type': 'Country', name: 'Türkiye' },
-    ],
+    areaServed: { '@type': 'Country', name: 'Türkiye' },
     priceRange: '₺₺',
   };
 
@@ -87,7 +81,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main className="min-h-[calc(100vh-80px)]">{children}</main>
         <Footer />
-        <WhatsAppFloat />
       </body>
     </html>
   );
