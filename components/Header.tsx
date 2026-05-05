@@ -1,12 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Phone, MessageCircle } from 'lucide-react';
 import TTLogo from './TTLogo';
-
-const WHATSAPP_URL =
-  'https://wa.me/905349777000?text=' +
-  encodeURIComponent('Merhaba, Türk Telekom fiber internet başvurusu hakkında bilgi almak istiyorum.');
 
 export default function Header() {
   function scrollToWizard() {
@@ -33,28 +28,25 @@ export default function Header() {
           href="tel:+905349777000"
           className="text-white font-bold no-underline hover:text-brand-300 transition inline-flex items-center gap-1.5"
         >
-          <Phone className="w-3 h-3" />
           0534 977 70 00
         </a>
       </div>
 
       {/* Main Header */}
       <header className="bg-white/85 backdrop-blur-md px-[5%] py-4 flex justify-between items-center sticky top-0 z-[1000] border-b border-black/5">
-        {/* Logo */}
+        {/* Logo: sol başta TT logosu öne çıkıyor */}
         <Link
           href="/"
-          className="text-[1.4rem] font-extrabold text-brand-500 no-underline flex items-baseline gap-2 -tracking-[0.5px]"
+          className="flex items-center gap-2.5 no-underline"
+          aria-label="Türk Telekom Yetkili Bayi · Anasayfa"
         >
-          <span>
-            <span>internet</span>
-            <span className="text-ink-900">başvuru</span>
-          </span>
-          {/* TT Cobrand - desktop */}
-          <span className="hidden md:inline-flex items-center gap-2 self-center">
-            <span className="w-px h-[22px] bg-ink-100 inline-block" />
-            <TTLogo variant="cobrand" />
-            <span className="text-[9px] font-bold text-ink-500 tracking-[0.08em] uppercase leading-none">
-              YETKİLİ BAYİ
+          <TTLogo variant="cobrand" />
+          <span className="hidden md:inline-flex flex-col leading-none border-l border-ink-100 pl-2.5">
+            <span className="text-[10px] font-bold text-ink-500 tracking-[0.1em] uppercase">
+              Yetkili Bayi
+            </span>
+            <span className="text-[11px] font-semibold text-ink-700 mt-0.5">
+              internetbaşvuru
             </span>
           </span>
         </Link>
@@ -63,6 +55,9 @@ export default function Header() {
         <div className="flex items-center gap-3 md:gap-5">
           {/* Nav links - desktop */}
           <nav className="hidden md:flex items-center gap-5 text-sm font-semibold text-ink-700">
+            <Link href="/" className="hover:text-brand-500 transition">
+              Anasayfa
+            </Link>
             <Link href="/rehber" className="hover:text-brand-500 transition">
               Rehber
             </Link>
@@ -70,18 +65,6 @@ export default function Header() {
               İletişim
             </Link>
           </nav>
-
-          {/* WhatsApp button (mockup'taki yeşil yüzen butonun yerine) */}
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="WhatsApp ile iletişim"
-            className="inline-flex items-center justify-center gap-1.5 bg-wa-500 hover:bg-wa-600 text-white px-3 md:px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-all hover:-translate-y-0.5 shadow-[0_4px_12px_rgba(37,211,102,0.3)]"
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span className="hidden md:inline">WhatsApp</span>
-          </a>
 
           {/* Phone link */}
           <a
