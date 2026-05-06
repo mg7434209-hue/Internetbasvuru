@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -7,6 +6,10 @@ import { useState } from 'react';
 export const BRAND_ASSETS_ENABLED = true;
 
 // Self-hosted TT logosu (public/tt-logo.png)
+// NOT: PNG'nin arka planı KOYU/SİYAH (şeffaf değil)
+// Bu yüzden:
+// - Mini (siyah bar üstünde): filter yok, siyah bg zemine karışır
+// - Cobrand (beyaz header üstünde): koyu kutu içinde "yetki rozeti" gibi
 const TT_LOGO_URL = '/tt-logo.png';
 
 interface TTLogoProps {
@@ -16,26 +19,22 @@ interface TTLogoProps {
 
 /**
  * Türk Telekom logosu wrapper
- * variant'a göre farklı boyut ve stil
- * Logo yüklenmezse otomatik text fallback ("TÜRK TELEKOM")
- * BRAND_ASSETS_ENABLED=false ise sadece text gösterilir
+ * variant'a göre farklı boyut ve container
+ * Logo yüklenmezse otomatik text fallback
  */
 export default function TTLogo({ variant = 'mini', className = '' }: TTLogoProps) {
   const [imgFailed, setImgFailed] = useState(false);
-
-  // Brand assets disabled veya image fail → text fallback
   const showFallback = !BRAND_ASSETS_ENABLED || imgFailed;
 
   if (variant === 'mini') {
-    // Dealer-strip için, beyaz, büyütülmüş (16px → 20px)
+    // Dealer-strip için: filter yok, koyu zemine karışır
     return (
       <span className={`inline-flex items-center align-middle ${className}`}>
         {!showFallback ? (
           <img
             src={TT_LOGO_URL}
             alt="Türk Telekom"
-            className="h-5 w-auto opacity-95"
-            style={{ filter: 'brightness(0) invert(1)' }}
+            className="h-5 w-auto"
             onError={() => setImgFailed(true)}
           />
         ) : (
@@ -48,18 +47,20 @@ export default function TTLogo({ variant = 'mini', className = '' }: TTLogoProps
   }
 
   if (variant === 'cobrand') {
-    // Header için, koyu, BÜYÜK ve etkili (22px → 40px - neredeyse 2 katı)
+    // Header için: koyu kurumsal "yetki rozeti" içinde — beyaz header üzerinde temiz görünür
     return (
-      <span className={`inline-flex items-center ${className}`}>
+      <span
+        className={`inline-flex items-center bg-ink-900 rounded-lg px-3 py-2 shadow-sm ${className}`}
+      >
         {!showFallback ? (
           <img
             src={TT_LOGO_URL}
             alt="Türk Telekom"
-            className="h-10 w-auto"
+            className="h-7 w-auto"
             onError={() => setImgFailed(true)}
           />
         ) : (
-          <span className="text-base font-extrabold text-ink-900 tracking-wider leading-none">
+          <span className="text-sm font-extrabold text-white tracking-wider leading-none">
             TÜRK TELEKOM
           </span>
         )}
@@ -88,18 +89,18 @@ export default function TTLogo({ variant = 'mini', className = '' }: TTLogoProps
   }
 
   if (variant === 'footer') {
-    // Footer için büyük
+    // Footer için büyük (footer zaten koyu zeminli, doğal gösterim)
     return (
       <span className={`inline-flex items-center ${className}`}>
         {!showFallback ? (
           <img
             src={TT_LOGO_URL}
             alt="Türk Telekom"
-            className="h-14 w-auto"
+            className="h-12 w-auto"
             onError={() => setImgFailed(true)}
           />
         ) : (
-          <span className="text-2xl font-extrabold text-ink-900 tracking-tight">
+          <span className="text-2xl font-extrabold text-white tracking-tight">
             TÜRK TELEKOM
           </span>
         )}
