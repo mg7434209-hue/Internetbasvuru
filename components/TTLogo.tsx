@@ -5,8 +5,7 @@ import { useState } from 'react';
 // Brand assets toggle - TT izni iptal olursa false yap
 export const BRAND_ASSETS_ENABLED = true;
 
-// Self-hosted yüksek çözünürlüklü TT logosu
-// Beyaz/şeffaf arka planlı → temiz tasarım, kutu/rozet'e gerek yok
+// Self-hosted yüksek çözünürlüklü TT logosu (şeffaf arka planlı)
 const TT_LOGO_URL = '/tt-logo.png';
 
 interface TTLogoProps {
@@ -16,17 +15,17 @@ interface TTLogoProps {
 
 /**
  * Türk Telekom logosu wrapper
- * Beyaz arka planlı kaynak logodan farklı zeminlere uyum:
- * - Mini (siyah bar): filter ile monokrom beyaz, arka plan kaybolur
- * - Cobrand (beyaz header): doğal renkli, arka plan zaten beyaz ile karışır
- * - Footer (koyu zemin): filter ile monokrom beyaz
+ * Şeffaf PNG'den farklı zeminlere uyum:
+ * - Mini (koyu zemin): filter ile beyaza çevir
+ * - Cobrand (beyaz header): doğal renkli, BÜYÜK
+ * - Footer (koyu zemin): filter ile beyaza çevir
  */
 export default function TTLogo({ variant = 'mini', className = '' }: TTLogoProps) {
   const [imgFailed, setImgFailed] = useState(false);
   const showFallback = !BRAND_ASSETS_ENABLED || imgFailed;
 
   if (variant === 'mini') {
-    // Dealer-strip için: filter ile beyaza çevir, arka plan siyah barla birleşir
+    // Küçük kullanım, koyu zemin için
     return (
       <span className={`inline-flex items-center align-middle ${className}`}>
         {!showFallback ? (
@@ -47,15 +46,14 @@ export default function TTLogo({ variant = 'mini', className = '' }: TTLogoProps
   }
 
   if (variant === 'cobrand') {
-    // Header için: doğal renkli, beyaz arka plan beyaz header ile karışır
-    // Büyük ve etkili — orijinal kurumsal renkler
+    // Header için BÜYÜK, doğal renkli (h-12 → h-14, %17 büyüdü)
     return (
       <span className={`inline-flex items-center ${className}`}>
         {!showFallback ? (
           <img
             src={TT_LOGO_URL}
             alt="Türk Telekom"
-            className="h-12 w-auto"
+            className="h-14 w-auto"
             onError={() => setImgFailed(true)}
           />
         ) : (
@@ -88,7 +86,7 @@ export default function TTLogo({ variant = 'mini', className = '' }: TTLogoProps
   }
 
   if (variant === 'footer') {
-    // Footer için: koyu zemin varsayımıyla beyaza çevir
+    // Footer için (koyu zemin varsayımıyla beyaza çevir)
     return (
       <span className={`inline-flex items-center ${className}`}>
         {!showFallback ? (
