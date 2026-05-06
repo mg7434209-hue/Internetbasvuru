@@ -1,0 +1,26 @@
+{
+  "name": "Türk Telekom Fiber İnternet Başvurusu",
+  "short_name": "internetbaşvuru",
+  "description": "Türk Telekom fiber internet yetkili bayisi - Göksoylar İletişim",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0E1F4D",
+  "lang": "tr",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "categories": ["business", "utilities"],
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
