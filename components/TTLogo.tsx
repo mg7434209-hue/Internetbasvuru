@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 
 // Brand assets toggle - TT izni iptal olursa false yap
 export const BRAND_ASSETS_ENABLED = true;
 
-const TT_LOGO_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/T%C3%BCrk_Telekom_logo.svg/200px-T%C3%BCrk_Telekom_logo.svg.png';
+// Self-hosted TT logosu (public/tt-logo.png)
+const TT_LOGO_URL = '/tt-logo.png';
 
 interface TTLogoProps {
   variant?: 'mini' | 'cobrand' | 'featured' | 'footer';
