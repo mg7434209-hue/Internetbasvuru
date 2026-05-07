@@ -1,153 +1,139 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Phone, MapPin, Clock, MessageCircle, Mail } from 'lucide-react';
+import { MessageCircle, Mail, MapPin, Award, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'İletişim',
   description:
-    'Türk Telekom yetkili bayi Göksoylar İletişim ile iletişim. Manavgat / Antalya - 0534 977 70 00. 7/24 ulaşım, 15 dakika içinde dönüş.',
+    'Göksoylar İletişim Ltd. Şti. — Türk Telekom yetkili bayisi. WhatsApp, e-posta ve online başvuru ile bize ulaşın.',
   alternates: { canonical: 'https://internetbasvuru.com/iletisim' },
 };
 
-const WHATSAPP_URL =
-  'https://wa.me/905349777000?text=' +
-  encodeURIComponent('Merhaba, Türk Telekom fiber internet başvurusu hakkında bilgi almak istiyorum.');
-
 export default function IletisimPage() {
   return (
-    <div className="bg-ink-50 min-h-screen py-12 sm:py-16">
-      <div className="max-w-4xl mx-auto px-[5%]">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 text-brand-700 text-[13px] font-bold mb-4 tracking-wide">
-            <Phone className="w-3.5 h-3.5" />
-            7/24 ulaşılabilir
-          </div>
-          <h1 className="text-display font-extrabold mb-3 text-balance">
-            <span className="text-brand-500">Bize Ulaşın</span>
-          </h1>
-          <p className="text-ink-500 max-w-xl mx-auto leading-relaxed">
-            Türk Telekom fiber internet başvurusu, fiyat bilgisi veya teknik destek için
-            yetkili bayimiz size yardımcı olmaktan mutluluk duyar.
-          </p>
-        </div>
+    <article className="max-w-4xl mx-auto px-[5%] py-12 sm:py-16">
+      <header className="mb-10 text-center">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-ink-900 mb-3">
+          İletişim
+        </h1>
+        <p className="text-ink-500 text-base max-w-2xl mx-auto">
+          Türk Telekom fiber internet başvurusu için aşağıdaki kanallardan bize ulaşabilirsiniz.
+          15 dakika içinde dönüş yapıyoruz.
+        </p>
+      </header>
 
-        {/* Contact Cards */}
-        <div className="grid md:grid-cols-2 gap-5 mb-10">
-          {/* Telefon */}
-          <a
-            href="tel:+905349777000"
-            className="block bg-white rounded-2xl p-7 border border-ink-100 hover:border-brand-500 hover:shadow-medium transition-all group"
-          >
-            <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center mb-4 group-hover:bg-brand-500 transition">
-              <Phone className="w-6 h-6 text-brand-500 group-hover:text-white transition" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+        {/* WhatsApp Card — primary CTA */}
+        <a
+          href="https://wa.me/905349777000?text=Merhaba%2C%20T%C3%BCrk%20Telekom%20fiber%20internet%20ba%C5%9Fvurusu%20yapmak%20istiyorum."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group bg-success/10 hover:bg-success/15 active:bg-success/20 border-2 border-success/30 rounded-2xl p-6 transition min-h-[140px]"
+        >
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-success/20 flex items-center justify-center">
+              <MessageCircle className="w-6 h-6 text-success" strokeWidth={2.5} />
             </div>
-            <h3 className="text-lg font-bold mb-2 text-ink-900">Telefonla Ara</h3>
-            <p className="text-2xl font-extrabold text-brand-500 mb-1.5 tracking-tight">
-              0534 977 70 00
-            </p>
-            <p className="text-sm text-ink-500 leading-relaxed">
-              7/24 ulaşılabilir<br />
-              15 dakika içinde dönüş garantisi
-            </p>
-          </a>
-
-          {/* WhatsApp */}
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block bg-white rounded-2xl p-7 border border-ink-100 hover:border-wa-500 hover:shadow-medium transition-all group"
-          >
-            <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center mb-4 group-hover:bg-wa-500 transition">
-              <MessageCircle className="w-6 h-6 text-wa-500 group-hover:text-white transition" />
-            </div>
-            <h3 className="text-lg font-bold mb-2 text-ink-900">WhatsApp Yaz</h3>
-            <span className="inline-flex items-center gap-2 bg-wa-500 hover:bg-wa-600 text-white px-4 py-2 rounded-full font-bold text-sm transition mb-2">
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp&apos;tan Yaz
-            </span>
-            <p className="text-sm text-ink-500 leading-relaxed mt-2">
-              Hızlı yanıt, yazılı kayıt<br />
-              Anlık iletişim
-            </p>
-          </a>
-
-          {/* Adres */}
-          <div className="bg-white rounded-2xl p-7 border border-ink-100">
-            <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center mb-4">
-              <MapPin className="w-6 h-6 text-brand-500" />
-            </div>
-            <h3 className="text-lg font-bold mb-2 text-ink-900">Adresimiz</h3>
-            <p className="font-semibold text-ink-900 mb-1">Göksoylar İletişim Ltd. Şti.</p>
-            <p className="text-ink-500 text-sm leading-relaxed">
-              Türk Telekom Yetkili Bayisi<br />
-              Manavgat / Antalya
-            </p>
-          </div>
-
-          {/* Saatler */}
-          <div className="bg-white rounded-2xl p-7 border border-ink-100">
-            <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center mb-4">
-              <Clock className="w-6 h-6 text-brand-500" />
-            </div>
-            <h3 className="text-lg font-bold mb-2 text-ink-900">Çalışma Saatleri</h3>
-            <p className="text-ink-500 text-sm leading-relaxed">
-              <strong className="text-ink-900">Ofis:</strong> Pzt-Cmt 09:00-19:00
-              <br />
-              <strong className="text-ink-900">Telefon &amp; WhatsApp:</strong> 7/24 aktif
-              <br />
-              <span className="text-xs text-ink-400">Pazar günleri sadece WhatsApp</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Hizmet Bölgeleri */}
-        <div className="bg-white rounded-2xl p-7 border border-ink-100 mb-10">
-          <h3 className="text-lg font-bold mb-3 text-ink-900">Hizmet Verdiğimiz Bölgeler</h3>
-          <p className="text-ink-500 text-sm mb-4 leading-relaxed">
-            Türk Telekom fiber internet başvuruları için <strong>Türkiye geneli</strong> hizmet veriyoruz.
-            Antalya bölgesinde özel bölgesel kampanyalarımız mevcuttur:
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-            <div className="bg-brand-50 px-3 py-2 rounded-lg">
-              <strong className="text-brand-700 text-xs uppercase tracking-wider">Bölgesel Avantaj</strong>
-              <p className="text-ink-700 text-sm mt-0.5">Manavgat · Alanya · Kepez</p>
-            </div>
-            <div className="bg-brand-50 px-3 py-2 rounded-lg">
-              <strong className="text-brand-700 text-xs uppercase tracking-wider">Bölgesel Fırsat</strong>
-              <p className="text-ink-700 text-sm mt-0.5">Muratpaşa (24 ay tek fiyat)</p>
-            </div>
-            <div className="bg-ink-50 px-3 py-2 rounded-lg">
-              <strong className="text-ink-700 text-xs uppercase tracking-wider">Standart</strong>
-              <p className="text-ink-700 text-sm mt-0.5">Diğer 80 il (Fiber Gücü Yaşa)</p>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-bold text-ink-900 text-lg mb-1">WhatsApp</h2>
+              <p className="text-sm text-ink-500 mb-3 leading-relaxed">
+                En hızlı yanıt. Mesajınızı atın, 15 dakika içinde dönüş yapalım.
+              </p>
+              <div className="inline-flex items-center gap-1.5 text-success font-bold text-sm group-hover:gap-2.5 transition-all">
+                <span>WhatsApp&apos;tan yaz</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
             </div>
           </div>
-        </div>
+        </a>
 
-        {/* CTA */}
-        <div className="text-center">
-          <p className="text-ink-500 mb-4">Hemen başvurmak ister misiniz?</p>
-          <Link
-            href="/#wizard"
-            className="inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-8 py-4 rounded-full font-bold text-base transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg"
-          >
-            Online Başvuru Yap
-          </Link>
-        </div>
+        {/* Online başvuru — primary CTA */}
+        <Link
+          href="/#wizard"
+          className="group bg-brand-50 hover:bg-brand-100 active:bg-brand-200 border-2 border-brand-500/30 rounded-2xl p-6 transition min-h-[140px]"
+        >
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-brand-500/20 flex items-center justify-center">
+              <Award className="w-6 h-6 text-brand-700" strokeWidth={2.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-bold text-ink-900 text-lg mb-1">Online Başvuru</h2>
+              <p className="text-sm text-ink-500 mb-3 leading-relaxed">
+                Formu doldurun, paket önerimizi alın. 5 adım, 2 dakika.
+              </p>
+              <div className="inline-flex items-center gap-1.5 text-brand-700 font-bold text-sm group-hover:gap-2.5 transition-all">
+                <span>Başvuruyu başlat</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
 
-        {/* KVKK Notu */}
-        <div className="mt-10 bg-white rounded-xl p-5 border border-ink-100 text-xs text-ink-500 leading-relaxed">
-          <strong className="text-ink-900 inline-flex items-center gap-1.5">
-            <Mail className="w-3.5 h-3.5" />
-            E-posta:
-          </strong>{' '}
-          info@internetbasvuru.com{' '}
-          <span className="text-ink-300">·</span>{' '}
-          <strong className="text-ink-900">Veri Sorumlusu:</strong> Göksoylar İletişim Ltd. Şti.{' '}
-          (KVKK uyarınca kişisel verileriniz güvenle saklanır.)
+      {/* Diğer iletişim bilgileri */}
+      <div className="bg-ink-50 rounded-2xl p-6 sm:p-8 mb-8">
+        <h2 className="font-bold text-ink-900 text-lg mb-5">Diğer İletişim Bilgileri</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="flex items-start gap-3">
+            <Mail className="w-5 h-5 text-brand-700 flex-shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-ink-500 uppercase tracking-wider mb-0.5">
+                E-posta
+              </p>
+              <a
+                href="mailto:info@internetbasvuru.com"
+                className="text-sm text-ink-900 hover:text-brand-700 transition font-semibold break-all"
+              >
+                info@internetbasvuru.com
+              </a>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <MapPin className="w-5 h-5 text-brand-700 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-xs font-bold text-ink-500 uppercase tracking-wider mb-0.5">
+                Adres
+              </p>
+              <p className="text-sm text-ink-900 font-semibold">Manavgat / Antalya</p>
+              <p className="text-xs text-ink-500 mt-0.5">Göksoylar İletişim Ltd. Şti.</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <Clock className="w-5 h-5 text-brand-700 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-xs font-bold text-ink-500 uppercase tracking-wider mb-0.5">
+                Çalışma Saatleri
+              </p>
+              <p className="text-sm text-ink-900 font-semibold">Pzt–Cmt: 09:00 – 19:00</p>
+              <p className="text-xs text-ink-500 mt-0.5">Pazar günleri kapalıyız</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <Award className="w-5 h-5 text-brand-700 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-xs font-bold text-ink-500 uppercase tracking-wider mb-0.5">
+                Bayi Kodu
+              </p>
+              <p className="text-sm text-ink-900 font-semibold">B9613</p>
+              <p className="text-xs text-ink-500 mt-0.5">Türk Telekom Yetkili Bayi</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div className="text-center bg-brand-50 border border-brand-100 rounded-2xl p-6">
+        <p className="text-sm text-ink-700 leading-relaxed">
+          <strong className="text-ink-900">KVKK ve Gizlilik:</strong> Bizimle paylaştığınız tüm
+          bilgiler{' '}
+          <Link href="/kvkk" className="text-brand-700 hover:text-brand-500 font-bold underline">
+            KVKK Aydınlatma Metni
+          </Link>{' '}
+          kapsamında işlenir. Üçüncü taraflarla paylaşılmaz.
+        </p>
+      </div>
+    </article>
   );
 }
