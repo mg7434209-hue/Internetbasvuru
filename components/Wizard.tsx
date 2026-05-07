@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Check, ChevronRight, Loader2 } from 'lucide-react';
+import { Check, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
 import { ALL_CITIES, getDistricts, getCampaignZone } from '@/data/turkey';
 import {
   getPackagesForLocation,
@@ -27,6 +27,7 @@ export default function Wizard() {
   const [line, setLine] = useState<LineStatus | ''>('');
   const [kvkk, setKvkk] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const districts = useMemo(() => (il ? getDistricts(il) : []), [il]);
   const zone = useMemo(() => getCampaignZone(il, ilce), [il, ilce]);
@@ -48,12 +49,19 @@ export default function Wizard() {
     return true;
   };
 
+  // =============================================
+  // SUBMIT — silent failure düzeltildi
+  // =============================================
+  // Önceki kod: try/catch boş, hata yutulmuş, her zaman success gösterilirdi.
+  // Yeni kod: response.ok kontrolü + hata gösterimi + retry imkanı.
   async function handleSubmit() {
-    if (!canProceed() || !pkg) return;
+    if (!canProceed() || !pkg || submitting) return;
     setSubmitting(true);
+    setError(null);
+
     try {
       const phoneClean = tel.replace(/\D/g, '');
-      await fetch('/api/lead', {
+      const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -65,21 +73,46 @@ export default function Wizard() {
           package_name: `${pkg.speedMbps} Mbps ${pkg.campaignName || ''} ${wantsTv ? '+ TV' : ''}`.trim(),
           message: `Wizard başvurusu - ${usage} kullanım, mevcut hat: ${line}`,
           source: 'wizard',
+          source_path: 'wizard',
         }),
       });
-    } catch {}
-    setSubmitting(false);
-    setStep(6);
+
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        success?: boolean;
+        error?: string;
+      };
+
+      const ok = data.ok || data.success;
+      if (!res.ok || !ok) {
+        console.error('Wizard lead submit failed:', res.status, data);
+        setError(
+          'Başvurunuz alınamadı. Lütfen birkaç dakika sonra tekrar deneyin veya WhatsApp\'tan yazın.'
+        );
+        setSubmitting(false);
+        return;
+      }
+
+      // Başarılı
+      setSubmitting(false);
+      setStep(6);
+    } catch (err) {
+      console.error('Wizard lead submit error:', err);
+      setError('Bağlantı hatası. İnternet bağlantınızı kontrol edip tekrar deneyin.');
+      setSubmitting(false);
+    }
   }
 
   function reset() {
     setStep(1); setIl(''); setIlce(''); setUsage(''); setWantsTv(null);
     setPkg(null); setAd(''); setTel(''); setLine(''); setKvkk(false);
+    setError(null);
   }
 
   function handleNext() {
     if (!canProceed()) return;
     if (step === 5) { handleSubmit(); return; }
+    setError(null); // Önceki hatayı temizle
     setStep((step + 1) as Step);
   }
 
@@ -134,13 +167,13 @@ export default function Wizard() {
               <p className="text-white/60 text-sm mb-5">Hangi şehirde fiber internet kullanmak istiyorsunuz?</p>
               <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">İl</label>
               <select value={il} onChange={e => { setIl(e.target.value); setIlce(''); }}
-                className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold focus:outline-none focus:border-brand-500 transition mb-3">
+                className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold focus:outline-none focus:border-brand-500 transition mb-3">
                 <option value="" className="bg-ink-900">İl seçin</option>
                 {ALL_CITIES.map(c => <option key={c.plate} value={c.name} className="bg-ink-900">{c.name}</option>)}
               </select>
               <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5 mt-1.5">İlçe</label>
               <select value={ilce} onChange={e => setIlce(e.target.value)} disabled={!il}
-                className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold focus:outline-none focus:border-brand-500 transition disabled:opacity-50">
+                className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold focus:outline-none focus:border-brand-500 transition disabled:opacity-50">
                 <option value="" className="bg-ink-900">{il ? 'İlçe seçin' : 'Önce il seçin'}</option>
                 {districts.map(d => <option key={d} value={d} className="bg-ink-900">{d}</option>)}
               </select>
@@ -159,7 +192,7 @@ export default function Wizard() {
               <p className="text-white/60 text-sm mb-5">Doğru hızı önerelim.</p>
               {(['hafif', 'orta', 'yogun'] as Usage[]).map(u => (
                 <button key={u} onClick={() => setUsage(u)}
-                  className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition ${usage === u ? 'border-2 border-brand-500 bg-brand-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08]'}`}>
+                  className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${usage === u ? 'border-2 border-brand-500 bg-brand-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
                   <div className="font-bold text-[15px] mb-0.5">{u === 'hafif' ? 'Hafif kullanım' : u === 'orta' ? 'Orta kullanım' : 'Yoğun kullanım'}</div>
                   <div className="text-xs text-white/60 font-medium">
                     {u === 'hafif' && '1-3 kişi · sosyal medya, video · 100 Mbps yeterli'}
@@ -176,12 +209,12 @@ export default function Wizard() {
               <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px]">TV de ister misiniz?</h3>
               <p className="text-white/60 text-sm mb-5">Tivibu opsiyonu.</p>
               <button onClick={() => setWantsTv(false)}
-                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition ${wantsTv === false ? 'border-2 border-brand-500 bg-brand-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08]'}`}>
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${wantsTv === false ? 'border-2 border-brand-500 bg-brand-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
                 <div className="font-bold text-[15px] mb-0.5">Sadece internet</div>
                 <div className="text-xs text-white/60 font-medium">Standart Fiber Gücü Yaşa kampanyası</div>
               </button>
               <button onClick={() => setWantsTv(true)}
-                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition ${wantsTv === true ? 'border-2 border-brand-500 bg-brand-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08]'}`}>
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${wantsTv === true ? 'border-2 border-brand-500 bg-brand-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
                 <div className="font-bold text-[15px] mb-0.5">TV + İnternet</div>
                 <div className="text-xs text-white/60 font-medium">Tivibu paketi (+{fmt(TV_EXTRA_FEE)}₺/ay)</div>
               </button>
@@ -197,7 +230,7 @@ export default function Wizard() {
                 const isSelected = pkg?.id === p.id;
                 return (
                   <div key={p.id} onClick={() => setPkg(p)}
-                    className={`rounded-xl border p-4 mb-2.5 cursor-pointer transition ${isSelected ? 'border-2 border-brand-500 bg-brand-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08]'}`}>
+                    className={`rounded-xl border p-4 mb-2.5 cursor-pointer transition min-h-[60px] ${isSelected ? 'border-2 border-brand-500 bg-brand-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
                     <div className="flex justify-between items-baseline mb-2.5">
                       <div className="text-2xl font-extrabold tracking-tight">{p.speedMbps}<span className="text-sm text-brand-500 font-bold ml-1">Mbps</span></div>
                       <div className="text-xs text-white/60 font-semibold">{p.campaignName || 'Fiber Gücü Yaşa'}</div>
@@ -234,24 +267,46 @@ export default function Wizard() {
                 })()}
               </div>
               <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">Ad Soyad</label>
-              <input type="text" value={ad} onChange={e => setAd(e.target.value)} placeholder="Mustafa Göksoy"
-                className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold mb-3 focus:outline-none focus:border-brand-500 transition placeholder-white/40" />
+              <input
+                type="text"
+                value={ad}
+                onChange={e => setAd(e.target.value)}
+                placeholder="Mustafa Göksoy"
+                autoComplete="name"
+                autoCapitalize="words"
+                className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold mb-3 focus:outline-none focus:border-brand-500 transition placeholder-white/40"
+              />
               <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">Telefon</label>
-              <input type="tel" value={tel} onChange={e => setTel(formatPhone(e.target.value))} placeholder="5XX XXX XX XX"
-                className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold mb-3 focus:outline-none focus:border-brand-500 transition placeholder-white/40" />
+              <input
+                type="tel"
+                inputMode="tel"
+                value={tel}
+                onChange={e => setTel(formatPhone(e.target.value))}
+                placeholder="5XX XXX XX XX"
+                autoComplete="tel"
+                className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold mb-3 focus:outline-none focus:border-brand-500 transition placeholder-white/40"
+              />
               <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">Mevcut TT hattınız?</label>
               <div className="flex gap-2.5 mb-3">
                 {(['yok', 'var'] as LineStatus[]).map(l => (
                   <button key={l} onClick={() => setLine(l)}
-                    className={`flex-1 rounded-xl border p-3 text-center text-sm font-bold transition ${line === l ? 'border-2 border-brand-500 bg-brand-500/15 px-[11px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08]'}`}>
+                    className={`flex-1 rounded-xl border p-3 text-center text-sm font-bold transition min-h-[48px] ${line === l ? 'border-2 border-brand-500 bg-brand-500/15 px-[11px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
                     {l === 'yok' ? 'Yok' : 'Var'}
                   </button>
                 ))}
               </div>
               <label className="flex gap-2.5 items-start mt-3.5 mb-1 text-white/70 text-xs leading-relaxed cursor-pointer">
-                <input type="checkbox" checked={kvkk} onChange={e => setKvkk(e.target.checked)} className="mt-0.5 flex-shrink-0 accent-brand-500" />
-                <span><a href="/kvkk-aydinlatma" target="_blank" className="text-brand-500 font-semibold">KVKK aydınlatma metnini</a> okudum, bilgilerimin Türk Telekom abonelik başvurum için işlenmesine izin veriyorum.</span>
+                <input type="checkbox" checked={kvkk} onChange={e => setKvkk(e.target.checked)} className="mt-0.5 flex-shrink-0 accent-brand-500 w-4 h-4" />
+                <span><a href="/kvkk" target="_blank" className="text-brand-500 font-semibold">KVKK aydınlatma metnini</a> okudum, bilgilerimin Türk Telekom abonelik başvurum için işlenmesine izin veriyorum.</span>
               </label>
+
+              {/* Hata mesajı — silent failure düzeltmesi */}
+              {error && (
+                <div className="bg-red-500/15 border border-red-500/40 text-red-200 text-xs font-semibold p-3 rounded-xl mt-3 flex gap-2 items-start">
+                  <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -262,9 +317,9 @@ export default function Wizard() {
               </div>
               <h3 className="text-xl font-bold mb-2">Başvurunuz alındı</h3>
               <p className="text-white/70 text-sm leading-relaxed max-w-[400px] mx-auto mb-6">
-                15 dakika içinde <strong>0534 977 70 00</strong> numarasından sizi arıyoruz.
+                15 dakika içinde yetkili bayimiz sizi arayacak.
               </p>
-              <button onClick={reset} className="bg-white/10 hover:bg-white/15 border border-white/20 px-6 py-2.5 rounded-full font-bold transition">
+              <button onClick={reset} className="bg-white/10 hover:bg-white/15 active:bg-white/20 border border-white/20 px-6 py-2.5 rounded-full font-bold transition min-h-[44px]">
                 Yeni başvuru
               </button>
             </div>
@@ -273,11 +328,11 @@ export default function Wizard() {
           {step !== 6 && (
             <div className="flex gap-2.5 mt-5">
               <button onClick={() => step > 1 && setStep((step - 1) as Step)}
-                className={`flex-1 py-3.5 px-5 rounded-full font-bold text-[15px] border border-white/15 bg-white/5 hover:bg-white/10 transition ${step === 1 ? 'invisible' : ''}`}>
+                className={`flex-1 min-h-[48px] py-3.5 px-5 rounded-full font-bold text-[15px] border border-white/15 bg-white/5 hover:bg-white/10 active:bg-white/15 transition ${step === 1 ? 'invisible' : ''}`}>
                 ← Geri
               </button>
               <button onClick={handleNext} disabled={!canProceed() || submitting}
-                className={`flex-1 py-3.5 px-5 rounded-full font-bold text-[15px] border transition flex items-center justify-center gap-2 ${canProceed() && !submitting ? 'bg-brand-500 border-brand-500 hover:bg-brand-600' : 'bg-brand-500/30 border-brand-500/30 cursor-not-allowed'}`}>
+                className={`flex-1 min-h-[48px] py-3.5 px-5 rounded-full font-bold text-[15px] border transition flex items-center justify-center gap-2 ${canProceed() && !submitting ? 'bg-brand-500 border-brand-500 hover:bg-brand-600 active:bg-brand-700' : 'bg-brand-500/30 border-brand-500/30 cursor-not-allowed'}`}>
                 {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Gönderiliyor</> : step === 5 ? 'Başvuruyu gönder' : <>Devam Et <ChevronRight className="w-4 h-4" /></>}
               </button>
             </div>
