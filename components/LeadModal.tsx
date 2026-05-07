@@ -11,14 +11,21 @@ interface LeadModalProps {
   onClose: () => void;
 }
 
-type CallTime = '' | 'hemen' | 'sabah' | 'oglen' | 'ogleden_sonra' | 'aksam';
+// Aranma zamanı: kullanıcı önce "hemen" mi "belirli saatte" mi seçer.
+// "Belirli saatte" ise hangi dilim sorulur.
+type CallMode = 'hemen' | 'belirli';
+type CallSlot = '' | 'sabah' | 'oglen' | 'ogleden_sonra' | 'aksam';
 
-const CALL_TIME_LABELS: Record<Exclude<CallTime, ''>, string> = {
-  hemen: 'Mümkün olan en kısa sürede',
-  sabah: 'Sabah (09:00 - 12:00)',
-  oglen: 'Öğlen (12:00 - 15:00)',
-  ogleden_sonra: 'Öğleden sonra (15:00 - 18:00)',
-  aksam: 'Akşam (18:00 - 21:00)',
+// Backend'e gönderilecek tüm olası değerler (preferred_call_time)
+type CallTimeBackend = 'hemen' | 'sabah' | 'oglen' | 'ogleden_sonra' | 'aksam';
+
+// Teşekkür sayfası için kısa "doğal" Türkçe ifadeler
+const CALL_TIME_NATURAL: Record<CallTimeBackend, string> = {
+  hemen: 'en kısa sürede',
+  sabah: 'sabah saatlerinde',
+  oglen: 'öğlen saatlerinde',
+  ogleden_sonra: 'öğleden sonra',
+  aksam: 'akşam saatlerinde',
 };
 
 export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalProps) {
@@ -36,12 +43,12 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
   const [address, setAddress] = useState('');
   const [tcNumber, setTcNumber] = useState('');
   // Doğum tarihi: kullanıcı GG.AA.YYYY formatında elle yazar.
-  // birthDateInput → ekranda gösterilen formatlı metin
-  // birthDateIso  → backend'e gönderilecek ISO formatı (YYYY-MM-DD)
   const [birthDateInput, setBirthDateInput] = useState('');
   const [birthDateIso, setBirthDateIso] = useState('');
   const [birthDateError, setBirthDateError] = useState('');
-  const [callTime, setCallTime] = useState<CallTime>('');
+  // Aranma zamanı: 2 ana mod, ikincisi seçilirse dropdown açılır
+  const [callMode, setCallMode] = useState<CallMode>('hemen');
+  const [callSlot, setCallSlot] = useState<CallSlot>('');
 
   // ----- Flow state -----
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -78,6 +85,10 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
     !!line &&
     kvkk;
 
+  // Backend'e gönderilecek final aranma zamanı değeri
+  const finalCallTime: CallTimeBackend =
+    callMode === 'belirli' && callSlot ? callSlot : 'hemen';
+
   function formatPhone(value: string) {
     let v = value.replace(/\D/g, '');
     if (v.startsWith('90')) v = v.slice(2);
@@ -108,7 +119,6 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
   function handleBirthDateChange(value: string) {
     const cleaned = value.replace(/\D/g, '').slice(0, 8);
 
-    // Görünen formatı oluştur
     let formatted = cleaned;
     if (cleaned.length > 4) {
       formatted = `${cleaned.slice(0, 2)}.${cleaned.slice(2, 4)}.${cleaned.slice(4)}`;
@@ -117,7 +127,6 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
     }
     setBirthDateInput(formatted);
 
-    // 8 rakam girilmediyse validate etme, hata da gösterme
     if (cleaned.length < 8) {
       setBirthDateIso('');
       setBirthDateError('');
@@ -147,7 +156,6 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
       setBirthDateError(`Yaş 18 ile 100 arasında olmalı`);
       return;
     }
-    // Ay-gün uyumu (örn. 31.02.1985 olmaz, Şubat 30 olmaz)
     const testDate = new Date(year, month - 1, day);
     if (
       testDate.getFullYear() !== year ||
@@ -159,7 +167,6 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
       return;
     }
 
-    // Geçerli — ISO formatına çevir (backend için: 1985-06-15)
     const iso = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
     setBirthDateIso(iso);
     setBirthDateError('');
@@ -206,7 +213,6 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
       }
 
       if (!data.token) {
-        // Lead düştü ama token gelmedi — yine de teşekkür sayfasına geç
         setSubmitting(false);
         setStep(3);
         return;
@@ -225,13 +231,11 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
   async function handleStep2Submit() {
     if (submitting || !token) return;
 
-    // TC validation: ya boş, ya 11 hane (0 ile başlamayan)
     if (tcNumber && (tcNumber.length !== 11 || tcNumber[0] === '0')) {
       setError('TC kimlik numarası 11 haneli olmalı ve 0 ile başlamamalıdır.');
       return;
     }
 
-    // Doğum tarihi validation: ya boş, ya geçerli ISO formatında
     if (birthDateInput && !birthDateIso) {
       setError('Doğum tarihini geçerli formatta girin (örn. 15.06.1985).');
       return;
@@ -248,11 +252,9 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
           address: address.trim() || undefined,
           tc_number: tcNumber || undefined,
           birth_date: birthDateIso || undefined,
-          preferred_call_time: callTime || undefined,
+          preferred_call_time: finalCallTime,
         }),
       });
-      // Hata olsa bile teşekkür göster — lead step 1'de zaten kayıtlı,
-      // bayi yine arayabilir. Sessiz başarısızlık yerine kullanıcı UX'i.
     } catch (err) {
       console.error('Lead extend error:', err);
     }
@@ -264,11 +266,11 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
     setStep(3);
   }
 
-  // Step 3 mesajı — kullanıcı saat seçtiyse onu göster
+  // Step 3 mesajı — kullanıcının seçimine göre özelleşir
   const thankYouMessage =
-    callTime && CALL_TIME_LABELS[callTime as Exclude<CallTime, ''>]
-      ? `Sizi ${CALL_TIME_LABELS[callTime as Exclude<CallTime, ''>].toLowerCase()} arıyoruz.`
-      : 'En kısa sürede yetkili bayimiz sizi arayacak.';
+    finalCallTime === 'hemen'
+      ? 'En kısa sürede yetkili bayimiz sizi arayacak.'
+      : `Sizi ${CALL_TIME_NATURAL[finalCallTime]} arıyoruz.`;
 
   return (
     <div
@@ -375,31 +377,75 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
               )}
             </div>
 
+            {/* Aranma zamanı — 2 ana seçenek + conditional dropdown */}
             <div className="mb-4">
               <label className="field-label">Sizi ne zaman arayalım?</label>
               <div className="flex flex-col gap-1.5">
-                {(Object.entries(CALL_TIME_LABELS) as [Exclude<CallTime, ''>, string][]).map(
-                  ([value, label]) => (
-                    <label
-                      key={value}
-                      className={`flex items-center gap-2.5 p-2.5 rounded-xl border-[1.5px] cursor-pointer transition ${
-                        callTime === value
-                          ? 'border-2 border-brand-500 bg-brand-50 p-[9px]'
-                          : 'border-ink-100 bg-white hover:border-ink-400'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="callTime"
-                        value={value}
-                        checked={callTime === value}
-                        onChange={(e) => setCallTime(e.target.value as CallTime)}
-                        className="w-4 h-4 accent-brand-500"
-                      />
-                      <span className="text-sm font-semibold text-ink-900">{label}</span>
-                    </label>
-                  )
-                )}
+                {/* Hemen */}
+                <label
+                  className={`flex items-center gap-2.5 p-3 rounded-xl border-[1.5px] cursor-pointer transition ${
+                    callMode === 'hemen'
+                      ? 'border-2 border-brand-500 bg-brand-50 p-[11px]'
+                      : 'border-ink-100 bg-white hover:border-ink-400'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="callMode"
+                    checked={callMode === 'hemen'}
+                    onChange={() => {
+                      setCallMode('hemen');
+                      setCallSlot('');
+                    }}
+                    className="w-4 h-4 accent-brand-500 flex-shrink-0"
+                  />
+                  <span className="text-sm font-semibold text-ink-900">
+                    En kısa zamanda arayın
+                  </span>
+                </label>
+
+                {/* Belirli saatte — seçilirse dropdown açılır */}
+                <label
+                  className={`block rounded-xl border-[1.5px] cursor-pointer transition ${
+                    callMode === 'belirli'
+                      ? 'border-2 border-brand-500 bg-brand-50'
+                      : 'border-ink-100 bg-white hover:border-ink-400'
+                  }`}
+                >
+                  <div
+                    className={`flex items-center gap-2.5 ${
+                      callMode === 'belirli' ? 'p-[11px]' : 'p-3'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="callMode"
+                      checked={callMode === 'belirli'}
+                      onChange={() => setCallMode('belirli')}
+                      className="w-4 h-4 accent-brand-500 flex-shrink-0"
+                    />
+                    <span className="text-sm font-semibold text-ink-900">
+                      Belirli bir saatte
+                    </span>
+                  </div>
+
+                  {callMode === 'belirli' && (
+                    <div className="px-[11px] pb-[11px]">
+                      <select
+                        value={callSlot}
+                        onChange={(e) => setCallSlot(e.target.value as CallSlot)}
+                        className="select w-full"
+                        aria-label="Müsait saat aralığı"
+                      >
+                        <option value="">Müsait saatinizi seçin...</option>
+                        <option value="sabah">Sabah (09:00 - 12:00)</option>
+                        <option value="oglen">Öğlen (12:00 - 15:00)</option>
+                        <option value="ogleden_sonra">Öğleden sonra (15:00 - 18:00)</option>
+                        <option value="aksam">Akşam (18:00 - 21:00)</option>
+                      </select>
+                    </div>
+                  )}
+                </label>
               </div>
             </div>
 
