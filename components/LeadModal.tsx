@@ -35,7 +35,12 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
   // ----- Step 2 state -----
   const [address, setAddress] = useState('');
   const [tcNumber, setTcNumber] = useState('');
-  const [birthDate, setBirthDate] = useState('');
+  // Doğum tarihi: kullanıcı GG.AA.YYYY formatında elle yazar.
+  // birthDateInput → ekranda gösterilen formatlı metin
+  // birthDateIso  → backend'e gönderilecek ISO formatı (YYYY-MM-DD)
+  const [birthDateInput, setBirthDateInput] = useState('');
+  const [birthDateIso, setBirthDateIso] = useState('');
+  const [birthDateError, setBirthDateError] = useState('');
   const [callTime, setCallTime] = useState<CallTime>('');
 
   // ----- Flow state -----
@@ -90,14 +95,75 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
     setTcNumber(v);
   }
 
-  // Birth date bounds (18-90 yaş arası)
-  const today = new Date();
-  const minBirthDate = new Date(today.getFullYear() - 90, today.getMonth(), today.getDate())
-    .toISOString()
-    .split('T')[0];
-  const maxBirthDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
-    .toISOString()
-    .split('T')[0];
+  // =============================================
+  // DOĞUM TARİHİ — MANUEL RAKAM GİRİŞİ
+  // =============================================
+  // Kullanıcı sayıları yazdıkça otomatik nokta eklenir:
+  //   "1"        → "1"
+  //   "15"       → "15"
+  //   "1506"     → "15.06"
+  //   "15061985" → "15.06.1985"
+  // 8 rakam girilince validate edilir, geçerliyse backend için
+  // ISO formatına (1985-06-15) çevrilir.
+  function handleBirthDateChange(value: string) {
+    const cleaned = value.replace(/\D/g, '').slice(0, 8);
+
+    // Görünen formatı oluştur
+    let formatted = cleaned;
+    if (cleaned.length > 4) {
+      formatted = `${cleaned.slice(0, 2)}.${cleaned.slice(2, 4)}.${cleaned.slice(4)}`;
+    } else if (cleaned.length > 2) {
+      formatted = `${cleaned.slice(0, 2)}.${cleaned.slice(2)}`;
+    }
+    setBirthDateInput(formatted);
+
+    // 8 rakam girilmediyse validate etme, hata da gösterme
+    if (cleaned.length < 8) {
+      setBirthDateIso('');
+      setBirthDateError('');
+      return;
+    }
+
+    const day = parseInt(cleaned.slice(0, 2), 10);
+    const month = parseInt(cleaned.slice(2, 4), 10);
+    const year = parseInt(cleaned.slice(4, 8), 10);
+
+    const currentYear = new Date().getFullYear();
+    const minYear = currentYear - 100;
+    const maxYear = currentYear - 18;
+
+    if (month < 1 || month > 12) {
+      setBirthDateIso('');
+      setBirthDateError('Geçersiz ay (01-12 arası)');
+      return;
+    }
+    if (day < 1 || day > 31) {
+      setBirthDateIso('');
+      setBirthDateError('Geçersiz gün (01-31 arası)');
+      return;
+    }
+    if (year < minYear || year > maxYear) {
+      setBirthDateIso('');
+      setBirthDateError(`Yaş 18 ile 100 arasında olmalı`);
+      return;
+    }
+    // Ay-gün uyumu (örn. 31.02.1985 olmaz, Şubat 30 olmaz)
+    const testDate = new Date(year, month - 1, day);
+    if (
+      testDate.getFullYear() !== year ||
+      testDate.getMonth() !== month - 1 ||
+      testDate.getDate() !== day
+    ) {
+      setBirthDateIso('');
+      setBirthDateError('Bu tarih takvimde yok');
+      return;
+    }
+
+    // Geçerli — ISO formatına çevir (backend için: 1985-06-15)
+    const iso = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    setBirthDateIso(iso);
+    setBirthDateError('');
+  }
 
   // ----- Submit handlers -----
   async function handleStep1Submit() {
@@ -165,6 +231,12 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
       return;
     }
 
+    // Doğum tarihi validation: ya boş, ya geçerli ISO formatında
+    if (birthDateInput && !birthDateIso) {
+      setError('Doğum tarihini geçerli formatta girin (örn. 15.06.1985).');
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
     try {
@@ -175,7 +247,7 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
           token,
           address: address.trim() || undefined,
           tc_number: tcNumber || undefined,
-          birth_date: birthDate || undefined,
+          birth_date: birthDateIso || undefined,
           preferred_call_time: callTime || undefined,
         }),
       });
@@ -269,20 +341,38 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
                 onChange={(e) => handleTcInput(e.target.value)}
                 placeholder="11 haneli"
                 maxLength={11}
+                autoComplete="off"
                 className="input"
               />
             </div>
 
+            {/* Doğum Tarihi — manuel rakam girişi (mobil dostu) */}
             <div className="mb-4">
               <label className="field-label">Doğum Tarihi</label>
               <input
-                type="date"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
-                min={minBirthDate}
-                max={maxBirthDate}
-                className="input"
+                type="text"
+                inputMode="numeric"
+                value={birthDateInput}
+                onChange={(e) => handleBirthDateChange(e.target.value)}
+                placeholder="GG.AA.YYYY"
+                maxLength={10}
+                autoComplete="bday"
+                aria-invalid={!!birthDateError}
+                aria-describedby={birthDateError ? 'birth-date-error' : 'birth-date-hint'}
+                className={`input ${birthDateError ? 'border-red-500 focus:border-red-500' : ''}`}
               />
+              {birthDateError ? (
+                <p
+                  id="birth-date-error"
+                  className="text-[11px] text-red-600 mt-1 font-semibold"
+                >
+                  {birthDateError}
+                </p>
+              ) : (
+                <p id="birth-date-hint" className="text-[11px] text-ink-500 mt-1">
+                  Örnek: 15.06.1985 — sadece rakamla yazın, noktalar otomatik eklenir
+                </p>
+              )}
             </div>
 
             <div className="mb-4">
