@@ -2,10 +2,11 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
- 
+import Analytics from '@/components/Analytics';
+import CookieConsent from '@/components/CookieConsent';
+
 // =============================================
 // VIEWPORT — mobile için kritik
-// Next.js 14+ ayrı export gerektiriyor
 // =============================================
 export const viewport: Viewport = {
   width: 'device-width',
@@ -17,8 +18,11 @@ export const viewport: Viewport = {
     { media: '(prefers-color-scheme: dark)', color: '#0E1F4D' },
   ],
   colorScheme: 'light',
+  // iOS Safari mobil klavye için: input açıldığında viewport küçülmesin
+  // (klavye footer'ın üstüne çıksın, butonlar görünür kalsın)
+  interactiveWidget: 'resizes-content',
 };
- 
+
 // =============================================
 // METADATA — SEO + Sosyal paylaşım
 // =============================================
@@ -60,13 +64,11 @@ export const metadata: Metadata = {
     title: 'Türk Telekom Fiber İnternet Başvurusu | Yetkili Bayi',
     description:
       'Türkiye geneli yetkili bayiden hızlı kurulum. 18 ay sabit fiyat, ücretsiz kurulum, KVKK uyumlu.',
-    // opengraph-image.png otomatik kullanılır (app/ içinde)
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Türk Telekom Fiber İnternet Başvurusu',
     description: 'Türkiye geneli yetkili bayiden hızlı kurulum. 18 ay sabit fiyat.',
-    // twitter-image.png otomatik kullanılır
   },
   robots: {
     index: true,
@@ -82,26 +84,31 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://internetbasvuru.com',
   },
-  // PWA manifest (public/manifest.json)
   manifest: '/manifest.json',
-  // Search Console verification — Mustafa hesap açtığında ekleyecek
-  // verification: {
-  //   google: 'google-site-verification-code-here',
-  //   yandex: 'yandex-verification-code-here',
-  // },
+  ...(process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION && {
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
+    },
+  }),
   other: {
-    // Google Ads / SEO için: doğru lokasyon
     'geo.region': 'TR-07',
     'geo.placename': 'Manavgat, Antalya',
     'geo.position': '36.7867;31.4374',
     ICBM: '36.7867, 31.4374',
+    // iOS Safari için ek meta
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    'apple-mobile-web-app-title': 'TT Başvuru',
+    'mobile-web-app-capable': 'yes',
   },
 };
- 
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // JSON-LD: LocalBusiness structured data
-  // NOT: 0850 hat alınınca telephone alanı geri eklenecek
-  const jsonLd = {
+  // =============================================
+  // JSON-LD: Multiple structured data types
+  // =============================================
+  // 1. LocalBusiness (organization)
+  const localBusinessLd = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     '@id': 'https://internetbasvuru.com#organization',
@@ -135,22 +142,102 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       'Tivibu',
       'Modem Kurulumu',
     ],
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        opens: '09:00',
+        closes: '19:00',
+      },
+    ],
   };
- 
+
+  // 2. WebSite + SearchAction (Google Sitelinks Searchbox için)
+  const webSiteLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': 'https://internetbasvuru.com#website',
+    url: 'https://internetbasvuru.com',
+    name: 'internetbasvuru.com',
+    inLanguage: 'tr-TR',
+    publisher: {
+      '@id': 'https://internetbasvuru.com#organization',
+    },
+  };
+
+  // 3. FAQ — sıkça sorulan sorular (SEO için zengin sonuç)
+  const faqLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Türk Telekom fiber internet başvurusu nasıl yapılır?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'internetbasvuru.com üzerinden online başvuru formunu doldurabilir veya WhatsApp üzerinden bizimle iletişime geçebilirsiniz. Yetkili bayimiz 15 dakika içinde sizi arar ve adresinizdeki altyapı uygunluğunu teyit eder.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Fiber internet kurulumu ücretsiz mi?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Evet. Türk Telekom Fiber Gücü Yaşa kampanyası kapsamında modem ve kurulum tüm Türkiye genelinde ücretsizdir.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Fiyat ne kadar süreyle sabit kalır?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Standart kampanyalarda fiyatınız 18 ay sözleşme süresince sabit kalır, enflasyon zammı uygulanmaz. Bölgesel Fırsat kampanyalarında 24 ay tek fiyat seçeneği vardır.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Hangi şehirlerde hizmet veriyorsunuz?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Türkiye geneli 81 ilde Türk Telekom fiber internet başvurusu kabul ediyoruz. Antalya bölgesinde özel bölgesel kampanyalarımız mevcuttur (Manavgat, Alanya, Kepez, Muratpaşa).',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Mevcut TT hattım yoksa başvurabilir miyim?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Evet. Yeni başvuru veya mevcut hat üzerinden başvuru, her ikisi de mümkündür. Form üzerinde bunu seçebilirsiniz.',
+        },
+      },
+    ],
+  };
+
   return (
     <html lang="tr" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* JSON-LD structured data — multiple types */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
         />
       </head>
       <body>
+        <Analytics />
         <Header />
         <main className="min-h-[calc(100vh-80px)]">{children}</main>
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   );
