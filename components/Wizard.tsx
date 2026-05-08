@@ -271,7 +271,7 @@ export default function Wizard() {
                 type="text"
                 value={ad}
                 onChange={e => setAd(e.target.value)}
-                placeholder="Mustafa Göksoy"
+                placeholder="İsism Soyisim"
                 autoComplete="name"
                 autoCapitalize="words"
                 className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold mb-3 focus:outline-none focus:border-brand-500 transition placeholder-white/40"
