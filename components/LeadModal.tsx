@@ -611,7 +611,7 @@ export default function LeadModal({ pkg, initialOptions, onClose }: LeadModalPro
                 type="text"
                 value={ad}
                 onChange={(e) => setAd(e.target.value)}
-                placeholder="Mustafa Göksoy"
+                placeholder="İsim Soyisim"
                 className="input"
               />
             </div>
