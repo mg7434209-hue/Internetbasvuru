@@ -172,3 +172,88 @@ export const allPackages = [
   ...bolgeselAvantajPackages,
   ...bolgeselFirsatPackages,
 ];
+
+// ============================================================
+// TURBOBOX (5G/4.5G Mobil İnternet)
+// Fibersiz adresler için tak-çalıştır mobil internet hizmeti
+// ============================================================
+
+export const TURBOBOX_MODEM_FEE = 240;
+
+export type TurboBoxPackage = {
+  id: string;
+  data: string;              // "250", "500", "∞"
+  unit: 'GB' | 'Limitsiz';
+  campaignName: string;
+  dataPrice: number;         // Sadece veri ücreti (TT.net "Taahhütlü Data Ücreti")
+  total45gDataPrice: number | null;  // 4.5G muadili veri ücreti (Limitsiz için null)
+  data45gLabel: string;      // 4.5G muadili kapasite metni
+  features: string[];
+  isPopular?: boolean;
+  badge?: string;
+};
+
+export type TurboBoxOptions = {
+  modemChoice: 'have' | 'rent';     // "have" = müşterinin modemi var, "rent" = kirala
+  signal5g: 'yes' | 'no' | 'unsure'; // 5G şebeke durumu
+};
+
+export const turboBoxPackages: TurboBoxPackage[] = [
+  {
+    id: 'turbobox-250',
+    data: '250',
+    unit: 'GB',
+    campaignName: 'TurboBox Başlangıç',
+    dataPrice: 960,
+    total45gDataPrice: 660,
+    data45gLabel: '250 GB',
+    features: [
+      'Tak-çalıştır 5G modem desteği',
+      'Çift kişilik kullanım',
+      'Tek hattan paylaşım',
+    ],
+    isPopular: false,
+  },
+  {
+    id: 'turbobox-500',
+    data: '500',
+    unit: 'GB',
+    campaignName: 'TurboBox Fırsat',
+    dataPrice: 1160,
+    total45gDataPrice: 1060,
+    data45gLabel: '500 GB',
+    features: [
+      'HD streaming + video konferans',
+      'Aileler için ideal kapasite',
+      'En çok tercih edilen',
+    ],
+    isPopular: true,
+    badge: 'En Çok Tercih Edilen',
+  },
+  {
+    id: 'turbobox-limitsiz',
+    data: '∞',
+    unit: 'Limitsiz',
+    campaignName: 'TurboBox Limitsiz',
+    dataPrice: 1510,
+    total45gDataPrice: null,
+    data45gLabel: '500 GB (en yakın)',
+    features: [
+      'Veri kotası yok',
+      'Fiber gibi sınırsız kullanım',
+      'Yoğun kullanım için ideal',
+    ],
+    isPopular: false,
+  },
+];
+
+/**
+ * TurboBox toplam aylık ücret hesaplaması.
+ * Modem kiralanırsa veri ücretine sabit modem ücreti eklenir.
+ */
+export function calcTurboBoxPrice(
+  pkg: TurboBoxPackage,
+  options: TurboBoxOptions
+): number {
+  return pkg.dataPrice + (options.modemChoice === 'rent' ? TURBOBOX_MODEM_FEE : 0);
+}
