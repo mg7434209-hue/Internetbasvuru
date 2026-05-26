@@ -4,6 +4,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Analytics from '@/components/Analytics';
 import CookieConsent from '@/components/CookieConsent';
+// 1. Next.js Script bileşenini import ediyoruz
+import Script from 'next/script';
 
 // =============================================
 // VIEWPORT — mobile için kritik
@@ -18,8 +20,6 @@ export const viewport: Viewport = {
     { media: '(prefers-color-scheme: dark)', color: '#0E1F4D' },
   ],
   colorScheme: 'light',
-  // iOS Safari mobil klavye için: input açıldığında viewport küçülmesin
-  // (klavye footer'ın üstüne çıksın, butonlar görünür kalsın)
   interactiveWidget: 'resizes-content',
 };
 
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   formatDetection: {
     email: false,
     address: false,
-    telephone: false, // 0850 hat alındığında true yap
+    telephone: false,
   },
   openGraph: {
     type: 'website',
@@ -95,7 +95,6 @@ export const metadata: Metadata = {
     'geo.placename': 'Manavgat, Antalya',
     'geo.position': '36.7867;31.4374',
     ICBM: '36.7867, 31.4374',
-    // iOS Safari için ek meta
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent',
     'apple-mobile-web-app-title': 'TT Başvuru',
@@ -107,7 +106,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // =============================================
   // JSON-LD: Multiple structured data types
   // =============================================
-  // 1. LocalBusiness (organization)
   const localBusinessLd = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -152,7 +150,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     ],
   };
 
-  // 2. WebSite + SearchAction (Google Sitelinks Searchbox için)
   const webSiteLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -165,7 +162,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
   };
 
-  // 3. FAQ — sıkça sorulan sorular (SEO için zengin sonuç)
   const faqLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -218,6 +214,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* =============================================
+            GOOGLE ADS TAG (gtag.js) ENTEGRASYONU
+           ============================================= */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17931293168"
+        />
+        <Script
+          id="google-ads-tag"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17931293168');
+            `,
+          }}
+        />
+
         {/* JSON-LD structured data — multiple types */}
         <script
           type="application/ld+json"
