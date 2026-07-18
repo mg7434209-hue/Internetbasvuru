@@ -9,31 +9,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // TT Mavi (Türk Telekom marka rengi)
+        // Turkcell Mavi (koyu kurumsal mavi — başlık, link, vurgu)
         brand: {
-          50:  '#E5F5FC',
-          100: '#CCEBF9',
-          200: '#99D7F3',
-          300: '#66C3ED',
-          400: '#33AFE7',
-          500: '#009ADA',  // ANA TT mavisi
-          600: '#007BB0',
-          700: '#00547B',
-          800: '#003E5C',
-          900: '#00283D',
+          50:  '#E9F2FA',
+          100: '#CCDFF1',
+          200: '#99BFE3',
+          300: '#669FD4',
+          400: '#337FC6',
+          500: '#005FB8',  // ANA Turkcell mavisi
+          600: '#004C93',
+          700: '#00396E',
+          800: '#062B4E',
+          900: '#041F3A',
         },
-        // Accent — turuncu (CTA için)
+        // Accent — Turkcell Sarısı (CTA'lar için; üzerinde koyu lacivert metin kullan)
         accent: {
-          50:  '#FFF3E6',
-          100: '#FFE0C2',
-          200: '#FFC399',
-          300: '#FFA670',
-          400: '#FF8847',
-          500: '#FF6B1F',
-          600: '#FF3D00',  // Mockup accent
-          700: '#CC3100',
-          800: '#992500',
-          900: '#661900',
+          50:  '#FFF9E5',
+          100: '#FFF3CC',
+          200: '#FFE799',
+          300: '#FFDB66',
+          400: '#FFCF33',
+          500: '#FFC900',  // ANA Turkcell sarısı
+          600: '#E6B500',
+          700: '#B38D00',
+          800: '#806500',
+          900: '#4D3C00',
         },
         // Yeşil (success, KVKK uyumlu rozetleri)
         prime: {
@@ -67,11 +67,11 @@ const config: Config = {
         warning: '#B45309',
         'warning-bg': '#FEF3C7',
         danger: '#DC2626',
-        // TT marka renkleri (alias)
-        'tt-blue': '#009ADA',
-        'tt-blue-dark': '#007BB0',
-        'tt-blue-darker': '#00547B',
-        'tt-yellow': '#FFE600',  // Demo banner
+        // Turkcell marka renkleri (alias)
+        'tc-yellow': '#FFC900',
+        'tc-yellow-dark': '#E6B500',
+        'tc-navy': '#0A2540',   // Koyu lacivert (footer, sarı üstü metin)
+        'tc-blue': '#005FB8',
       },
       fontFamily: {
         body: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
@@ -89,7 +89,7 @@ const config: Config = {
       boxShadow: {
         'soft': '0 4px 12px rgba(0,0,0,0.04)',
         'medium': '0 20px 40px rgba(0,0,0,0.06)',
-        'strong': '0 25px 50px rgba(0,154,218,0.15)',
+        'strong': '0 25px 50px rgba(255,201,0,0.25)',
         'modal': '0 30px 60px rgba(0,0,0,0.3)',
       },
       animation: {

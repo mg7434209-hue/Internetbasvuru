@@ -1,5 +1,9 @@
 'use client';
 
+// Superbox GB'li (kotalı) paketler bölümü.
+// Dosya/tip adları geriye dönük uyumluluk için "TurboBox" olarak korunmuştur;
+// arayüzde her yerde "Superbox GB'li Paket" olarak görünür.
+
 import { useState } from 'react';
 import { Check } from 'lucide-react';
 import {
@@ -9,7 +13,7 @@ import {
   type TurboBoxPackage,
   type TurboBoxOptions,
 } from '@/data/packages';
-import TTLogo from './TTLogo';
+import TurkcellLogo from './TurkcellLogo';
 
 interface TurboBoxGridProps {
   onSelectPackage: (pkg: TurboBoxPackage, options: TurboBoxOptions) => void;
@@ -49,16 +53,16 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
       <div className="flex justify-between items-center mb-8 flex-wrap gap-3">
         <div>
           <div className="inline-flex items-center gap-2 mb-2">
-            <span className="bg-brand-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
-              5G TurboBox
+            <span className="bg-accent-500 text-tc-navy text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
+              Superbox GB&apos;li
             </span>
-            <span className="text-xs text-ink-500 font-semibold">Yeni · Mobil İnternet</span>
+            <span className="text-xs text-ink-500 font-semibold">Ekonomik · Kotalı Paketler</span>
           </div>
           <h2 className="text-2xl font-extrabold tracking-tight text-ink-900">
-            Fibersiz adreslere TurboBox
+            Daha ekonomik: Superbox GB&apos;li paketler
           </h2>
           <p className="text-sm text-ink-500 mt-1">
-            Tak-çalıştır mobil internet · Kurulum gerektirmez · Modem&apos;iniz varsa kiralamadan kullanabilirsiniz
+            Tak-çalıştır kablosuz internet · Kurulum gerektirmez · Superbox cihazınız varsa kiralamadan kullanabilirsiniz
           </p>
         </div>
       </div>
@@ -77,36 +81,36 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
 
           let ctaText: string;
           if (!sel.modem && !sel.signal5g) ctaText = 'Önce seçimleri tamamlayın';
-          else if (!sel.modem) ctaText = 'Önce modem durumunu seçin';
+          else if (!sel.modem) ctaText = 'Önce cihaz durumunu seçin';
           else if (!sel.signal5g) ctaText = 'Önce 5G durumunu seçin';
           else ctaText = 'Bu Paketi Seç';
 
           return (
             <div
               key={pkg.id}
-              className={`relative bg-white rounded-2xl p-9 border transition-all duration-300 hover:-translate-y-2 hover:shadow-medium hover:border-brand-500 flex flex-col ${
+              className={`relative bg-white rounded-2xl p-9 border transition-all duration-300 hover:-translate-y-2 hover:shadow-medium hover:border-accent-500 flex flex-col ${
                 isFeatured
-                  ? 'border-2 border-brand-500 shadow-strong'
+                  ? 'border-2 border-accent-500 shadow-strong'
                   : 'border-ink-100'
               }`}
               style={
                 isFeatured
-                  ? { background: 'linear-gradient(180deg, #fff 0%, #F0F9FF 100%)' }
+                  ? { background: 'linear-gradient(180deg, #fff 0%, #FFF9E5 100%)' }
                   : undefined
               }
             >
               {/* Popular tag */}
               {isFeatured && pkg.badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand-500 text-white px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg whitespace-nowrap">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent-500 text-tc-navy px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg whitespace-nowrap">
                   {pkg.badge}
                 </div>
               )}
 
-              {/* TT 5G badge */}
+              {/* Superbox 5G badge */}
               {isFeatured && (
-                <div className="absolute top-3.5 right-3.5 inline-flex items-center gap-1 bg-brand-500/10 border border-brand-500/20 px-2 py-1 rounded-full text-[9px] font-extrabold text-brand-700 uppercase tracking-wider">
-                  <TTLogo variant="featured" />
-                  5G TurboBox
+                <div className="absolute top-3.5 right-3.5 inline-flex items-center gap-1 bg-accent-500/15 border border-accent-500/30 px-2 py-1 rounded-full text-[9px] font-extrabold text-tc-navy uppercase tracking-wider">
+                  <TurkcellLogo variant="featured" />
+                  Superbox 5G
                 </div>
               )}
 
@@ -141,7 +145,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                       </span>
                     </div>
                     <div className="flex justify-between items-baseline pt-2.5 mt-1 border-t border-dashed border-ink-100/60 text-[11px] text-amber-700">
-                      <span className="font-semibold">⚠ Modem durumu seçilmedi</span>
+                      <span className="font-semibold">⚠ Cihaz durumu seçilmedi</span>
                       <span>Fiyat değişebilir</span>
                     </div>
                   </>
@@ -153,7 +157,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                       <span className="text-[13px] text-ink-500 font-semibold flex items-center gap-1.5">
                         Aylık ücret
                         <span className="bg-prime-100 text-success text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                          Modemim Var
+                          Cihazım Var
                         </span>
                       </span>
                       <span className="text-[1.85rem] font-extrabold text-ink-900 tracking-tight">
@@ -164,7 +168,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                     </div>
                     <div className="flex justify-between items-baseline pt-2.5 mt-1 border-t border-dashed border-ink-100/60 text-[11px] text-success">
                       <span className="font-semibold">✓ {fmt(TURBOBOX_MODEM_FEE)}₺ tasarruf edersiniz</span>
-                      <span className="font-semibold">Modem uyumluluğu doğrulanacak</span>
+                      <span className="font-semibold">Cihaz uyumluluğu doğrulanacak</span>
                     </div>
                   </>
                 )}
@@ -174,8 +178,8 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                     <div className="flex justify-between items-baseline py-1.5">
                       <span className="text-[13px] text-ink-500 font-semibold flex items-center gap-1.5">
                         Aylık ücret
-                        <span className="bg-brand-500/15 text-brand-700 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                          Modem Dahil
+                        <span className="bg-accent-500/20 text-tc-navy text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                          Cihaz Dahil
                         </span>
                       </span>
                       <span className="text-[1.85rem] font-extrabold text-ink-900 tracking-tight">
@@ -185,7 +189,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                       </span>
                     </div>
                     <div className="flex justify-between items-baseline pt-2.5 mt-1 border-t border-dashed border-ink-100/60 text-[11px] text-ink-400">
-                      <span>Veri {fmt(pkg.dataPrice)}₺ + Modem {fmt(TURBOBOX_MODEM_FEE)}₺</span>
+                      <span>Veri {fmt(pkg.dataPrice)}₺ + Cihaz {fmt(TURBOBOX_MODEM_FEE)}₺</span>
                       <span className="font-semibold text-brand-700">Eklendi</span>
                     </div>
                   </>
@@ -208,10 +212,10 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                 ))}
               </ul>
 
-              {/* Modem durumu (zorunlu) */}
+              {/* Cihaz durumu (zorunlu) */}
               <div className="border-t border-ink-100 pt-3.5 mb-3">
                 <div className="text-[11px] text-ink-500 font-bold uppercase tracking-wider mb-2.5 flex items-center justify-between">
-                  <span>Modem durumu</span>
+                  <span>Superbox cihaz durumu</span>
                   <span className="text-amber-700 text-[9px] normal-case">* Seçim zorunlu</span>
                 </div>
                 <div className="grid grid-cols-2 gap-1.5">
@@ -221,11 +225,11 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                     className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-[10px] border-[1.5px] text-xs font-bold transition-all ${
                       sel.modem === 'have'
                         ? 'bg-success border-success text-white'
-                        : 'bg-white border-ink-100 text-ink-500 hover:border-brand-500 hover:text-ink-900'
+                        : 'bg-white border-ink-100 text-ink-500 hover:border-accent-500 hover:text-ink-900'
                     }`}
                   >
                     <span>✓</span>
-                    <span>Modemim var</span>
+                    <span>Cihazım var</span>
                   </button>
                   <button
                     type="button"
@@ -233,7 +237,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                     className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-[10px] border-[1.5px] text-xs font-bold transition-all ${
                       sel.modem === 'rent'
                         ? 'bg-brand-500 border-brand-500 text-white'
-                        : 'bg-white border-ink-100 text-ink-500 hover:border-brand-500 hover:text-ink-900'
+                        : 'bg-white border-ink-100 text-ink-500 hover:border-accent-500 hover:text-ink-900'
                     }`}
                   >
                     <span>+</span>
@@ -255,7 +259,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                     className={`flex items-center justify-center gap-1 py-2.5 px-2 rounded-[10px] border-[1.5px] text-xs font-bold transition-all ${
                       sel.signal5g === 'yes'
                         ? 'bg-success border-success text-white'
-                        : 'bg-white border-ink-100 text-ink-500 hover:border-brand-500 hover:text-ink-900'
+                        : 'bg-white border-ink-100 text-ink-500 hover:border-accent-500 hover:text-ink-900'
                     }`}
                   >
                     <span>✓</span><span>Var</span>
@@ -266,7 +270,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                     className={`flex items-center justify-center gap-1 py-2.5 px-2 rounded-[10px] border-[1.5px] text-xs font-bold transition-all ${
                       sel.signal5g === 'no'
                         ? 'bg-amber-500 border-amber-500 text-white'
-                        : 'bg-white border-ink-100 text-ink-500 hover:border-brand-500 hover:text-ink-900'
+                        : 'bg-white border-ink-100 text-ink-500 hover:border-accent-500 hover:text-ink-900'
                     }`}
                   >
                     <span>✗</span><span>Yok</span>
@@ -277,7 +281,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                     className={`flex items-center justify-center gap-1 py-2.5 px-2 rounded-[10px] border-[1.5px] text-xs font-bold transition-all ${
                       sel.signal5g === 'unsure'
                         ? 'bg-ink-500 border-ink-500 text-white'
-                        : 'bg-white border-ink-100 text-ink-500 hover:border-brand-500 hover:text-ink-900'
+                        : 'bg-white border-ink-100 text-ink-500 hover:border-accent-500 hover:text-ink-900'
                     }`}
                   >
                     <span>?</span><span>Bilmiyorum</span>
@@ -288,7 +292,7 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
               {/* Conditional uyarı (5G yok / bilmiyorum) */}
               {(sel.signal5g === 'no' || sel.signal5g === 'unsure') && (
                 <div className="bg-amber-50 border border-amber-100 text-amber-700 rounded-xl px-3 py-2.5 text-[11px] font-semibold leading-snug mb-4">
-                  <strong>Bilgi:</strong> 5G yoksa 4.5G muadili paket önerilir.{' '}
+                  <strong>Bilgi:</strong> 5G yoksa Superbox 4.5G muadili paket önerilir.{' '}
                   {pkg.total45gDataPrice !== null ? (
                     <>
                       Veri ücreti tahmini: <strong>{fmt(pkg.total45gDataPrice)}₺/ay</strong> ({pkg.data45gLabel}). Çağrı merkezi sizi arayacak.
@@ -309,11 +313,11 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
                 className={`mt-auto py-4 rounded-xl font-bold text-base transition-all ${
                   bothSelected
                     ? isFeatured
-                      ? 'bg-brand-500 hover:bg-brand-600 text-white hover:-translate-y-0.5 hover:shadow-lg'
-                      : 'bg-ink-900 hover:bg-brand-500 text-white hover:-translate-y-0.5 hover:shadow-lg'
+                      ? 'bg-accent-500 hover:bg-accent-600 text-tc-navy hover:-translate-y-0.5 hover:shadow-lg'
+                      : 'bg-tc-navy hover:bg-brand-600 text-white hover:-translate-y-0.5 hover:shadow-lg'
                     : isFeatured
-                      ? 'bg-brand-500 text-white opacity-45 cursor-not-allowed'
-                      : 'bg-ink-900 text-white opacity-45 cursor-not-allowed'
+                      ? 'bg-accent-500 text-tc-navy opacity-45 cursor-not-allowed'
+                      : 'bg-tc-navy text-white opacity-45 cursor-not-allowed'
                 }`}
               >
                 {ctaText}
@@ -325,11 +329,11 @@ export default function TurboBoxGrid({ onSelectPackage }: TurboBoxGridProps) {
 
       {/* Disclaimer */}
       <div className="bg-white border border-ink-100 rounded-2xl px-6 py-5 mt-8 text-xs text-ink-500 leading-relaxed">
-        <strong className="text-ink-900">TurboBox şeffaflığı:</strong>{' '}
-        Veri ücreti TT.net üzerinde görünen &ldquo;Taahhütlü Data Ücreti&rdquo; ile birebir eşittir.{' '}
-        <strong className="text-ink-900">Modem kiralama isteğe bağlıdır:</strong>{' '}
-        Kendi 5G/4.5G modeminiz varsa kiralamadan kullanabilir, aylık {TURBOBOX_MODEM_FEE}₺ tasarruf edersiniz —
-        çağrı merkezimiz modem uyumluluğunu doğrulayacaktır.
+        <strong className="text-ink-900">GB&apos;li paket şeffaflığı:</strong>{' '}
+        Veri ücreti, taahhütlü tarifedeki aylık veri ücretiyle birebir eşittir.{' '}
+        <strong className="text-ink-900">Superbox cihazı kiralama isteğe bağlıdır:</strong>{' '}
+        Kendi uyumlu 5G/4.5G cihazınız varsa kiralamadan kullanabilir, aylık {TURBOBOX_MODEM_FEE}₺ tasarruf edersiniz —
+        çağrı merkezimiz cihaz uyumluluğunu doğrulayacaktır.
         Adresinizde 5G yoksa 4.5G muadili paket önerilir, fiyat ve kapasite farklılık gösterebilir.
         18 ay sözleşmede fiyat sabittir, enflasyon zammı uygulanmaz. KDV ve ÖİV dahildir.
       </div>

@@ -16,7 +16,7 @@ export interface City {
 }
 
 // 14 KAPSAMA İL — bölgesel kampanyalı
-// Diğer 67 il "standart" kampanya (Fiber Gücü Yaşa)
+// Diğer 67 il "standart" kampanya (Superbox Limitsiz)
 export const ALL_CITIES: City[] = [
   { plate: 1,  name: 'Adana',          slug: 'adana',          region: 'Akdeniz',     districts: ['Seyhan','Yüreğir','Çukurova','Sarıçam','Ceyhan','İmamoğlu','Karaisalı','Karataş','Kozan','Pozantı','Saimbeyli','Tufanbeyli','Yumurtalık','Aladağ','Feke'] },
   { plate: 2,  name: 'Adıyaman',       slug: 'adiyaman',       region: 'Güneydoğu',   districts: ['Merkez','Besni','Çelikhan','Gerger','Gölbaşı','Kahta','Samsat','Sincik','Tut'] },
@@ -132,7 +132,7 @@ export function getDistricts(cityName: string): string[] {
  * Bir il+ilçe kombinasyonu için kampanya zone'unu döndürür
  * Antalya/Manavgat → 'bolgesel-avantaj'
  * Antalya/Muratpaşa → 'bolgesel-firsat'
- * İstanbul/Kadıköy → 'standart' (Fiber Gücü Yaşa)
+ * İstanbul/Kadıköy → 'standart' (Superbox Limitsiz)
  */
 export function getCampaignZone(cityName: string, districtName?: string): CampaignZone {
   const city = findCityByName(cityName);
@@ -145,6 +145,6 @@ export const COVERED_CITIES = ALL_CITIES.filter(c => c.campaigns);
 export const INTEREST_CITIES: City[] = [];
 
 export function isCovered(_cityName: string): boolean {
-  // Yeni mimaride tüm 81 il "covered" (Fiber Gücü Yaşa açık her ilde)
+  // Yeni mimaride tüm 81 il "covered" (Superbox başvurusu her ilde açık)
   return true;
 }

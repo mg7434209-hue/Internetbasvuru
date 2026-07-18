@@ -5,7 +5,7 @@ import { Mail, MapPin, Award, Clock, ArrowRight } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'İletişim',
   description:
-    'Göksoylar İletişim Ltd. Şti. — Türk Telekom yetkili bayisi. E-posta ve online başvuru ile bize ulaşın.',
+    'Göksoylar İletişim Ltd. Şti. — Turkcell Superbox yetkili satış noktası. E-posta ve online başvuru ile bize ulaşın.',
   alternates: { canonical: 'https://internetbasvuru.com/iletisim' },
 };
  
@@ -17,7 +17,7 @@ export default function IletisimPage() {
           İletişim
         </h1>
         <p className="text-ink-500 text-base max-w-2xl mx-auto">
-          Türk Telekom fiber internet başvurusu için aşağıdaki kanallardan bize ulaşabilirsiniz.
+          Turkcell Superbox başvurusu için aşağıdaki kanallardan bize ulaşabilirsiniz.
           15 dakika içinde dönüş yapıyoruz.
         </p>
       </header>
@@ -94,7 +94,7 @@ export default function IletisimPage() {
                 Bayi Kodu
               </p>
               <p className="text-sm text-ink-900 font-semibold">B9613</p>
-              <p className="text-xs text-ink-500 mt-0.5">Türk Telekom Yetkili Bayi</p>
+              <p className="text-xs text-ink-500 mt-0.5">Turkcell Yetkili Satış Noktası</p>
             </div>
           </div>
         </div>

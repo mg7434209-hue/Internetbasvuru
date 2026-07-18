@@ -378,7 +378,7 @@ export default function LeadModal({
                 className="input min-h-[72px] resize-none"
               />
               <p className="text-[11px] text-ink-500 mt-1">
-                TT altyapı uygunluk sorgusu için kullanılır.
+                Turkcell şebeke kapsama sorgusu için kullanılır.
               </p>
             </div>
 
@@ -514,7 +514,7 @@ export default function LeadModal({
                 disabled={submitting}
                 className={`flex-[1.4] py-3.5 rounded-xl font-bold text-base transition flex items-center justify-center gap-2 ${
                   !submitting
-                    ? 'bg-brand-500 hover:bg-brand-600 text-white'
+                    ? 'bg-accent-500 hover:bg-accent-600 text-tc-navy'
                     : 'bg-ink-300 text-white cursor-not-allowed'
                 }`}
               >
@@ -536,7 +536,7 @@ export default function LeadModal({
             {/* ÜST KUTU: Fiber veya TurboBox özet */}
             {isTurboBox && turboBoxPkg && turboBoxOptions ? (
               // === TURBOBOX ÖZET KUTUSU ===
-              <div className="bg-gradient-to-br from-brand-50 to-blue-50 border border-brand-500/20 rounded-xl p-4 mb-4">
+              <div className="bg-gradient-to-br from-accent-50 to-white border border-accent-500/30 rounded-xl p-4 mb-4">
                 <div className="flex justify-between items-baseline mb-1.5">
                   <span className="text-2xl font-extrabold text-ink-900 tracking-tight">
                     {turboBoxPkg.data}
@@ -554,8 +554,8 @@ export default function LeadModal({
                     <Check className="w-3.5 h-3.5 text-success flex-shrink-0" strokeWidth={3} />
                     <span>
                       {turboBoxOptions.modemChoice === 'have'
-                        ? `Modemim var (${fmt(TURBOBOX_MODEM_FEE)}₺ tasarruf)`
-                        : `Modem kiralanacak (+${fmt(TURBOBOX_MODEM_FEE)}₺/ay)`}
+                        ? `Superbox cihazım var (${fmt(TURBOBOX_MODEM_FEE)}₺ tasarruf)`
+                        : `Superbox cihazı kiralanacak (+${fmt(TURBOBOX_MODEM_FEE)}₺/ay)`}
                     </span>
                   </div>
                   <div className="flex gap-1.5 items-center font-semibold">
@@ -581,14 +581,14 @@ export default function LeadModal({
                 </div>
               </div>
             ) : pkg && prices ? (
-              // === FIBER ÖZET KUTUSU (mevcut, dokunulmadı) ===
-              <div className="bg-gradient-to-br from-brand-50 to-blue-50 border border-brand-500/20 rounded-xl p-4 mb-4">
+              // === LİMİTSİZ PAKET ÖZET KUTUSU ===
+              <div className="bg-gradient-to-br from-accent-50 to-white border border-accent-500/30 rounded-xl p-4 mb-4">
                 <div className="flex justify-between items-baseline mb-1.5">
                   <span className="text-2xl font-extrabold text-ink-900 tracking-tight">
                     {pkg.speedMbps} <span className="text-sm text-brand-500 font-bold">Mbps</span>
                   </span>
                   <span className="text-xs text-ink-500 font-semibold">
-                    {pkg.campaignName || 'Fiber Gücü Yaşa'}
+                    {pkg.campaignName || 'Superbox Limitsiz'}
                   </span>
                 </div>
                 {(tv || modem) && (
@@ -596,13 +596,13 @@ export default function LeadModal({
                     {tv && (
                       <div className="flex gap-1.5 items-center font-semibold">
                         <Check className="w-3.5 h-3.5 text-success flex-shrink-0" strokeWidth={3} />
-                        <span>Tivibu TV (+{fmt(TV_EXTRA_FEE)}₺/ay)</span>
+                        <span>TV+ (+{fmt(TV_EXTRA_FEE)}₺/ay)</span>
                       </div>
                     )}
                     {modem && (
                       <div className="flex gap-1.5 items-center font-semibold">
                         <Check className="w-3.5 h-3.5 text-success flex-shrink-0" strokeWidth={3} />
-                        <span>Modem kirala (+{fmt(MODEM_RENTAL_FEE)}₺/ay)</span>
+                        <span>Superbox cihazı kirala (+{fmt(MODEM_RENTAL_FEE)}₺/ay)</span>
                       </div>
                     )}
                   </div>
@@ -638,7 +638,7 @@ export default function LeadModal({
                     className="checkbox"
                   />
                   <span className="text-sm font-semibold text-ink-900">
-                    Tivibu TV ekle{' '}
+                    TV+ ekle{' '}
                     <span className="text-ink-500 font-medium">(+{fmt(TV_EXTRA_FEE)}₺/ay)</span>
                   </span>
                 </label>
@@ -650,7 +650,7 @@ export default function LeadModal({
                     className="checkbox"
                   />
                   <span className="text-sm font-semibold text-ink-900">
-                    Modem kirala{' '}
+                    Superbox cihazı kirala{' '}
                     <span className="text-ink-500 font-medium">(+{fmt(MODEM_RENTAL_FEE)}₺/ay)</span>
                   </span>
                 </label>
@@ -728,7 +728,7 @@ export default function LeadModal({
             {/* Mevcut TT hattı sorusu — sadece Fiber için */}
             {!isTurboBox && (
               <div className="mb-3">
-                <label className="field-label">Mevcut TT hattınız?</label>
+                <label className="field-label">Mevcut Turkcell hattınız?</label>
                 <div className="flex gap-2">
                   {(['yok', 'var'] as const).map((l) => (
                     <button
@@ -755,7 +755,7 @@ export default function LeadModal({
                 className="checkbox mt-0.5 flex-shrink-0"
               />
               <span>
-                <a href="/kvkk-aydinlatma" target="_blank" className="text-brand-500 font-semibold">
+                <a href="/kvkk" target="_blank" className="text-brand-500 font-semibold">
                   KVKK aydınlatma metnini
                 </a>{' '}
                 okudum, izin veriyorum.
@@ -781,7 +781,7 @@ export default function LeadModal({
                 disabled={!canSubmitStep1 || submitting}
                 className={`flex-[1.4] py-3.5 rounded-xl font-bold text-base transition flex items-center justify-center gap-2 ${
                   canSubmitStep1 && !submitting
-                    ? 'bg-brand-500 hover:bg-brand-600 text-white'
+                    ? 'bg-accent-500 hover:bg-accent-600 text-tc-navy'
                     : 'bg-ink-300 text-white cursor-not-allowed'
                 }`}
               >

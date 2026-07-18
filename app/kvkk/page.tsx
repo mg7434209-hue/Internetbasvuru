@@ -47,7 +47,7 @@ export default function KVKKPage() {
           <h2 className="text-xl font-bold text-ink-900 mb-2">3. İşleme Amaçları</h2>
           <p>Kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:</p>
           <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>Türk Telekom fiber internet başvurunuzun değerlendirilmesi</li>
+            <li>Turkcell Superbox başvurunuzun değerlendirilmesi</li>
             <li>Adresinizdeki altyapı uygunluğunun teyit edilmesi</li>
             <li>Yetkili bayimiz tarafından sizinle iletişime geçilmesi</li>
             <li>Sözleşme süreçlerinin yürütülmesi</li>
@@ -69,8 +69,8 @@ export default function KVKKPage() {
           <h2 className="text-xl font-bold text-ink-900 mb-2">5. Aktarım</h2>
           <p>
             Kişisel verileriniz, başvurunuzun değerlendirilmesi ve hizmetin sağlanması amacıyla
-            Türk Telekom A.Ş.&apos;ye, yetkili bayilik faaliyetleri kapsamında aktarılabilir. Yasal
-            zorunluluklar haricinde üçüncü taraflara aktarılmaz.
+            Turkcell İletişim Hizmetleri A.Ş.&apos;ye, yetkili satış noktası faaliyetleri kapsamında
+            aktarılabilir. Yasal zorunluluklar haricinde üçüncü taraflara aktarılmaz.
           </p>
         </div>
 

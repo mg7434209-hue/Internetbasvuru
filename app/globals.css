@@ -24,7 +24,7 @@
   }
 
   ::selection {
-    @apply bg-brand-500 text-white;
+    @apply bg-accent-500 text-tc-navy;
   }
 
   h1, h2, h3, h4 {
@@ -75,7 +75,7 @@
   /* Min 44x44px (Apple HIG) — tüm buton sınıfları */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3.5
-           bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white
+           bg-accent-500 hover:bg-accent-600 active:bg-accent-700 text-tc-navy
            font-bold text-base rounded-lg transition-all duration-200
            shadow-md hover:shadow-lg
            disabled:opacity-50 disabled:cursor-not-allowed
@@ -84,7 +84,7 @@
 
   .btn-accent {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3.5
-           bg-accent-600 hover:bg-accent-700 active:bg-accent-800 text-white
+           bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white
            font-bold text-base rounded-lg transition-all duration-200
            shadow-md hover:shadow-xl
            min-h-[48px];
@@ -92,7 +92,7 @@
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3.5
-           bg-ink-900 hover:bg-brand-500 text-white
+           bg-tc-navy hover:bg-brand-600 text-white
            font-bold text-base rounded-full transition-all duration-200
            min-h-[48px];
   }
@@ -137,12 +137,12 @@
   }
 
   .card-hover {
-    @apply hover:-translate-y-2 hover:shadow-medium hover:border-brand-500;
+    @apply hover:-translate-y-2 hover:shadow-medium hover:border-accent-500;
   }
 
   .card-popular {
-    @apply border-2 border-brand-500 shadow-strong;
-    background: linear-gradient(180deg, #fff 0%, #F0F9FF 100%);
+    @apply border-2 border-accent-500 shadow-strong;
+    background: linear-gradient(180deg, #fff 0%, #FFF9E5 100%);
   }
 
   /* ===== BADGES ===== */
@@ -158,7 +158,7 @@
 
   .badge-popular {
     @apply absolute -top-3.5 left-1/2 -translate-x-1/2
-           bg-brand-500 text-white font-extrabold text-xs uppercase tracking-wider
+           bg-accent-500 text-tc-navy font-extrabold text-xs uppercase tracking-wider
            px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap;
   }
 

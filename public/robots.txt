@@ -1,5 +1,5 @@
 # robots.txt for internetbasvuru.com
-# Türk Telekom Yetkili Bayi - Göksoylar İletişim
+# Turkcell Superbox Yetkili Satış Noktası - Göksoylar İletişim
 
 User-agent: *
 Allow: /

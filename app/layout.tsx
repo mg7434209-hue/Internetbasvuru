@@ -16,8 +16,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#0E1F4D' },
-    { media: '(prefers-color-scheme: dark)', color: '#0E1F4D' },
+    { media: '(prefers-color-scheme: light)', color: '#0A2540' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A2540' },
   ],
   colorScheme: 'light',
   interactiveWidget: 'resizes-content',
@@ -29,21 +29,21 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://internetbasvuru.com'),
   title: {
-    default: 'Türk Telekom Fiber İnternet Başvurusu | Yetkili Bayi',
+    default: 'Turkcell Superbox Başvurusu | Yetkili Satış Noktası',
     template: '%s | internetbasvuru.com',
   },
   description:
-    'Türk Telekom fiber internet paketleri için online başvuru. 81 il açık, bölgesel kampanyalar, ücretsiz kurulum, 18 ay sabit fiyat. Göksoylar İletişim Yetkili Bayi.',
+    'Turkcell Superbox kablosuz evde internet paketleri için online başvuru. 81 il açık, 5G hızı, kablosuz tak-çalıştır kurulum, 18 ay sabit fiyat. Göksoylar İletişim Yetkili Satış Noktası.',
   keywords: [
-    'türk telekom',
-    'türk telekom fiber',
-    'fiber internet başvuru',
-    'tt yetkili bayi',
-    'internet başvuru',
-    'fiber gücü yaşa',
+    'turkcell',
+    'turkcell superbox',
+    'superbox başvuru',
+    'superbox paketleri',
+    'kablosuz evde internet',
+    '5g evde internet',
+    'evde internet başvuru',
     'manavgat internet',
-    'antalya fiber',
-    'ücretsiz kurulum',
+    'antalya superbox',
     'sabit fiyat internet',
   ],
   authors: [{ name: 'Göksoylar İletişim Ltd. Şti.' }],
@@ -61,14 +61,14 @@ export const metadata: Metadata = {
     locale: 'tr_TR',
     url: 'https://internetbasvuru.com',
     siteName: 'internetbasvuru.com',
-    title: 'Türk Telekom Fiber İnternet Başvurusu | Yetkili Bayi',
+    title: 'Turkcell Superbox Başvurusu | Yetkili Satış Noktası',
     description:
-      'Türkiye geneli yetkili bayiden hızlı kurulum. 18 ay sabit fiyat, ücretsiz kurulum, KVKK uyumlu.',
+      'Türkiye geneli yetkili satış noktasından Superbox kablosuz evde internet. 5G hızı, 18 ay sabit fiyat, tak-çalıştır kurulum, KVKK uyumlu.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Türk Telekom Fiber İnternet Başvurusu',
-    description: 'Türkiye geneli yetkili bayiden hızlı kurulum. 18 ay sabit fiyat.',
+    title: 'Turkcell Superbox Başvurusu',
+    description: 'Türkiye geneli yetkili satış noktasından Superbox kablosuz evde internet. 18 ay sabit fiyat.',
   },
   robots: {
     index: true,
@@ -97,7 +97,7 @@ export const metadata: Metadata = {
     ICBM: '36.7867, 31.4374',
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent',
-    'apple-mobile-web-app-title': 'TT Başvuru',
+    'apple-mobile-web-app-title': 'Superbox Başvuru',
     'mobile-web-app-capable': 'yes',
   },
 };
@@ -110,13 +110,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     '@id': 'https://internetbasvuru.com#organization',
-    name: 'Göksoylar İletişim - Türk Telekom Yetkili Bayi',
+    name: 'Göksoylar İletişim - Turkcell Superbox Yetkili Satış Noktası',
     alternateName: 'internetbasvuru.com',
     description:
-      'Türk Telekom fiber internet yetkili bayisi. Türkiye geneli kampanyalar, ücretsiz kurulum, 18 ay sabit fiyat.',
+      'Turkcell Superbox kablosuz evde internet yetkili satış noktası. Türkiye geneli kampanyalar, 5G hızı, tak-çalıştır kurulum, 18 ay sabit fiyat.',
     url: 'https://internetbasvuru.com',
-    logo: 'https://internetbasvuru.com/tt-logo.png',
-    image: 'https://internetbasvuru.com/opengraph-image.png',
+    logo: 'https://internetbasvuru.com/icon',
+    image: 'https://internetbasvuru.com/opengraph-image',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Manavgat',
@@ -134,11 +134,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
     priceRange: '₺₺',
     knowsAbout: [
-      'Türk Telekom Fiber',
-      'TTNET',
-      'Fiber İnternet',
-      'Tivibu',
-      'Modem Kurulumu',
+      'Turkcell Superbox',
+      'Kablosuz Evde İnternet',
+      '5G Evde İnternet',
+      'Turkcell TV+',
+      'Superbox Kurulumu',
     ],
     openingHoursSpecification: [
       {
@@ -168,18 +168,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'Türk Telekom fiber internet başvurusu nasıl yapılır?',
+        name: 'Turkcell Superbox başvurusu nasıl yapılır?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'internetbasvuru.com üzerinden online başvuru formunu doldurabilir veya WhatsApp üzerinden bizimle iletişime geçebilirsiniz. Yetkili bayimiz 15 dakika içinde sizi arar ve adresinizdeki altyapı uygunluğunu teyit eder.',
+          text: 'internetbasvuru.com üzerinden online başvuru formunu doldurabilir veya WhatsApp üzerinden bizimle iletişime geçebilirsiniz. Yetkili satış noktamız 15 dakika içinde sizi arar ve adresinizdeki şebeke kapsamasını teyit eder.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Fiber internet kurulumu ücretsiz mi?',
+        name: 'Superbox kurulumu nasıl olur, teknisyen gerekir mi?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Evet. Türk Telekom Fiber Gücü Yaşa kampanyası kapsamında modem ve kurulum tüm Türkiye genelinde ücretsizdir.',
+          text: 'Superbox kablosuz çalışır; kablo çekimi ve altyapı beklemesi yoktur. Cihazı prize takıp açmanız yeterlidir — dakikalar içinde internete bağlanırsınız.',
         },
       },
       {
@@ -195,15 +195,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Hangi şehirlerde hizmet veriyorsunuz?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Türkiye geneli 81 ilde Türk Telekom fiber internet başvurusu kabul ediyoruz. Antalya bölgesinde özel bölgesel kampanyalarımız mevcuttur (Manavgat, Alanya, Kepez, Muratpaşa).',
+          text: 'Türkiye geneli 81 ilde Turkcell Superbox başvurusu kabul ediyoruz. Antalya bölgesinde özel bölgesel kampanyalarımız mevcuttur (Manavgat, Alanya, Kepez, Muratpaşa).',
         },
       },
       {
         '@type': 'Question',
-        name: 'Mevcut TT hattım yoksa başvurabilir miyim?',
+        name: 'Superbox için 5G şart mı? Mevcut Turkcell hattım yoksa başvurabilir miyim?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Evet. Yeni başvuru veya mevcut hat üzerinden başvuru, her ikisi de mümkündür. Form üzerinde bunu seçebilirsiniz.',
+          text: '5G kapsaması olmayan adreslerde Superbox 4.5G muadili paketlerle hizmet verir. Mevcut Turkcell hattınız olmasa da yeni başvuru yapabilirsiniz; form üzerinde bunu seçebilirsiniz.',
         },
       },
     ],
@@ -214,7 +214,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+
         {/* =============================================
             GOOGLE ADS TAG (gtag.js) ENTEGRASYONU
            ============================================= */}

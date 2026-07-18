@@ -1,23 +1,23 @@
 {
-  "name": "Türk Telekom Fiber İnternet Başvurusu",
-  "short_name": "internetbaşvuru",
-  "description": "Türk Telekom fiber internet yetkili bayisi - Göksoylar İletişim",
+  "name": "Turkcell Superbox Başvurusu",
+  "short_name": "Superbox Başvuru",
+  "description": "Turkcell Superbox kablosuz evde internet yetkili satış noktası - Göksoylar İletişim",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFFFFF",
-  "theme_color": "#0E1F4D",
+  "theme_color": "#0A2540",
   "lang": "tr",
   "scope": "/",
   "orientation": "portrait-primary",
   "categories": ["business", "utilities"],
   "icons": [
     {
-      "src": "/icon.png",
-      "sizes": "32x32",
+      "src": "/icon",
+      "sizes": "64x64",
       "type": "image/png"
     },
     {
-      "src": "/apple-icon.png",
+      "src": "/apple-icon",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any maskable"

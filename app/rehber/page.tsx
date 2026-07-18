@@ -5,7 +5,7 @@ import { BookOpen, Clock, ArrowRight, Phone } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Rehber',
   description:
-    'Türk Telekom fiber internet, taahhüt süreleri, modem seçimi, Tivibu ve daha fazlası hakkında detaylı rehber yazıları.',
+    'Turkcell Superbox, 5G evde internet, kotalı/limitsiz paket seçimi, cihaz kurulumu, TV+ ve daha fazlası hakkında detaylı rehber yazıları.',
   alternates: { canonical: 'https://internetbasvuru.com/rehber' },
 };
 
@@ -20,22 +20,22 @@ interface Article {
 
 const articles: Article[] = [
   {
-    slug: 'fiber-vdsl-farki',
-    title: 'Fiber ile VDSL Arasındaki Fark Nedir?',
+    slug: 'superbox-nedir',
+    title: 'Turkcell Superbox Nedir, Nasıl Çalışır?',
     excerpt:
-      'Fiber optik ve VDSL teknolojilerinin teknik farkları, hız performansı ve hangi adrese hangisinin uygun olduğu.',
+      'Kablosuz evde internetin çalışma mantığı, kimler için uygun olduğu ve kablolu internete göre avantajları.',
     category: 'Teknoloji',
     readTime: '4 dk',
-    date: '2026-04-20',
+    date: '2026-07-01',
   },
   {
-    slug: 'turk-telekom-altyapi-sorgulama',
-    title: 'Türk Telekom Altyapı Sorgulama Nasıl Yapılır?',
+    slug: 'superbox-kapsama-sorgulama',
+    title: 'Superbox Kapsama Alanı Sorgulama Nasıl Yapılır?',
     excerpt:
-      'Adresinizde fiber internet olup olmadığını öğrenmenin yolları ve yetersiz altyapı durumunda seçenekler.',
+      'Adresinizde 5G veya 4.5G Superbox kapsaması olup olmadığını öğrenmenin yolları ve zayıf sinyal durumunda seçenekler.',
     category: 'Başvuru',
     readTime: '3 dk',
-    date: '2026-04-18',
+    date: '2026-06-28',
   },
   {
     slug: 'taahhut-suresi-rehberi',
@@ -44,41 +44,41 @@ const articles: Article[] = [
       'Hangi taahhüt süresi size daha avantajlı? Kampanya fiyatlarıyla ömür boyu maliyet hesabı.',
     category: 'Fiyatlandırma',
     readTime: '5 dk',
-    date: '2026-04-15',
+    date: '2026-06-25',
   },
   {
-    slug: 'modem-kiralama-vs-satin-alma',
-    title: 'Modem Kiralama mı Yoksa Satın Alma mı?',
+    slug: 'superbox-cihaz-kiralama-vs-satin-alma',
+    title: 'Superbox Cihazı Kiralama mı, Kendi Cihazın mı?',
     excerpt:
-      'Aylık modem kiralama ücreti ile kendi modeminizi almanın avantaj ve dezavantajları.',
+      'Aylık cihaz kiralama ücreti ile kendi uyumlu 5G/4.5G cihazınızı kullanmanın avantaj ve dezavantajları.',
     category: 'Teknoloji',
     readTime: '4 dk',
-    date: '2026-04-12',
+    date: '2026-06-20',
   },
   {
-    slug: 'tivibulu-nedir',
-    title: 'Tivibu\'lu İnternet: TV + İnternet Birlikte',
+    slug: 'tv-plus-nedir',
+    title: 'TV+ ile İnternet: TV + İnternet Birlikte',
     excerpt:
-      'Tivibu platformu, kanal paketleri, IPTV modem gereksinimi ve gerçek kullanıcı deneyimi.',
+      'Turkcell TV+ platformu, kanal paketleri, cihaz gereksinimleri ve gerçek kullanıcı deneyimi.',
     category: 'TV Paketleri',
     readTime: '6 dk',
-    date: '2026-04-10',
+    date: '2026-06-15',
   },
   {
-    slug: 'fiber-hiz-onerisi',
-    title: 'Hangi Fiber Hızı Sizin İçin Yeterli?',
+    slug: 'gb-mi-limitsiz-mi',
+    title: 'GB\'li Paket mi, Limitsiz mi? Hangi Superbox Paketi Yeterli?',
     excerpt:
-      'Hane halkı sayısı, kullanım alışkanlıkları ve cihaz sayısına göre 100 mi 300 mü 1000 Mbps mi?',
+      'Hane halkı sayısı, kullanım alışkanlıkları ve cihaz sayısına göre kotalı mı limitsiz mi; 50 mi 200 mü 1000 Mbps mi?',
     category: 'Teknoloji',
     readTime: '5 dk',
-    date: '2026-04-08',
+    date: '2026-06-10',
   },
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
   Teknoloji: 'bg-brand-50 text-brand-700',
   Başvuru: 'bg-prime-100 text-success',
-  Fiyatlandırma: 'bg-accent-50 text-accent-700',
+  Fiyatlandırma: 'bg-accent-100 text-accent-800',
   'TV Paketleri': 'bg-purple-50 text-purple-700',
 };
 
@@ -88,16 +88,16 @@ export default function RehberPage() {
       <div className="max-w-5xl mx-auto px-[5%]">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 text-brand-700 text-[13px] font-bold mb-4 tracking-wide">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-100 text-tc-navy text-[13px] font-bold mb-4 tracking-wide">
             <BookOpen className="w-3.5 h-3.5" />
             Bilgi Rehberi
           </div>
           <h1 className="text-display font-extrabold mb-3 text-balance">
-            Türk Telekom Fiber <span className="text-brand-500">Rehberleri</span>
+            Turkcell Superbox <span className="text-brand-500">Rehberleri</span>
           </h1>
           <p className="text-ink-500 max-w-xl mx-auto leading-relaxed">
-            Fiber internet, taahhüt süreleri, modem seçimi ve TV paketleri hakkında
-            yetkili bayiden detaylı bilgi yazıları.
+            Kablosuz evde internet, taahhüt süreleri, cihaz seçimi ve TV+ paketleri
+            hakkında yetkili satış noktasından detaylı bilgi yazıları.
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export default function RehberPage() {
           {articles.map((article) => (
             <article
               key={article.slug}
-              className="bg-white rounded-2xl p-6 border border-ink-100 hover:border-brand-500 hover:shadow-medium transition-all group flex flex-col"
+              className="bg-white rounded-2xl p-6 border border-ink-100 hover:border-accent-500 hover:shadow-medium transition-all group flex flex-col"
             >
               {/* Category Badge */}
               <div className="flex items-center justify-between mb-3">
@@ -155,20 +155,20 @@ export default function RehberPage() {
         <div
           className="rounded-2xl p-8 text-center text-white"
           style={{
-            background: `radial-gradient(circle at 20% 0%, rgba(0,154,218,0.4) 0%, transparent 50%), #0F172A`,
+            background: `radial-gradient(circle at 20% 0%, rgba(255,201,0,0.25) 0%, transparent 50%), #0A2540`,
           }}
         >
           <h3 className="text-2xl font-extrabold mb-2 leading-tight">
             Hâlâ Karar Veremediniz mi?
           </h3>
           <p className="text-white/70 mb-6 max-w-md mx-auto leading-relaxed">
-            Yetkili bayimizi arayın, ihtiyacınıza uygun fiber paketi konusunda
-            ücretsiz danışmanlık alın.
+            Yetkili satış noktamızı arayın, ihtiyacınıza uygun Superbox paketi
+            konusunda ücretsiz danışmanlık alın.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href="tel:+905349777000"
-              className="inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-full font-bold transition-all hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-tc-navy px-6 py-3 rounded-full font-bold transition-all hover:-translate-y-0.5"
             >
               <Phone className="w-4 h-4" />
               0534 977 70 00
