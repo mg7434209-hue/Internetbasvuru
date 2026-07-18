@@ -1,0 +1,291 @@
+// Türk Telekom Fiber İnternet Paketleri
+// Akıllı kampanya seçimi: il/ilçe + TV tercihine göre doğru fiyat
+// Son güncelleme: Mayıs 2026
+
+import { type CampaignZone } from './turkey';
+
+export interface Package {
+  type: 'fiber';                // ← Discriminator (TurboBox ile ayırt etmek için)
+  id: string;
+  speedMbps: number;
+  // Fiyat: ilk 9 ay (Hoş Geldin) + 10-18. ay
+  priceFirstPeriod: number;     // İlk 9 ay
+  priceSecondPeriod: number;    // 10-18. ay
+  // Bölgesel Fırsat'ta tek fiyat (24 ay)
+  priceMonthly?: number;
+  commitmentMonths: number;     // 18 veya 24
+  isPopular?: boolean;          // Vitrinde gösterilecek mi
+  badge?: string;               // "En Çok Tercih Edilen"
+  campaignName?: string;        // "Fiber Gücü Fırsat"
+  features?: string[];          // Vitrin için özellikler
+}
+
+// ============ STANDART (Fiber Gücü Yaşa - 81 il) - 18 ay ============
+export const standartPackages: Package[] = [
+  { type: 'fiber', id: 'std-16',   speedMbps: 16,   priceFirstPeriod: 800,  priceSecondPeriod: 900,  commitmentMonths: 18 },
+  { type: 'fiber', id: 'std-24',   speedMbps: 24,   priceFirstPeriod: 800,  priceSecondPeriod: 900,  commitmentMonths: 18 },
+  { type: 'fiber', id: 'std-50',   speedMbps: 50,   priceFirstPeriod: 850,  priceSecondPeriod: 950,  commitmentMonths: 18 },
+  { type: 'fiber', id: 'std-100',  speedMbps: 100,  priceFirstPeriod: 850,  priceSecondPeriod: 950,  commitmentMonths: 18,
+    isPopular: true, badge: 'Başlangıç', campaignName: 'Fiber Gücü Başlangıç',
+    features: ['Ücretsiz kurulum', '18 ay sabit fiyat sözü', 'Limitsiz yüksek hız'] },
+  { type: 'fiber', id: 'std-200',  speedMbps: 200,  priceFirstPeriod: 900,  priceSecondPeriod: 1000, commitmentMonths: 18 },
+  { type: 'fiber', id: 'std-300',  speedMbps: 300,  priceFirstPeriod: 950,  priceSecondPeriod: 1050, commitmentMonths: 18,
+    isPopular: true, badge: 'En Çok Tercih Edilen', campaignName: 'Fiber Gücü Fırsat',
+    features: ['4K Ultra HD kesintisiz yayın', 'Limitsiz yüksek hız', '18 ay enflasyon koruması'] },
+  { type: 'fiber', id: 'std-500',  speedMbps: 500,  priceFirstPeriod: 1050, priceSecondPeriod: 1150, commitmentMonths: 18 },
+  { type: 'fiber', id: 'std-750',  speedMbps: 750,  priceFirstPeriod: 1100, priceSecondPeriod: 1200, commitmentMonths: 18 },
+  { type: 'fiber', id: 'std-1000', speedMbps: 1000, priceFirstPeriod: 1150, priceSecondPeriod: 1250, commitmentMonths: 18,
+    isPopular: true, badge: 'En Hızlı', campaignName: 'GigaFiber Gücü',
+    features: ['Işık hızında download/upload', 'Profesyonel oyuncu ping', 'Kalabalık ev/ofis için ideal'] },
+];
+
+// ============ BÖLGESEL AVANTAJ (Manavgat, Alanya, Kepez) - 18 ay ============
+export const bolgeselAvantajPackages: Package[] = [
+  { type: 'fiber', id: 'ba-16',   speedMbps: 16,   priceFirstPeriod: 750,  priceSecondPeriod: 890,  commitmentMonths: 18 },
+  { type: 'fiber', id: 'ba-24',   speedMbps: 24,   priceFirstPeriod: 750,  priceSecondPeriod: 890,  commitmentMonths: 18 },
+  { type: 'fiber', id: 'ba-50',   speedMbps: 50,   priceFirstPeriod: 775,  priceSecondPeriod: 905,  commitmentMonths: 18 },
+  { type: 'fiber', id: 'ba-100',  speedMbps: 100,  priceFirstPeriod: 775,  priceSecondPeriod: 905,  commitmentMonths: 18,
+    isPopular: true, badge: 'Başlangıç', campaignName: 'Bölgesel Avantaj 100',
+    features: ['Bölgesel kampanya fiyatı', 'Ücretsiz kurulum', '18 ay sabit fiyat'] },
+  { type: 'fiber', id: 'ba-200',  speedMbps: 200,  priceFirstPeriod: 825,  priceSecondPeriod: 955,  commitmentMonths: 18 },
+  { type: 'fiber', id: 'ba-300',  speedMbps: 300,  priceFirstPeriod: 950,  priceSecondPeriod: 1050, commitmentMonths: 18,
+    isPopular: true, badge: 'En Çok Tercih Edilen', campaignName: 'Bölgesel Avantaj 300',
+    features: ['4K kesintisiz yayın', 'Bölgesel özel fiyat', '18 ay enflasyon koruması'] },
+  { type: 'fiber', id: 'ba-500',  speedMbps: 500,  priceFirstPeriod: 1050, priceSecondPeriod: 1150, commitmentMonths: 18 },
+  { type: 'fiber', id: 'ba-750',  speedMbps: 750,  priceFirstPeriod: 1100, priceSecondPeriod: 1200, commitmentMonths: 18 },
+  { type: 'fiber', id: 'ba-1000', speedMbps: 1000, priceFirstPeriod: 1150, priceSecondPeriod: 1250, commitmentMonths: 18,
+    isPopular: true, badge: 'En Hızlı', campaignName: 'Bölgesel Avantaj GigaFiber',
+    features: ['Işık hızında bölgesel fiyat', 'Profesyonel oyuncu ping', 'Kalabalık ev/ofis için'] },
+];
+
+// ============ BÖLGESEL FIRSAT (Muratpaşa) - 24 ay TEK FİYAT ============
+export const bolgeselFirsatPackages: Package[] = [
+  { type: 'fiber', id: 'bf-24',   speedMbps: 24,   priceFirstPeriod: 680,  priceSecondPeriod: 680,  priceMonthly: 680,  commitmentMonths: 24 },
+  { type: 'fiber', id: 'bf-50',   speedMbps: 50,   priceFirstPeriod: 720,  priceSecondPeriod: 720,  priceMonthly: 720,  commitmentMonths: 24 },
+  { type: 'fiber', id: 'bf-100',  speedMbps: 100,  priceFirstPeriod: 720,  priceSecondPeriod: 720,  priceMonthly: 720,  commitmentMonths: 24,
+    isPopular: true, badge: 'Başlangıç', campaignName: 'Bölgesel Fırsat 100',
+    features: ['24 ay TEK fiyat (zam yok)', 'Ücretsiz kurulum', 'Bölgesel özel fiyat'] },
+  { type: 'fiber', id: 'bf-200',  speedMbps: 200,  priceFirstPeriod: 760,  priceSecondPeriod: 760,  priceMonthly: 760,  commitmentMonths: 24 },
+  { type: 'fiber', id: 'bf-300',  speedMbps: 300,  priceFirstPeriod: 800,  priceSecondPeriod: 800,  priceMonthly: 800,  commitmentMonths: 24,
+    isPopular: true, badge: 'En Çok Tercih Edilen', campaignName: 'Bölgesel Fırsat 300',
+    features: ['24 ay TEK fiyat (zam yok)', '4K kesintisiz yayın', 'Bölgesel özel fiyat'] },
+  { type: 'fiber', id: 'bf-500',  speedMbps: 500,  priceFirstPeriod: 880,  priceSecondPeriod: 880,  priceMonthly: 880,  commitmentMonths: 24 },
+  { type: 'fiber', id: 'bf-750',  speedMbps: 750,  priceFirstPeriod: 920,  priceSecondPeriod: 920,  priceMonthly: 920,  commitmentMonths: 24 },
+  { type: 'fiber', id: 'bf-1000', speedMbps: 1000, priceFirstPeriod: 960,  priceSecondPeriod: 960,  priceMonthly: 960,  commitmentMonths: 24,
+    isPopular: true, badge: 'En Hızlı', campaignName: 'Bölgesel Fırsat GigaFiber',
+    features: ['24 ay TEK fiyat', 'Işık hızında upload/download', 'Profesyonel oyuncu ping'] },
+];
+
+// ============ TIVIBU (TV+İnternet ek seçeneği için fiyat farkı) ============
+export const TV_EXTRA_FEE = 250;        // Tivibu eklendiğinde aylık ek
+export const MODEM_RENTAL_FEE = 90;     // Modem kiralama (opsiyonel)
+
+// ============ ANA FONKSİYONLAR ============
+
+/**
+ * il/ilçe ve TV tercihine göre doğru paket listesini döndürür
+ * Mockup mantığı: kullanıcı 9 hız görür ama fiyatlar bölgeye göre değişir
+ */
+export function getPackagesForLocation(zone: CampaignZone): Package[] {
+  switch (zone) {
+    case 'bolgesel-avantaj':
+      return bolgeselAvantajPackages;
+    case 'bolgesel-firsat':
+      return bolgeselFirsatPackages;
+    default:
+      return standartPackages;
+  }
+}
+
+/**
+ * Vitrinde gösterilecek 3 popüler paket
+ */
+export function getFeaturedPackages(zone: CampaignZone = 'standart'): Package[] {
+  return getPackagesForLocation(zone).filter(p => p.isPopular);
+}
+
+/**
+ * Belirli bir hız için paket bulur
+ */
+export function getPackageBySpeed(speedMbps: number, zone: CampaignZone = 'standart'): Package | undefined {
+  return getPackagesForLocation(zone).find(p => p.speedMbps === speedMbps);
+}
+
+/**
+ * Kullanım profiline göre önerilen hız
+ * hafif → 100, orta → 300, yoğun → 1000
+ */
+export function recommendSpeed(usage: 'hafif' | 'orta' | 'yogun'): number {
+  switch (usage) {
+    case 'hafif': return 100;
+    case 'orta':  return 300;
+    case 'yogun': return 1000;
+  }
+}
+
+/**
+ * Paket fiyatını TV ve modem ile birlikte hesaplar
+ */
+export function calcPackagePrices(
+  pkg: Package,
+  options: { tv: boolean; modem: boolean }
+): { firstPeriod: number; secondPeriod: number; isFlat: boolean } {
+  const tvAdd = options.tv ? TV_EXTRA_FEE : 0;
+  const modemAdd = options.modem ? MODEM_RENTAL_FEE : 0;
+
+  // Bölgesel Fırsat = tek fiyat
+  if (pkg.priceMonthly !== undefined) {
+    return {
+      firstPeriod: pkg.priceMonthly + tvAdd + modemAdd,
+      secondPeriod: pkg.priceMonthly + tvAdd + modemAdd,
+      isFlat: true,
+    };
+  }
+
+  return {
+    firstPeriod: pkg.priceFirstPeriod + tvAdd + modemAdd,
+    secondPeriod: pkg.priceSecondPeriod + tvAdd + modemAdd,
+    isFlat: false,
+  };
+}
+
+/**
+ * Kampanya zone'unun adını döndür (UI'da göstermek için)
+ */
+export function getCampaignDisplayName(zone: CampaignZone): string {
+  switch (zone) {
+    case 'bolgesel-avantaj': return 'Bölgesel Avantaj';
+    case 'bolgesel-firsat':  return 'Bölgesel Fırsat (24 ay tek fiyat)';
+    default: return 'Fiber Gücü Yaşa';
+  }
+}
+
+/**
+ * Ana sayfa için: standart fiyatlarla 3 popüler paket
+ * Kullanıcı il seçince Wizard'da gerçek bölgesel fiyat gelecek
+ */
+export const featuredPackages = getFeaturedPackages('standart');
+export const allStandartPackages = standartPackages;
+
+// Tüm paketler (legacy uyumluluk için)
+export const allPackages = [
+  ...standartPackages,
+  ...bolgeselAvantajPackages,
+  ...bolgeselFirsatPackages,
+];
+
+// ============================================================
+// TURBOBOX (5G/4.5G Mobil İnternet)
+// Fibersiz adresler için tak-çalıştır mobil internet hizmeti
+// ============================================================
+
+export const TURBOBOX_MODEM_FEE = 240;
+
+export type TurboBoxPackage = {
+  type: 'turbobox';          // ← Discriminator (Fiber ile ayırt etmek için)
+  id: string;
+  data: string;              // "250", "500", "∞"
+  unit: 'GB' | 'Limitsiz';
+  campaignName: string;
+  dataPrice: number;         // Sadece veri ücreti (TT.net "Taahhütlü Data Ücreti")
+  total45gDataPrice: number | null;  // 4.5G muadili veri ücreti (Limitsiz için null)
+  data45gLabel: string;      // 4.5G muadili kapasite metni
+  features: string[];
+  isPopular?: boolean;
+  badge?: string;
+};
+
+export type TurboBoxOptions = {
+  modemChoice: 'have' | 'rent';     // "have" = müşterinin modemi var, "rent" = kirala
+  signal5g: 'yes' | 'no' | 'unsure'; // 5G şebeke durumu
+};
+
+export const turboBoxPackages: TurboBoxPackage[] = [
+  {
+    type: 'turbobox',
+    id: 'turbobox-250',
+    data: '250',
+    unit: 'GB',
+    campaignName: 'TurboBox Başlangıç',
+    dataPrice: 960,
+    total45gDataPrice: 660,
+    data45gLabel: '250 GB',
+    features: [
+      'Tak-çalıştır 5G modem desteği',
+      'Çift kişilik kullanım',
+      'Tek hattan paylaşım',
+    ],
+    isPopular: false,
+  },
+  {
+    type: 'turbobox',
+    id: 'turbobox-500',
+    data: '500',
+    unit: 'GB',
+    campaignName: 'TurboBox Fırsat',
+    dataPrice: 1160,
+    total45gDataPrice: 1060,
+    data45gLabel: '500 GB',
+    features: [
+      'HD streaming + video konferans',
+      'Aileler için ideal kapasite',
+      'En çok tercih edilen',
+    ],
+    isPopular: true,
+    badge: 'En Çok Tercih Edilen',
+  },
+  {
+    type: 'turbobox',
+    id: 'turbobox-limitsiz',
+    data: '∞',
+    unit: 'Limitsiz',
+    campaignName: 'TurboBox Limitsiz',
+    dataPrice: 1510,
+    total45gDataPrice: null,
+    data45gLabel: '500 GB (en yakın)',
+    features: [
+      'Veri kotası yok',
+      'Fiber gibi sınırsız kullanım',
+      'Yoğun kullanım için ideal',
+    ],
+    isPopular: false,
+  },
+];
+
+/**
+ * TurboBox toplam aylık ücret hesaplaması.
+ * Modem kiralanırsa veri ücretine sabit modem ücreti eklenir.
+ */
+export function calcTurboBoxPrice(
+  pkg: TurboBoxPackage,
+  options: TurboBoxOptions
+): number {
+  return pkg.dataPrice + (options.modemChoice === 'rent' ? TURBOBOX_MODEM_FEE : 0);
+}
+
+// ============================================================
+// DISCRIMINATED UNION + TYPE GUARDS
+// LeadModal'da Fiber ve TurboBox paketlerini tek prop'la kabul
+// edebilmek için union tipi ve type-safe ayırt etme yardımcıları.
+// ============================================================
+
+/**
+ * Fiber veya TurboBox paketi — LeadModal'da ortak prop tipi
+ */
+export type AnyPackage = Package | TurboBoxPackage;
+
+/**
+ * TypeScript type guard — TurboBox paketi mi kontrol eder
+ * Kullanım: if (isTurboBox(pkg)) { pkg.data güvenli kullanılır }
+ */
+export function isTurboBox(pkg: AnyPackage): pkg is TurboBoxPackage {
+  return pkg.type === 'turbobox';
+}
+
+/**
+ * TypeScript type guard — Fiber paketi mi kontrol eder
+ * Kullanım: if (isFiber(pkg)) { pkg.speedMbps güvenli kullanılır }
+ */
+export function isFiber(pkg: AnyPackage): pkg is Package {
+  return pkg.type === 'fiber';
+}
