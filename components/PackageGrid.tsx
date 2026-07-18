@@ -1,265 +1,177 @@
 'use client';
 
-import { useState } from 'react';
-import { Check } from 'lucide-react';
+import { Wifi, CheckCircle2, MessageCircle } from 'lucide-react';
 import {
-  standartPackages,
-  TV_EXTRA_FEE,
-  MODEM_RENTAL_FEE,
-  calcPackagePrices,
+  packages5G,
+  packages45G,
+  whatsappLink,
   type Package,
 } from '@/data/packages';
-import TurkcellLogo from './TurkcellLogo';
 
 interface PackageGridProps {
-  onSelectPackage: (pkg: Package, options: { tv: boolean; modem: boolean }) => void;
+  onSelectPackage: (pkg: Package) => void;
 }
 
-export default function PackageGrid({ onSelectPackage }: PackageGridProps) {
-  const [view, setView] = useState<'popular' | 'all'>('popular');
-  const [options, setOptions] = useState<Record<string, { tv: boolean; modem: boolean }>>(
-    Object.fromEntries(standartPackages.map(p => [p.id, { tv: false, modem: false }]))
-  );
+const fmt = (n: number) => new Intl.NumberFormat('tr-TR').format(Math.round(n));
 
-  const toggleOption = (pkgId: string, opt: 'tv' | 'modem') => {
-    setOptions(prev => ({
-      ...prev,
-      [pkgId]: { ...prev[pkgId], [opt]: !prev[pkgId][opt] },
-    }));
-  };
-
-  const popularPackages = standartPackages.filter(p => p.isPopular);
-  const displayedPackages = view === 'popular' ? popularPackages : standartPackages;
-
-  const fmt = (n: number) => new Intl.NumberFormat('tr-TR').format(Math.round(n));
+function PackageCard({
+  pkg,
+  onSelect,
+}: {
+  pkg: Package;
+  onSelect: (pkg: Package) => void;
+}) {
+  const is5G = pkg.network === '5G';
 
   return (
-    <section className="px-[5%] py-4 pb-16 max-w-[1300px] mx-auto">
-      {/* Section header */}
-      <div className="flex justify-between items-center mb-8 flex-wrap gap-3">
-        <div>
-          <h2 className="text-2xl font-extrabold tracking-tight text-ink-900">
-            Superbox Limitsiz paketler
-          </h2>
-          <p className="text-sm text-ink-500 mt-1">
-            Kotasız, hız bazlı paketler. Tüm fiyatlar 18 ay sözleşmede sabittir, enflasyon zammı yoktur.
-          </p>
-        </div>
-
-        {/* View toggle */}
-        <div className="inline-flex gap-1 bg-white border border-ink-100 rounded-full p-1 shadow-soft">
-          <button
-            onClick={() => setView('popular')}
-            className={`px-4 py-2 text-[13px] font-bold rounded-full transition-all ${
-              view === 'popular'
-                ? 'bg-tc-navy text-white'
-                : 'text-ink-500 hover:text-ink-900'
-            }`}
-          >
-            3 popüler hız
-          </button>
-          <button
-            onClick={() => setView('all')}
-            className={`px-4 py-2 text-[13px] font-bold rounded-full transition-all ${
-              view === 'all'
-                ? 'bg-tc-navy text-white'
-                : 'text-ink-500 hover:text-ink-900'
-            }`}
-          >
-            Tüm hızlar (9)
-          </button>
-        </div>
-      </div>
-
-      {/* Grid */}
-      {view === 'popular' ? (
-        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch">
-          {popularPackages.map(pkg => {
-            const opts = options[pkg.id];
-            const prices = calcPackagePrices(pkg, opts);
-            const isFeatured = pkg.speedMbps === 200;
-
-            return (
-              <div
-                key={pkg.id}
-                className={`relative bg-white rounded-2xl p-9 border transition-all duration-300 hover:-translate-y-2 hover:shadow-medium hover:border-accent-500 flex flex-col ${
-                  isFeatured
-                    ? 'border-2 border-accent-500 shadow-strong'
-                    : 'border-ink-100'
-                }`}
-                style={isFeatured ? { background: 'linear-gradient(180deg, #fff 0%, #FFF9E5 100%)' } : undefined}
-              >
-                {/* Popular tag */}
-                {isFeatured && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent-500 text-tc-navy px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg whitespace-nowrap">
-                    {pkg.badge}
-                  </div>
-                )}
-
-                {/* Turkcell badge (sadece featured paket için) */}
-                {isFeatured && (
-                  <div className="absolute top-3.5 right-3.5 inline-flex items-center gap-1 bg-accent-500/15 border border-accent-500/30 px-2 py-1 rounded-full text-[9px] font-extrabold text-tc-navy uppercase tracking-wider">
-                    <TurkcellLogo variant="featured" />
-                    Resmi Kampanya
-                  </div>
-                )}
-
-                {/* Speed */}
-                <div className="flex items-baseline gap-2 mb-1">
-                  <h3 className="text-[3.25rem] font-extrabold text-ink-900 leading-none tracking-tight">
-                    {pkg.speedMbps}
-                  </h3>
-                  <span className="font-bold text-brand-500 text-lg">Mbps</span>
-                </div>
-                <div className="text-ink-500 font-semibold text-sm mb-6">
-                  {pkg.campaignName || 'Superbox Evde İnternet'}
-                </div>
-
-                {/* Pricing block */}
-                <div className="bg-ink-50 rounded-xl p-4 mb-3">
-                  <div className="flex justify-between items-baseline py-1.5">
-                    <span className="text-[13px] text-ink-500 font-semibold flex items-center gap-1.5">
-                      İlk 9 ay
-                      <span className="bg-prime-100 text-success text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                        Hoş Geldin
-                      </span>
-                    </span>
-                    <span className="text-[1.85rem] font-extrabold text-ink-900 tracking-tight">
-                      {fmt(prices.firstPeriod)}
-                      <span className="text-base font-bold">₺</span>
-                      <span className="text-xs text-ink-500 ml-0.5 font-semibold">/ay</span>
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-baseline pt-2.5 mt-1 border-t border-dashed border-ink-100/60">
-                    <span className="text-[13px] text-ink-500 font-semibold">10–18. ay</span>
-                    <span className="text-lg font-bold text-ink-500">
-                      {fmt(prices.secondPeriod)}
-                      <span className="text-sm">₺</span>
-                      <span className="text-xs text-ink-400 ml-0.5 font-semibold">/ay</span>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Stable promise */}
-                <div className="bg-prime-100 text-success px-3 py-2 rounded-xl text-xs font-bold text-center mb-4 flex items-center justify-center gap-1.5">
-                  <Check className="w-3.5 h-3.5" strokeWidth={3} />
-                  18 ay sözleşmede sabit · enflasyon zammı yok
-                </div>
-
-                {/* Features */}
-                <ul className="border-t border-ink-100 pt-4 mb-6 space-y-2.5">
-                  {(pkg.features || []).map((f, i) => (
-                    <li key={i} className="flex items-center gap-2.5 text-sm text-ink-900 font-semibold">
-                      <Check className="w-4 h-4 text-brand-500 flex-shrink-0" strokeWidth={3} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Options */}
-                <div className="border-t border-ink-100 pt-3.5 mb-4">
-                  <div className="text-[11px] text-ink-500 font-bold uppercase tracking-wider mb-2">
-                    Ek seçenekler
-                  </div>
-                  <label className="flex items-center gap-2.5 py-1.5 cursor-pointer hover:text-brand-500 transition">
-                    <input
-                      type="checkbox"
-                      checked={opts.tv}
-                      onChange={() => toggleOption(pkg.id, 'tv')}
-                      className="checkbox"
-                    />
-                    <span className="text-sm font-semibold text-ink-900">
-                      TV+ ekle <span className="text-ink-500 font-medium">(+{fmt(TV_EXTRA_FEE)}₺/ay)</span>
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-2.5 py-1.5 cursor-pointer hover:text-brand-500 transition">
-                    <input
-                      type="checkbox"
-                      checked={opts.modem}
-                      onChange={() => toggleOption(pkg.id, 'modem')}
-                      className="checkbox"
-                    />
-                    <span className="text-sm font-semibold text-ink-900">
-                      Superbox cihazı kirala <span className="text-ink-500 font-medium">(+{fmt(MODEM_RENTAL_FEE)}₺/ay)</span>
-                    </span>
-                  </label>
-                </div>
-
-                {/* CTA */}
-                <button
-                  onClick={() => onSelectPackage(pkg, opts)}
-                  className={`mt-auto py-4 rounded-xl font-bold text-base transition-all hover:-translate-y-0.5 hover:shadow-lg ${
-                    isFeatured
-                      ? 'bg-accent-500 hover:bg-accent-600 text-tc-navy'
-                      : 'bg-tc-navy hover:bg-brand-600 text-white'
-                  }`}
-                >
-                  Bu Paketi Seç
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
-          {standartPackages.map(pkg => {
-            const prices = calcPackagePrices(pkg, { tv: false, modem: false });
-            return (
-              <div
-                key={pkg.id}
-                className={`relative bg-white rounded-xl p-4 border transition-all duration-200 hover:-translate-y-1 hover:shadow-soft hover:border-accent-500 flex flex-col ${
-                  pkg.isPopular ? 'border-2 border-accent-500' : 'border-ink-100'
-                }`}
-              >
-                {pkg.isPopular && pkg.badge && (
-                  <div className="absolute -top-2 right-3 bg-accent-500 text-tc-navy text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">
-                    {pkg.badge}
-                  </div>
-                )}
-
-                <div className="flex items-baseline gap-1 mb-3">
-                  <span className="text-[1.85rem] font-extrabold text-ink-900 leading-none tracking-tight">
-                    {pkg.speedMbps}
-                  </span>
-                  <span className="text-sm text-brand-500 font-bold">Mbps</span>
-                </div>
-
-                <div className="bg-ink-50 rounded-xl px-3 py-2.5 mb-3 space-y-1">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-ink-500 font-semibold">İlk 9 ay</span>
-                    <span className="font-bold text-ink-900">{fmt(prices.firstPeriod)}₺/ay</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-ink-500 font-semibold">10–18. ay</span>
-                    <span className="font-semibold text-ink-500">{fmt(prices.secondPeriod)}₺/ay</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => onSelectPackage(pkg, { tv: false, modem: false })}
-                  className={`mt-auto py-2.5 rounded-xl text-sm font-bold transition-all ${
-                    pkg.isPopular
-                      ? 'bg-accent-500 hover:bg-accent-600 text-tc-navy'
-                      : 'bg-tc-navy hover:bg-brand-600 text-white'
-                  }`}
-                >
-                  Başvur
-                </button>
-              </div>
-            );
-          })}
+    <div
+      className={`relative flex flex-col rounded-2xl bg-white overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-medium ${
+        pkg.isPopular
+          ? 'border-2 border-accent-500 shadow-strong'
+          : is5G
+            ? 'border border-brand-200'
+            : 'border border-emerald-200'
+      }`}
+    >
+      {/* En Popüler şeridi */}
+      {pkg.isPopular && pkg.badge && (
+        <div className="bg-accent-500 text-tc-navy text-center text-[13px] font-extrabold py-2 tracking-wide">
+          {pkg.badge}
         </div>
       )}
 
+      {/* Renkli başlık bloğu — 5G: parlament mavisi, 4.5G: yeşil */}
+      <div
+        className="text-white text-center px-6 pt-7 pb-10"
+        style={{
+          background: is5G
+            ? 'linear-gradient(135deg, #2F62B5 0%, #1E4489 100%)'
+            : 'linear-gradient(135deg, #00A876 0%, #007D58 100%)',
+        }}
+      >
+        <Wifi className="w-8 h-8 mx-auto mb-3 opacity-95" strokeWidth={2.2} />
+        <h3 className="text-xl font-extrabold leading-snug mb-1 text-white">{pkg.name}</h3>
+        <p className="text-sm text-white/75 font-semibold">{pkg.network} Hızında</p>
+      </div>
+
+      {/* Kota rozeti — başlık bloğunun üzerine biner */}
+      <div className="flex justify-center -mt-6">
+        <span
+          className="text-white text-2xl font-extrabold px-8 py-2.5 rounded-full shadow-lg tracking-tight"
+          style={{
+            background: is5G
+              ? 'linear-gradient(135deg, #24509C 0%, #17356C 100%)'
+              : 'linear-gradient(135deg, #00905F 0%, #006B4B 100%)',
+          }}
+        >
+          {pkg.quota}
+        </span>
+      </div>
+
+      {/* Özellikler */}
+      <ul className="px-8 pt-6 pb-2 space-y-3">
+        {pkg.features.map((f, i) => (
+          <li key={i} className="flex items-center gap-2.5 text-[15px] text-ink-700 font-semibold">
+            <CheckCircle2 className="w-5 h-5 text-sb-green-500 flex-shrink-0" strokeWidth={2.2} />
+            {f}
+          </li>
+        ))}
+      </ul>
+
+      {/* Fiyat */}
+      <div className="text-center border-t border-ink-100 mx-8 mt-4 pt-5 pb-1">
+        <div className="flex items-baseline justify-center gap-1.5">
+          <span className="text-[2.6rem] font-extrabold text-brand-600 leading-none tracking-tight">
+            {fmt(pkg.priceMonthly)}
+          </span>
+          <span className="text-base font-bold text-ink-500">TL/ay</span>
+        </div>
+        <p className="text-xs text-ink-400 font-semibold mt-1.5">
+          {pkg.commitmentMonths} Ay Taahhüt
+        </p>
+      </div>
+
+      {/* CTA'lar */}
+      <div className="px-6 pt-4 pb-6 mt-auto space-y-2.5">
+        <a
+          href={whatsappLink(pkg)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`flex items-center justify-center gap-2 w-full py-3.5 rounded-full font-bold text-[15px] text-white transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+            is5G ? 'bg-wa-500 hover:bg-wa-600' : 'bg-brand-600 hover:bg-brand-700'
+          }`}
+        >
+          <MessageCircle className="w-4.5 h-4.5 w-[18px] h-[18px]" />
+          WhatsApp ile Başvur
+        </a>
+        <button
+          onClick={() => onSelect(pkg)}
+          className="w-full py-3 rounded-full font-bold text-sm border-[1.5px] border-brand-500 text-brand-600 hover:bg-brand-50 transition"
+        >
+          Online Başvuru Formu
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function PackageGrid({ onSelectPackage }: PackageGridProps) {
+  return (
+    <section id="paketler" className="px-[5%] py-4 pb-16 max-w-[1300px] mx-auto">
+      {/* ============ SUPERBOX 5G HAZIR ============ */}
+      <div className="mb-8">
+        <div className="inline-flex items-center gap-2 mb-2">
+          <span className="bg-brand-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
+            5G Hazır
+          </span>
+          <span className="text-xs text-ink-500 font-semibold">5G Hızında · Kota aşım derdi yok</span>
+        </div>
+        <h2 className="text-2xl font-extrabold tracking-tight text-ink-900">
+          Superbox 5G Hazır paketler
+        </h2>
+        <p className="text-sm text-ink-500 mt-1">
+          Tüm fiyatlar 12 ay taahhüt süresince sabittir; taahhüt boyunca zam yapılmaz.
+        </p>
+      </div>
+
+      <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch mb-14">
+        {packages5G.map(pkg => (
+          <PackageCard key={pkg.id} pkg={pkg} onSelect={onSelectPackage} />
+        ))}
+      </div>
+
+      {/* ============ SUPERBOX 4.5G ============ */}
+      <div className="mb-8">
+        <div className="inline-flex items-center gap-2 mb-2">
+          <span className="bg-sb-green-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
+            4.5G
+          </span>
+          <span className="text-xs text-ink-500 font-semibold">Ekonomik · 5G kapsaması olmayan adresler için</span>
+        </div>
+        <h2 className="text-2xl font-extrabold tracking-tight text-ink-900">
+          Superbox 4.5G paketler
+        </h2>
+        <p className="text-sm text-ink-500 mt-1">
+          100 GB ve 300 GB paketlerinde +50 GB hediye internet, kartlarda gösterilen toplam kotaya dahildir.
+        </p>
+      </div>
+
+      <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+        {packages45G.map(pkg => (
+          <PackageCard key={pkg.id} pkg={pkg} onSelect={onSelectPackage} />
+        ))}
+      </div>
+
       {/* Disclaimer */}
-      <div className="bg-white border border-ink-100 rounded-2xl px-6 py-5 mt-8 text-xs text-ink-500 leading-relaxed">
+      <div className="bg-white border border-ink-100 rounded-2xl px-6 py-5 mt-10 text-xs text-ink-500 leading-relaxed">
         <strong className="text-ink-900">Fiyatlandırma şeffaflığı:</strong>{' '}
-        İlk 9 ay Hoş Geldin İndirimi uygulanır, 10-18. ay standart kampanya fiyatı geçerlidir.
-        Her iki dönemde de fiyat sözleşmede sabittir; 18 ay boyunca enflasyon zammı uygulanmaz.
-        KDV ve ÖİV dahildir. Kurulum kablosuzdur; Superbox cihazını prize takmanız yeterlidir.{' '}
-        <strong className="text-ink-900">Superbox cihazı kiralama isteğe bağlıdır</strong> (+90₺/ay) — kendi uyumlu cihazını bağlamak isteyenler için ücretsizdir.
-        100 Mbps ve üzeri hızlar 5G kapsama alanında geçerlidir. 500 ve 750 Mbps paketleri yalnızca telefonla görüşmede önerilir.
-        Adresinizdeki şebeke kapsaması telefon görüşmesinde kontrol edilir.
+        Tüm fiyatlar 12 ay taahhütlüdür ve taahhüt süresince sabittir; KDV ve ÖİV dahildir.{' '}
+        <strong className="text-ink-900">Aşım derdi yok:</strong> aylık kota tamamlandığında ek ücret
+        yansıtılmaz. <strong className="text-ink-900">Alt yapı derdi yok:</strong> Superbox kablosuz
+        çalışır; cihazı prize takmanız yeterlidir, kablo çekimi ve altyapı randevusu gerekmez.
+        5G paketleri 5G kapsama alanındaki adreslerde geçerlidir; kapsama durumu telefon
+        görüşmesinde teyit edilir. 4.5G 100 GB ve 300 GB paketlerindeki +50 GB hediye internet
+        kampanya koşullarına tabidir.
       </div>
     </section>
   );

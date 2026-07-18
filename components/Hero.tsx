@@ -18,8 +18,8 @@ export default function Hero() {
 
       {/* Sub */}
       <p className="text-ink-500 text-lg max-w-[640px] mx-auto mb-8 leading-relaxed">
-        Altyapı ve kablo beklemeden, tak-çalıştır Superbox ile 5G hızında
-        evde internet. 18 ay sabit fiyat ve enflasyon koruması — bugün başvurun.
+        Altyapı ve kablo beklemeden, tek prizle çalışan Superbox ile 5G hızında
+        evde internet. 12 ay sabit fiyat, aşım derdi yok — bugün başvurun.
       </p>
 
       {/* Trust badges */}
@@ -30,7 +30,7 @@ export default function Hero() {
         </span>
         <span className="inline-flex items-center gap-1.5">
           <Check className="w-3.5 h-3.5 text-success" strokeWidth={3} />
-          Kablosuz, tak-çalıştır kurulum
+          Tek priz yeterli · altyapı derdi yok
         </span>
         <span className="inline-flex items-center gap-1.5">
           <Check className="w-3.5 h-3.5 text-success" strokeWidth={3} />

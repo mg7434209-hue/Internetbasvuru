@@ -1,13 +1,13 @@
 // Turkcell Superbox logosu — tamamen SVG/metin tabanlı, dış görsel gerektirmez.
-// Marka renkleri: Turkcell Sarısı #FFC900 + Koyu Lacivert #0A2540
-// TTLogo ile aynı variant API'si korunmuştur (mini | cobrand | featured | footer).
+// Marka renkleri: Turkcell Sarısı #FFC900 + Parlament Mavisi #2856A5 / #12294F
+// Variant API'si: mini | cobrand (mavi header) | featured | footer
 
 interface TurkcellLogoProps {
   variant?: 'mini' | 'cobrand' | 'featured' | 'footer';
   className?: string;
 }
 
-/** Sarı yuvarlak kare içinde lacivert "S" — Superbox amblemi */
+/** Sarı yuvarlak kare içinde lacivert sinyal amblemi — Superbox */
 function Mark({ size = 32 }: { size?: number }) {
   return (
     <svg
@@ -22,19 +22,19 @@ function Mark({ size = 32 }: { size?: number }) {
       <path
         d="M14 30a10 10 0 0 1 20 0"
         fill="none"
-        stroke="#0A2540"
+        stroke="#17356C"
         strokeWidth="3.4"
         strokeLinecap="round"
       />
       <path
         d="M9 30a15 15 0 0 1 30 0"
         fill="none"
-        stroke="#0A2540"
+        stroke="#17356C"
         strokeWidth="3.4"
         strokeLinecap="round"
         opacity="0.45"
       />
-      <circle cx="24" cy="33.5" r="4" fill="#0A2540" />
+      <circle cx="24" cy="33.5" r="4" fill="#17356C" />
     </svg>
   );
 }
@@ -75,11 +75,11 @@ export default function TurkcellLogo({ variant = 'mini', className = '' }: Turkc
   }
 
   if (variant === 'cobrand') {
-    // Header için, açık zemin
+    // Header için — parlament mavisi zemin üzerinde beyaz yazı
     return (
       <span className={`inline-flex items-center gap-2.5 ${className}`}>
         <Mark size={40} />
-        <Wordmark />
+        <Wordmark dark />
       </span>
     );
   }

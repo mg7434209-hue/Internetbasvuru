@@ -22,19 +22,19 @@ export default function Icon() {
           <path
             d="M14 30a10 10 0 0 1 20 0"
             fill="none"
-            stroke="#0A2540"
+            stroke="#17356C"
             strokeWidth="3.6"
             strokeLinecap="round"
           />
           <path
             d="M9 30a15 15 0 0 1 30 0"
             fill="none"
-            stroke="#0A2540"
+            stroke="#17356C"
             strokeWidth="3.6"
             strokeLinecap="round"
             opacity="0.45"
           />
-          <circle cx="24" cy="34" r="4.2" fill="#0A2540" />
+          <circle cx="24" cy="34" r="4.2" fill="#17356C" />
         </svg>
       </div>
     ),

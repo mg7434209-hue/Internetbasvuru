@@ -2,17 +2,16 @@
 
 import { useState, useMemo } from 'react';
 import { Check, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
-import { ALL_CITIES, getDistricts, getCampaignZone } from '@/data/turkey';
+import { ALL_CITIES, getDistricts } from '@/data/turkey';
 import {
-  getPackagesForLocation,
-  recommendSpeed,
-  calcPackagePrices,
-  TV_EXTRA_FEE,
+  recommendPackage,
   type Package,
+  type Network,
 } from '@/data/packages';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 type Usage = 'hafif' | 'orta' | 'yogun';
+type Coverage = 'var' | 'yok' | 'bilmiyorum';
 type LineStatus = 'yok' | 'var';
 
 export default function Wizard() {
@@ -20,7 +19,7 @@ export default function Wizard() {
   const [il, setIl] = useState('');
   const [ilce, setIlce] = useState('');
   const [usage, setUsage] = useState<Usage | ''>('');
-  const [wantsTv, setWantsTv] = useState<boolean | null>(null);
+  const [coverage, setCoverage] = useState<Coverage | ''>('');
   const [pkg, setPkg] = useState<Package | null>(null);
   const [ad, setAd] = useState('');
   const [tel, setTel] = useState('');
@@ -30,20 +29,21 @@ export default function Wizard() {
   const [error, setError] = useState<string | null>(null);
 
   const districts = useMemo(() => (il ? getDistricts(il) : []), [il]);
-  const zone = useMemo(() => getCampaignZone(il, ilce), [il, ilce]);
 
-  const recommendedPackages = useMemo(() => {
-    if (!usage) return [];
-    const targetSpeed = recommendSpeed(usage);
-    return getPackagesForLocation(zone).filter(p => p.speedMbps === targetSpeed);
-  }, [usage, zone]);
+  // 5G kapsaması yoksa 4.5G önerilir; "bilmiyorum" için 5G önerilir (teyit aramada)
+  const network: Network = coverage === 'yok' ? '4.5G' : '5G';
+
+  const recommendedPackage = useMemo(() => {
+    if (!usage || !coverage) return null;
+    return recommendPackage(usage, network);
+  }, [usage, coverage, network]);
 
   const fmt = (n: number) => new Intl.NumberFormat('tr-TR').format(Math.round(n));
 
   const canProceed = () => {
     if (step === 1) return !!il && !!ilce;
     if (step === 2) return !!usage;
-    if (step === 3) return wantsTv !== null;
+    if (step === 3) return !!coverage;
     if (step === 4) return pkg !== null;
     if (step === 5) return ad.trim().length >= 3 && tel.trim().replace(/\D/g, '').length >= 10 && !!line && kvkk;
     return true;
@@ -52,8 +52,7 @@ export default function Wizard() {
   // =============================================
   // SUBMIT — silent failure düzeltildi
   // =============================================
-  // Önceki kod: try/catch boş, hata yutulmuş, her zaman success gösterilirdi.
-  // Yeni kod: response.ok kontrolü + hata gösterimi + retry imkanı.
+  // response.ok kontrolü + hata gösterimi + retry imkanı.
   async function handleSubmit() {
     if (!canProceed() || !pkg || submitting) return;
     setSubmitting(true);
@@ -70,8 +69,8 @@ export default function Wizard() {
           il, ilce,
           kvkk_consent: kvkk,
           package_id: pkg.id,
-          package_name: `${pkg.speedMbps} Mbps ${pkg.campaignName || ''} ${wantsTv ? '+ TV' : ''}`.trim(),
-          message: `Wizard başvurusu - ${usage} kullanım, mevcut hat: ${line}`,
+          package_name: `${pkg.name} (${pkg.quota})`,
+          message: `Wizard başvurusu - ${usage} kullanım, 5G kapsama: ${coverage}, mevcut hat: ${line}`,
           source: 'wizard',
           source_path: 'wizard',
         }),
@@ -104,7 +103,7 @@ export default function Wizard() {
   }
 
   function reset() {
-    setStep(1); setIl(''); setIlce(''); setUsage(''); setWantsTv(null);
+    setStep(1); setIl(''); setIlce(''); setUsage(''); setCoverage('');
     setPkg(null); setAd(''); setTel(''); setLine(''); setKvkk(false);
     setError(null);
   }
@@ -133,18 +132,18 @@ export default function Wizard() {
       id="wizard"
       className="px-[5%] py-20 text-white mt-8 rounded-t-[60px]"
       style={{
-        background: `radial-gradient(circle at 20% 0%, rgba(255,201,0,0.12) 0%, transparent 50%), radial-gradient(circle at 80% 100%, rgba(0,95,184,0.18) 0%, transparent 50%), #0A2540`,
+        background: `radial-gradient(circle at 20% 0%, rgba(255,201,0,0.12) 0%, transparent 50%), radial-gradient(circle at 80% 100%, rgba(40,86,165,0.35) 0%, transparent 50%), #12294F`,
       }}
     >
       <div className="max-w-[800px] mx-auto text-center">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-500/15 text-accent-500 text-[13px] font-bold mb-5 tracking-wide border border-accent-500/30">
           🧭 Akıllı Yönlendirme
         </div>
-        <h2 className="text-display font-extrabold mb-4 leading-tight">
+        <h2 className="text-display font-extrabold mb-4 leading-tight text-white">
           Size En Uygun Superbox Paketini Bulalım
         </h2>
         <p className="opacity-70 text-base max-w-[540px] mx-auto">
-          Birkaç kısa soruyla kullanım profilinize ve bütçenize göre en uygun Superbox paketini önerelim.
+          Birkaç kısa soruyla kullanım profilinize ve adresinize göre en uygun Superbox paketini önerelim.
         </p>
 
         <div className="bg-white/5 p-6 sm:p-9 rounded-2xl border border-white/10 mt-8 backdrop-blur-md text-left">
@@ -163,7 +162,7 @@ export default function Wizard() {
 
           {step === 1 && (
             <div className="animate-fade-in">
-              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px]">Konumunuz</h3>
+              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Konumunuz</h3>
               <p className="text-white/60 text-sm mb-5">Hangi şehirde Superbox kullanmak istiyorsunuz?</p>
               <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">İl</label>
               <select value={il} onChange={e => { setIl(e.target.value); setIlce(''); }}
@@ -177,27 +176,21 @@ export default function Wizard() {
                 <option value="" className="bg-tc-navy">{il ? 'İlçe seçin' : 'Önce il seçin'}</option>
                 {districts.map(d => <option key={d} value={d} className="bg-tc-navy">{d}</option>)}
               </select>
-              {zone === 'bolgesel-avantaj' && (
-                <p className="text-[12px] text-accent-500 mt-3 font-semibold">✨ Bu bölge için <strong>Bölgesel Avantaj</strong> kampanyası uygulanır.</p>
-              )}
-              {zone === 'bolgesel-firsat' && (
-                <p className="text-[12px] text-accent-500 mt-3 font-semibold">✨ Bu bölge için <strong>Bölgesel Fırsat</strong> (24 ay tek fiyat) kampanyası uygulanır.</p>
-              )}
             </div>
           )}
 
           {step === 2 && (
             <div className="animate-fade-in">
-              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px]">Kullanım profili</h3>
-              <p className="text-white/60 text-sm mb-5">Doğru hızı önerelim.</p>
+              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Kullanım profili</h3>
+              <p className="text-white/60 text-sm mb-5">Doğru kotayı önerelim.</p>
               {(['hafif', 'orta', 'yogun'] as Usage[]).map(u => (
                 <button key={u} onClick={() => setUsage(u)}
                   className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${usage === u ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
                   <div className="font-bold text-[15px] mb-0.5">{u === 'hafif' ? 'Hafif kullanım' : u === 'orta' ? 'Orta kullanım' : 'Yoğun kullanım'}</div>
                   <div className="text-xs text-white/60 font-medium">
-                    {u === 'hafif' && '1-3 kişi · sosyal medya, video · 50 Mbps yeterli'}
-                    {u === 'orta' && '3-5 kişi · 4K, oyun, video konferans · 5G 200 Mbps'}
-                    {u === 'yogun' && 'Kalabalık ev / ev ofis · 5G 1000 Mbps'}
+                    {u === 'hafif' && '1-3 kişi · sosyal medya, video · 500 GB / 150 GB yeterli'}
+                    {u === 'orta' && '3-5 kişi · 4K, oyun, video konferans · 1 TB / 350 GB'}
+                    {u === 'yogun' && 'Kalabalık ev / ev ofis · 2 TB / 1 TB'}
                   </div>
                 </button>
               ))}
@@ -206,65 +199,67 @@ export default function Wizard() {
 
           {step === 3 && (
             <div className="animate-fade-in">
-              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px]">TV de ister misiniz?</h3>
-              <p className="text-white/60 text-sm mb-5">Turkcell TV+ opsiyonu.</p>
-              <button onClick={() => setWantsTv(false)}
-                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${wantsTv === false ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
-                <div className="font-bold text-[15px] mb-0.5">Sadece internet</div>
-                <div className="text-xs text-white/60 font-medium">Standart Superbox Limitsiz kampanyası</div>
+              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Adresinizde 5G var mı?</h3>
+              <p className="text-white/60 text-sm mb-5">5G kapsamasına göre 5G Hazır veya 4.5G paketi önerilir.</p>
+              <button onClick={() => setCoverage('var')}
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${coverage === 'var' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
+                <div className="font-bold text-[15px] mb-0.5">Evet, 5G var</div>
+                <div className="text-xs text-white/60 font-medium">Superbox 5G Hazır paketleri — 5G hızında</div>
               </button>
-              <button onClick={() => setWantsTv(true)}
-                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${wantsTv === true ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
-                <div className="font-bold text-[15px] mb-0.5">TV + İnternet</div>
-                <div className="text-xs text-white/60 font-medium">TV+ paketi (+{fmt(TV_EXTRA_FEE)}₺/ay)</div>
+              <button onClick={() => setCoverage('yok')}
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${coverage === 'yok' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
+                <div className="font-bold text-[15px] mb-0.5">Hayır, 5G yok</div>
+                <div className="text-xs text-white/60 font-medium">Superbox 4.5G paketleri — ekonomik seçenekler</div>
+              </button>
+              <button onClick={() => setCoverage('bilmiyorum')}
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${coverage === 'bilmiyorum' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
+                <div className="font-bold text-[15px] mb-0.5">Bilmiyorum</div>
+                <div className="text-xs text-white/60 font-medium">5G Hazır önerilir; kapsama telefonda teyit edilir</div>
               </button>
             </div>
           )}
 
-          {step === 4 && (
+          {step === 4 && recommendedPackage && (
             <div className="animate-fade-in">
-              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px]">Sizin için seçilen paket</h3>
-              <p className="text-white/60 text-sm mb-5">{il} / {ilce} · {wantsTv ? 'TV+ dahil' : 'sadece internet'}</p>
-              {recommendedPackages.map(p => {
-                const prices = calcPackagePrices(p, { tv: !!wantsTv, modem: false });
+              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Sizin için seçilen paket</h3>
+              <p className="text-white/60 text-sm mb-5">{il} / {ilce} · {network} şebekesi</p>
+              {[recommendedPackage].map(p => {
                 const isSelected = pkg?.id === p.id;
                 return (
                   <div key={p.id} onClick={() => setPkg(p)}
                     className={`rounded-xl border p-4 mb-2.5 cursor-pointer transition min-h-[60px] ${isSelected ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
                     <div className="flex justify-between items-baseline mb-2.5">
-                      <div className="text-2xl font-extrabold tracking-tight">{p.speedMbps}<span className="text-sm text-accent-500 font-bold ml-1">Mbps</span></div>
-                      <div className="text-xs text-white/60 font-semibold">{p.campaignName || 'Superbox Limitsiz'}</div>
+                      <div className="text-2xl font-extrabold tracking-tight">{p.quota}<span className="text-sm text-accent-500 font-bold ml-2">{p.network}</span></div>
+                      <div className="text-xs text-white/60 font-semibold">{p.name}</div>
                     </div>
                     <div className="flex gap-4 bg-black/25 px-3 py-2 rounded-xl mb-2">
-                      <div><div className="text-[10px] text-white/50 font-semibold">İlk 9 ay</div><div className="text-[15px] font-bold">{fmt(prices.firstPeriod)}₺/ay</div></div>
-                      <div><div className="text-[10px] text-white/50 font-semibold">{prices.isFlat ? '24 ay' : '10-18. ay'}</div><div className="text-[15px] font-bold">{fmt(prices.secondPeriod)}₺/ay</div></div>
+                      <div><div className="text-[10px] text-white/50 font-semibold">Aylık ücret</div><div className="text-[15px] font-bold">{fmt(p.priceMonthly)} TL/ay</div></div>
+                      <div><div className="text-[10px] text-white/50 font-semibold">Taahhüt</div><div className="text-[15px] font-bold">{p.commitmentMonths} Ay</div></div>
                     </div>
                     <div className="text-[11px] text-prime-100/95 flex items-center gap-1 font-semibold">
                       <Check className="w-3 h-3" strokeWidth={3} />
-                      {prices.isFlat ? '24 ay TEK fiyat' : '18 ay sözleşmede sabit'} · enflasyon zammı yok
+                      12 ay sabit fiyat · aşım derdi yok · tek priz yeterli
                     </div>
                   </div>
                 );
               })}
+              {coverage === 'bilmiyorum' && (
+                <p className="text-[11px] text-white/50 leading-relaxed">
+                  Adresinizde 5G çıkmazsa çağrı merkezimiz 4.5G muadili paketi önerecektir.
+                </p>
+              )}
             </div>
           )}
 
           {step === 5 && pkg && (
             <div className="animate-fade-in">
-              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px]">Bilgileriniz</h3>
+              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Bilgileriniz</h3>
               <p className="text-white/60 text-sm mb-5">15 dakika içinde sizi arıyoruz.</p>
               <div className="bg-accent-500/10 border border-accent-500/30 p-3.5 rounded-xl mb-3.5 space-y-1">
-                {(() => {
-                  const prices = calcPackagePrices(pkg, { tv: !!wantsTv, modem: false });
-                  return (
-                    <>
-                      <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Bölge</span><span className="font-bold">{il} / {ilce}</span></div>
-                      <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Paket</span><span className="font-bold">{pkg.speedMbps} Mbps {wantsTv ? '+ TV+' : ''}</span></div>
-                      <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">İlk 9 ay</span><span className="font-bold">{fmt(prices.firstPeriod)}₺/ay</span></div>
-                      <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">{prices.isFlat ? '24 ay' : '10-18. ay'}</span><span className="font-bold">{fmt(prices.secondPeriod)}₺/ay</span></div>
-                    </>
-                  );
-                })()}
+                <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Bölge</span><span className="font-bold">{il} / {ilce}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Paket</span><span className="font-bold">{pkg.name}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Kota</span><span className="font-bold">{pkg.quota}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Aylık ücret</span><span className="font-bold">{fmt(pkg.priceMonthly)} TL/ay · {pkg.commitmentMonths} ay taahhüt</span></div>
               </div>
               <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">Ad Soyad</label>
               <input
@@ -315,7 +310,7 @@ export default function Wizard() {
               <div className="w-16 h-16 rounded-full bg-success/20 mx-auto mb-5 flex items-center justify-center">
                 <Check className="w-8 h-8 text-success" strokeWidth={3} />
               </div>
-              <h3 className="text-xl font-bold mb-2">Başvurunuz alındı</h3>
+              <h3 className="text-xl font-bold mb-2 text-white">Başvurunuz alındı</h3>
               <p className="text-white/70 text-sm leading-relaxed max-w-[400px] mx-auto mb-6">
                 15 dakika içinde yetkili satış noktamız sizi arayacak.
               </p>

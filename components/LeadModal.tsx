@@ -1,26 +1,12 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { X, Check, Loader2, AlertCircle, ArrowRight } from 'lucide-react';
-import { ALL_CITIES, getDistricts, getCampaignZone } from '@/data/turkey';
-import {
-  calcPackagePrices,
-  TV_EXTRA_FEE,
-  MODEM_RENTAL_FEE,
-  TURBOBOX_MODEM_FEE,
-  calcTurboBoxPrice,
-  type Package,
-  type TurboBoxPackage,
-  type TurboBoxOptions,
-} from '@/data/packages';
+import { X, Check, Loader2, AlertCircle, ArrowRight, Wifi } from 'lucide-react';
+import { ALL_CITIES, getDistricts } from '@/data/turkey';
+import { type Package } from '@/data/packages';
 
 interface LeadModalProps {
-  // Fiber için (mevcut)
   pkg: Package | null;
-  initialOptions: { tv: boolean; modem: boolean };
-  // TurboBox için (yeni — opsiyonel)
-  turboBoxPkg?: TurboBoxPackage | null;
-  turboBoxOptions?: TurboBoxOptions | null;
   onClose: () => void;
 }
 
@@ -41,19 +27,8 @@ const CALL_TIME_NATURAL: Record<CallTimeBackend, string> = {
   aksam: 'akşam saatlerinde',
 };
 
-export default function LeadModal({
-  pkg,
-  initialOptions,
-  turboBoxPkg = null,
-  turboBoxOptions = null,
-  onClose,
-}: LeadModalProps) {
-  // TurboBox mu Fiber mı? — Tek satırlık kontrol, gerisi normal kod
-  const isTurboBox = turboBoxPkg !== null;
-
+export default function LeadModal({ pkg, onClose }: LeadModalProps) {
   // ----- Step 1 state -----
-  const [tv, setTv] = useState(initialOptions.tv);
-  const [modem, setModem] = useState(initialOptions.modem);
   const [il, setIl] = useState('');
   const [ilce, setIlce] = useState('');
   const [ad, setAd] = useState('');
@@ -77,39 +52,26 @@ export default function LeadModal({
   const [token, setToken] = useState<string | null>(null);
 
   const districts = useMemo(() => (il ? getDistricts(il) : []), [il]);
-  const zone = useMemo(() => getCampaignZone(il, ilce), [il, ilce]);
 
   useEffect(() => {
-    setTv(initialOptions.tv);
-    setModem(initialOptions.modem);
-  }, [initialOptions]);
-
-  useEffect(() => {
-    if (pkg || turboBoxPkg) {
+    if (pkg) {
       const handleEsc = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
       document.addEventListener('keydown', handleEsc);
       return () => document.removeEventListener('keydown', handleEsc);
     }
-  }, [pkg, turboBoxPkg, onClose]);
+  }, [pkg, onClose]);
 
-  if (!pkg && !turboBoxPkg) return null;
+  if (!pkg) return null;
 
   const fmt = (n: number) => new Intl.NumberFormat('tr-TR').format(Math.round(n));
+  const is5G = pkg.network === '5G';
 
-  // Fiber için fiyat hesaplaması
-  const prices = pkg ? calcPackagePrices(pkg, { tv, modem }) : null;
-
-  // TurboBox için fiyat hesaplaması
-  const turboBoxTotal =
-    turboBoxPkg && turboBoxOptions ? calcTurboBoxPrice(turboBoxPkg, turboBoxOptions) : 0;
-
-  // Validation: Fiber'da "Mevcut TT hattı" zorunlu, TurboBox'ta gerek yok
   const canSubmitStep1 =
     !!il &&
     !!ilce &&
     ad.trim().length >= 3 &&
     tel.replace(/\D/g, '').length >= 10 &&
-    (isTurboBox ? true : !!line) &&
+    !!line &&
     kvkk;
 
   // Backend'e gönderilecek final aranma zamanı değeri
@@ -191,54 +153,27 @@ export default function LeadModal({
 
   // ----- Submit handlers -----
   async function handleStep1Submit() {
-    if (!canSubmitStep1 || submitting) return;
-    if (!pkg && !turboBoxPkg) return;
+    if (!canSubmitStep1 || submitting || !pkg) return;
     setSubmitting(true);
     setError(null);
     try {
       const phoneClean = tel.replace(/\D/g, '');
 
-      // Fiber veya TurboBox payload'ı hazırla
-      let payload: Record<string, unknown>;
-
-      if (isTurboBox && turboBoxPkg && turboBoxOptions) {
-        // TurboBox payload
-        payload = {
-          name: ad.trim(),
-          phone: phoneClean.startsWith('0') ? phoneClean : '0' + phoneClean,
-          il,
-          ilce,
-          kvkk_consent: kvkk,
-          package_id: turboBoxPkg.id,
-          package_name: `${turboBoxPkg.campaignName} (${turboBoxPkg.data}${turboBoxPkg.unit === 'Limitsiz' ? '' : ' ' + turboBoxPkg.unit})`,
-          message: `TurboBox başvurusu. Bölge: ${zone}.`,
-          source: 'turbobox-modal',
-          source_path: 'turbobox',
-          // TurboBox-spesifik alanlar
-          package_type: 'turbobox',
-          modem_choice: turboBoxOptions.modemChoice,
-          signal_5g: turboBoxOptions.signal5g,
-          data_capacity: `${turboBoxPkg.data} ${turboBoxPkg.unit}`,
-          monthly_price: turboBoxTotal,
-        };
-      } else if (pkg) {
-        // Fiber payload (mevcut, dokunulmadı)
-        payload = {
-          name: ad.trim(),
-          phone: phoneClean.startsWith('0') ? phoneClean : '0' + phoneClean,
-          il,
-          ilce,
-          kvkk_consent: kvkk,
-          package_id: pkg.id,
-          package_name: `${pkg.speedMbps} Mbps${tv ? ' + TV' : ''}${modem ? ' + Modem' : ''}`,
-          message: `Modal başvuru. Mevcut TT hattı: ${line}. Bölge: ${zone}.`,
-          source: 'package-modal',
-          source_path: 'modal',
-          package_type: 'fiber',
-        };
-      } else {
-        return;
-      }
+      const payload = {
+        name: ad.trim(),
+        phone: phoneClean.startsWith('0') ? phoneClean : '0' + phoneClean,
+        il,
+        ilce,
+        kvkk_consent: kvkk,
+        package_id: pkg.id,
+        package_name: `${pkg.name} (${pkg.quota})`,
+        message: `Modal başvuru. Mevcut Turkcell hattı: ${line}. Şebeke: ${pkg.network}.`,
+        source: 'package-modal',
+        source_path: 'modal',
+        package_type: 'superbox',
+        data_capacity: pkg.quota,
+        monthly_price: pkg.priceMonthly,
+      };
 
       const res = await fetch('/api/lead', {
         method: 'POST',
@@ -318,13 +253,13 @@ export default function LeadModal({
 
   const thankYouMessage =
     finalCallTime === 'hemen'
-      ? 'En kısa sürede yetkili bayimiz sizi arayacak.'
+      ? 'En kısa sürede yetkili satış noktamız sizi arayacak.'
       : `Sizi ${CALL_TIME_NATURAL[finalCallTime]} arıyoruz.`;
 
   return (
     <div
       onClick={(e) => e.target === e.currentTarget && onClose()}
-      className="fixed inset-0 z-[2000] bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+      className="fixed inset-0 z-[2000] bg-tc-navy/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
     >
       <div className="bg-white rounded-2xl max-w-[480px] w-full p-7 max-h-[90vh] overflow-y-auto shadow-modal animate-modal-in">
         <div className="flex justify-between items-start mb-5">
@@ -363,7 +298,7 @@ export default function LeadModal({
             <div className="bg-prime-100 border border-success/30 text-success text-xs font-semibold p-3 rounded-xl mb-4 flex gap-2 items-start">
               <Check className="w-4 h-4 mt-0.5 flex-shrink-0" strokeWidth={3} />
               <span>
-                Başvurunuz kayıt altına alındı. Aşağıdaki bilgiler altyapı sorgusunu hızlandırır — opsiyoneldir.
+                Başvurunuz kayıt altına alındı. Aşağıdaki bilgiler süreci hızlandırır — opsiyoneldir.
               </span>
             </div>
 
@@ -533,129 +468,35 @@ export default function LeadModal({
         {/* ============ STEP 1: Initial form ============ */}
         {step === 1 && (
           <>
-            {/* ÜST KUTU: Fiber veya TurboBox özet */}
-            {isTurboBox && turboBoxPkg && turboBoxOptions ? (
-              // === TURBOBOX ÖZET KUTUSU ===
-              <div className="bg-gradient-to-br from-accent-50 to-white border border-accent-500/30 rounded-xl p-4 mb-4">
-                <div className="flex justify-between items-baseline mb-1.5">
-                  <span className="text-2xl font-extrabold text-ink-900 tracking-tight">
-                    {turboBoxPkg.data}
-                    {turboBoxPkg.unit !== 'Limitsiz' && (
-                      <span className="text-sm text-brand-500 font-bold ml-1">{turboBoxPkg.unit}</span>
-                    )}
-                  </span>
-                  <span className="text-xs text-ink-500 font-semibold">
-                    {turboBoxPkg.campaignName}
-                  </span>
-                </div>
-
-                <div className="text-xs text-ink-900 mb-2 leading-relaxed space-y-1">
-                  <div className="flex gap-1.5 items-center font-semibold">
-                    <Check className="w-3.5 h-3.5 text-success flex-shrink-0" strokeWidth={3} />
-                    <span>
-                      {turboBoxOptions.modemChoice === 'have'
-                        ? `Superbox cihazım var (${fmt(TURBOBOX_MODEM_FEE)}₺ tasarruf)`
-                        : `Superbox cihazı kiralanacak (+${fmt(TURBOBOX_MODEM_FEE)}₺/ay)`}
-                    </span>
-                  </div>
-                  <div className="flex gap-1.5 items-center font-semibold">
-                    <Check className="w-3.5 h-3.5 text-success flex-shrink-0" strokeWidth={3} />
-                    <span>
-                      5G şebeke:{' '}
-                      {turboBoxOptions.signal5g === 'yes'
-                        ? 'Var'
-                        : turboBoxOptions.signal5g === 'no'
-                        ? 'Yok (4.5G muadili önerilecek)'
-                        : 'Bilmiyorum (çağrı merkezi yönlendirecek)'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="bg-white/70 rounded-lg px-3.5 py-2.5 mt-2.5">
-                  <div className="flex justify-between items-baseline py-1.5">
-                    <span className="text-xs text-ink-500 font-semibold">Aylık ücret</span>
-                    <span className="text-base font-extrabold text-ink-900 tracking-tight">
-                      {fmt(turboBoxTotal)}₺/ay
-                    </span>
-                  </div>
-                </div>
+            {/* ÜST KUTU: Paket özeti */}
+            <div
+              className="text-white rounded-xl p-4 mb-4"
+              style={{
+                background: is5G
+                  ? 'linear-gradient(135deg, #2F62B5 0%, #1E4489 100%)'
+                  : 'linear-gradient(135deg, #00A876 0%, #007D58 100%)',
+              }}
+            >
+              <div className="flex justify-between items-center mb-2">
+                <span className="inline-flex items-center gap-2 text-sm font-extrabold">
+                  <Wifi className="w-4 h-4" strokeWidth={2.5} />
+                  {pkg.name}
+                </span>
+                <span className="text-[10px] font-extrabold bg-white/15 px-2 py-1 rounded-full uppercase tracking-wider">
+                  {pkg.network} Hızında
+                </span>
               </div>
-            ) : pkg && prices ? (
-              // === LİMİTSİZ PAKET ÖZET KUTUSU ===
-              <div className="bg-gradient-to-br from-accent-50 to-white border border-accent-500/30 rounded-xl p-4 mb-4">
-                <div className="flex justify-between items-baseline mb-1.5">
-                  <span className="text-2xl font-extrabold text-ink-900 tracking-tight">
-                    {pkg.speedMbps} <span className="text-sm text-brand-500 font-bold">Mbps</span>
-                  </span>
-                  <span className="text-xs text-ink-500 font-semibold">
-                    {pkg.campaignName || 'Superbox Limitsiz'}
-                  </span>
-                </div>
-                {(tv || modem) && (
-                  <div className="text-xs text-ink-900 mb-2 leading-relaxed space-y-1">
-                    {tv && (
-                      <div className="flex gap-1.5 items-center font-semibold">
-                        <Check className="w-3.5 h-3.5 text-success flex-shrink-0" strokeWidth={3} />
-                        <span>TV+ (+{fmt(TV_EXTRA_FEE)}₺/ay)</span>
-                      </div>
-                    )}
-                    {modem && (
-                      <div className="flex gap-1.5 items-center font-semibold">
-                        <Check className="w-3.5 h-3.5 text-success flex-shrink-0" strokeWidth={3} />
-                        <span>Superbox cihazı kirala (+{fmt(MODEM_RENTAL_FEE)}₺/ay)</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-                <div className="bg-white/70 rounded-lg px-3.5 py-2.5 mt-2.5">
-                  <div className="flex justify-between items-baseline py-1.5">
-                    <span className="text-xs text-ink-500 font-semibold">İlk 9 ay (Hoş Geldin)</span>
-                    <span className="text-base font-extrabold text-ink-900 tracking-tight">
-                      {fmt(prices.firstPeriod)}₺/ay
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-baseline pt-1 border-t border-dashed border-ink-100/50">
-                    <span className="text-xs text-ink-500 font-semibold">
-                      {prices.isFlat ? '24 ay' : '10-18. ay'}
-                    </span>
-                    <span className="text-sm font-bold text-ink-500">{fmt(prices.secondPeriod)}₺/ay</span>
-                  </div>
-                </div>
+              <div className="flex justify-between items-baseline bg-black/20 rounded-lg px-3.5 py-2.5">
+                <span className="text-2xl font-extrabold tracking-tight">{pkg.quota}</span>
+                <span className="text-base font-extrabold">
+                  {fmt(pkg.priceMonthly)} <span className="text-xs font-bold opacity-80">TL/ay · {pkg.commitmentMonths} ay taahhüt</span>
+                </span>
               </div>
-            ) : null}
-
-            {/* EK SEÇENEKLER (sadece Fiber için göster) */}
-            {!isTurboBox && (
-              <div className="bg-ink-50 rounded-xl p-3.5 mb-4">
-                <div className="text-[11px] text-ink-500 font-bold uppercase tracking-wider mb-2.5">
-                  Ek seçenekler
-                </div>
-                <label className="flex items-center gap-2.5 py-1.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={tv}
-                    onChange={(e) => setTv(e.target.checked)}
-                    className="checkbox"
-                  />
-                  <span className="text-sm font-semibold text-ink-900">
-                    TV+ ekle{' '}
-                    <span className="text-ink-500 font-medium">(+{fmt(TV_EXTRA_FEE)}₺/ay)</span>
-                  </span>
-                </label>
-                <label className="flex items-center gap-2.5 py-1.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={modem}
-                    onChange={(e) => setModem(e.target.checked)}
-                    className="checkbox"
-                  />
-                  <span className="text-sm font-semibold text-ink-900">
-                    Superbox cihazı kirala{' '}
-                    <span className="text-ink-500 font-medium">(+{fmt(MODEM_RENTAL_FEE)}₺/ay)</span>
-                  </span>
-                </label>
+              <div className="flex gap-1.5 items-center mt-2 text-[11px] font-semibold text-white/85">
+                <Check className="w-3.5 h-3.5 flex-shrink-0" strokeWidth={3} />
+                12 ay sabit fiyat · aşım derdi yok · tek priz yeterli
               </div>
-            )}
+            </div>
 
             <div className="grid grid-cols-2 gap-2 mb-3">
               <div>
@@ -694,16 +535,6 @@ export default function LeadModal({
               </div>
             </div>
 
-            {/* Bölgesel kampanya uyarısı sadece Fiber için */}
-            {!isTurboBox && (zone === 'bolgesel-avantaj' || zone === 'bolgesel-firsat') && (
-              <div className="bg-prime-100 border border-success/30 text-success text-xs font-semibold p-2.5 rounded-lg mb-3">
-                ✨{' '}
-                {zone === 'bolgesel-avantaj'
-                  ? 'Bölgesel Avantaj kampanyası uygulanacak'
-                  : 'Bölgesel Fırsat (24 ay tek fiyat) kampanyası uygulanacak'}
-              </div>
-            )}
-
             <div className="mb-3">
               <label className="field-label">Ad Soyad</label>
               <input
@@ -725,27 +556,24 @@ export default function LeadModal({
               />
             </div>
 
-            {/* Mevcut TT hattı sorusu — sadece Fiber için */}
-            {!isTurboBox && (
-              <div className="mb-3">
-                <label className="field-label">Mevcut Turkcell hattınız?</label>
-                <div className="flex gap-2">
-                  {(['yok', 'var'] as const).map((l) => (
-                    <button
-                      key={l}
-                      onClick={() => setLine(l)}
-                      className={`flex-1 rounded-xl border-[1.5px] p-2.5 text-center text-sm font-bold transition ${
-                        line === l
-                          ? 'border-2 border-brand-500 bg-brand-50 text-brand-700 p-[9px]'
-                          : 'border-ink-100 bg-white text-ink-900 hover:border-ink-400'
-                      }`}
-                    >
-                      {l === 'yok' ? 'Yok' : 'Var'}
-                    </button>
-                  ))}
-                </div>
+            <div className="mb-3">
+              <label className="field-label">Mevcut Turkcell hattınız?</label>
+              <div className="flex gap-2">
+                {(['yok', 'var'] as const).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLine(l)}
+                    className={`flex-1 rounded-xl border-[1.5px] p-2.5 text-center text-sm font-bold transition ${
+                      line === l
+                        ? 'border-2 border-brand-500 bg-brand-50 text-brand-700 p-[9px]'
+                        : 'border-ink-100 bg-white text-ink-900 hover:border-ink-400'
+                    }`}
+                  >
+                    {l === 'yok' ? 'Yok' : 'Var'}
+                  </button>
+                ))}
               </div>
-            )}
+            </div>
 
             <label className="flex gap-2.5 items-start text-xs text-ink-500 mt-3.5 mb-1 leading-relaxed cursor-pointer">
               <input

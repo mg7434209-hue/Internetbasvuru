@@ -9,18 +9,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Turkcell Mavi (koyu kurumsal mavi — başlık, link, vurgu)
+        // Parlament Mavisi (turkcell.com.tr kurumsal mavi — header, başlık, fiyat)
         brand: {
-          50:  '#E9F2FA',
-          100: '#CCDFF1',
-          200: '#99BFE3',
-          300: '#669FD4',
-          400: '#337FC6',
-          500: '#005FB8',  // ANA Turkcell mavisi
-          600: '#004C93',
-          700: '#00396E',
-          800: '#062B4E',
-          900: '#041F3A',
+          50:  '#EBF1FA',
+          100: '#D6E2F5',
+          200: '#ADC6EB',
+          300: '#84A9E0',
+          400: '#5580C8',
+          500: '#2856A5',  // ANA parlament mavisi
+          600: '#1E4489',
+          700: '#17356C',
+          800: '#12294F',
+          900: '#0C1B36',
         },
         // Accent — Turkcell Sarısı (CTA'lar için; üzerinde koyu lacivert metin kullan)
         accent: {
@@ -70,8 +70,14 @@ const config: Config = {
         // Turkcell marka renkleri (alias)
         'tc-yellow': '#FFC900',
         'tc-yellow-dark': '#E6B500',
-        'tc-navy': '#0A2540',   // Koyu lacivert (footer, sarı üstü metin)
-        'tc-blue': '#005FB8',
+        'tc-navy': '#12294F',   // Parlament koyu (footer, sarı üstü metin)
+        'tc-blue': '#2856A5',   // Parlament mavisi
+        // Superbox 4.5G kart yeşili
+        'sb-green': {
+          500: '#00A876',
+          600: '#00905F',
+          700: '#007D58',
+        },
       },
       fontFamily: {
         body: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],

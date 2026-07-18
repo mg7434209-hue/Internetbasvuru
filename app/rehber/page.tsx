@@ -47,10 +47,10 @@ const articles: Article[] = [
     date: '2026-06-25',
   },
   {
-    slug: 'superbox-cihaz-kiralama-vs-satin-alma',
-    title: 'Superbox Cihazı Kiralama mı, Kendi Cihazın mı?',
+    slug: 'superbox-kurulum-tek-priz',
+    title: 'Superbox Kurulumu: Neden Tek Priz Yeterli?',
     excerpt:
-      'Aylık cihaz kiralama ücreti ile kendi uyumlu 5G/4.5G cihazınızı kullanmanın avantaj ve dezavantajları.',
+      'Kablo çekimi ve teknisyen randevusu olmadan Superbox cihazını dakikalar içinde kurma rehberi.',
     category: 'Teknoloji',
     readTime: '4 dk',
     date: '2026-06-20',
@@ -65,10 +65,10 @@ const articles: Article[] = [
     date: '2026-06-15',
   },
   {
-    slug: 'gb-mi-limitsiz-mi',
-    title: 'GB\'li Paket mi, Limitsiz mi? Hangi Superbox Paketi Yeterli?',
+    slug: 'hangi-kota-yeterli',
+    title: 'Hangi Superbox Kotası Yeterli? 150 GB, 500 GB, 1 TB, 2 TB?',
     excerpt:
-      'Hane halkı sayısı, kullanım alışkanlıkları ve cihaz sayısına göre kotalı mı limitsiz mi; 50 mi 200 mü 1000 Mbps mi?',
+      'Hane halkı sayısı, kullanım alışkanlıkları ve cihaz sayısına göre size uygun aylık kota seçimi.',
     category: 'Teknoloji',
     readTime: '5 dk',
     date: '2026-06-10',
@@ -155,10 +155,10 @@ export default function RehberPage() {
         <div
           className="rounded-2xl p-8 text-center text-white"
           style={{
-            background: `radial-gradient(circle at 20% 0%, rgba(255,201,0,0.25) 0%, transparent 50%), #0A2540`,
+            background: `radial-gradient(circle at 20% 0%, rgba(255,201,0,0.25) 0%, transparent 50%), #12294F`,
           }}
         >
-          <h3 className="text-2xl font-extrabold mb-2 leading-tight">
+          <h3 className="text-2xl font-extrabold mb-2 leading-tight text-white">
             Hâlâ Karar Veremediniz mi?
           </h3>
           <p className="text-white/70 mb-6 max-w-md mx-auto leading-relaxed">

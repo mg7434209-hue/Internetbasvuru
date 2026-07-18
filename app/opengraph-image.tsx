@@ -16,7 +16,7 @@ export default function OgImage() {
           flexDirection: 'column',
           justifyContent: 'center',
           padding: '80px',
-          background: 'linear-gradient(135deg, #0A2540 0%, #04182B 100%)',
+          background: 'linear-gradient(135deg, #1E4489 0%, #0C1B36 100%)',
           color: '#fff',
           fontFamily: 'sans-serif',
         }}
@@ -78,7 +78,7 @@ export default function OgImage() {
           Kablosuz Evde İnternet — 5G Hızında
         </div>
         <div style={{ fontSize: 30, marginTop: 28, color: 'rgba(255,255,255,0.75)' }}>
-          18 ay sabit fiyat · Tak-çalıştır kurulum · internetbasvuru.com
+          12 ay sabit fiyat · Aşım derdi yok · internetbasvuru.com
         </div>
         <div
           style={{

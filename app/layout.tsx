@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: '%s | internetbasvuru.com',
   },
   description:
-    'Turkcell Superbox kablosuz evde internet paketleri için online başvuru. 81 il açık, 5G hızı, kablosuz tak-çalıştır kurulum, 18 ay sabit fiyat. Göksoylar İletişim Yetkili Satış Noktası.',
+    'Turkcell Superbox kablosuz evde internet paketleri için online başvuru. 5G Hazır 500 GB / 1 TB / 2 TB ve 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok. Göksoylar İletişim Yetkili Satış Noktası.',
   keywords: [
     'turkcell',
     'turkcell superbox',
@@ -63,12 +63,12 @@ export const metadata: Metadata = {
     siteName: 'internetbasvuru.com',
     title: 'Turkcell Superbox Başvurusu | Yetkili Satış Noktası',
     description:
-      'Türkiye geneli yetkili satış noktasından Superbox kablosuz evde internet. 5G hızı, 18 ay sabit fiyat, tak-çalıştır kurulum, KVKK uyumlu.',
+      'Türkiye geneli yetkili satış noktasından Superbox kablosuz evde internet. 5G hızı, 12 ay sabit fiyat, tek priz yeterli, KVKK uyumlu.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Turkcell Superbox Başvurusu',
-    description: 'Türkiye geneli yetkili satış noktasından Superbox kablosuz evde internet. 18 ay sabit fiyat.',
+    description: 'Türkiye geneli yetkili satış noktasından Superbox kablosuz evde internet. 12 ay sabit fiyat.',
   },
   robots: {
     index: true,
@@ -113,7 +113,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     name: 'Göksoylar İletişim - Turkcell Superbox Yetkili Satış Noktası',
     alternateName: 'internetbasvuru.com',
     description:
-      'Turkcell Superbox kablosuz evde internet yetkili satış noktası. Türkiye geneli kampanyalar, 5G hızı, tak-çalıştır kurulum, 18 ay sabit fiyat.',
+      'Turkcell Superbox kablosuz evde internet yetkili satış noktası. 5G Hazır ve 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok, tek priz yeterli.',
     url: 'https://internetbasvuru.com',
     logo: 'https://internetbasvuru.com/icon',
     image: 'https://internetbasvuru.com/opengraph-image',
@@ -184,10 +184,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       },
       {
         '@type': 'Question',
-        name: 'Fiyat ne kadar süreyle sabit kalır?',
+        name: 'Superbox paketlerinde fiyat ve kota nasıl işler?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Standart kampanyalarda fiyatınız 18 ay sözleşme süresince sabit kalır, enflasyon zammı uygulanmaz. Bölgesel Fırsat kampanyalarında 24 ay tek fiyat seçeneği vardır.',
+          text: 'Tüm Superbox paketleri 12 ay taahhütlüdür ve fiyat taahhüt süresince sabit kalır. Aşım derdi yoktur: aylık kota tamamlandığında ek ücret yansıtılmaz. 5G Hazır paketler 500 GB, 1 TB ve 2 TB; 4.5G paketler 150 GB, 350 GB ve 1 TB seçenekleriyle sunulur.',
         },
       },
       {
@@ -195,7 +195,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Hangi şehirlerde hizmet veriyorsunuz?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Türkiye geneli 81 ilde Turkcell Superbox başvurusu kabul ediyoruz. Antalya bölgesinde özel bölgesel kampanyalarımız mevcuttur (Manavgat, Alanya, Kepez, Muratpaşa).',
+          text: 'Türkiye geneli 81 ilde Turkcell Superbox başvurusu kabul ediyoruz. Paket fiyatları tüm Türkiye\'de aynıdır; adresinizdeki 5G/4.5G kapsaması telefon görüşmesinde teyit edilir.',
         },
       },
       {
