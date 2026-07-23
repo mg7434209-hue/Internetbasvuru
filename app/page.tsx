@@ -12,8 +12,16 @@ export default function HomePage() {
 
   return (
     <>
-      <Hero />
-      <PackageGrid onSelectPackage={setSelectedPkg} />
+      {/* Mobilde tarifeler ilk açılışta görünür; açıklama (Hero) alta iner.
+          Desktop'ta klasik sıra: önce Hero, sonra paketler. */}
+      <div className="flex flex-col">
+        <div className="order-1 md:order-2">
+          <PackageGrid onSelectPackage={setSelectedPkg} />
+        </div>
+        <div className="order-2 md:order-1">
+          <Hero />
+        </div>
+      </div>
       <Wizard />
 
       {selectedPkg && (

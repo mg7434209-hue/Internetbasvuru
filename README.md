@@ -7,14 +7,15 @@ Superbox** sürümüne tam dönüşüm. Eski sürümün birebir yedeği:
 ## Ne var?
 
 Turkcell Superbox (kablosuz 4.5G/5G evde internet) başvuru sitesi.
-Göksoylar İletişim Ltd. Şti. yetkili satış noktası sitesi olarak çalışır.
+Yetkili satış noktası sitesi olarak çalışır.
 
 - **Superbox 5G Hazır** — 500 GB (900 TL/ay) · 1 TB (1.200 TL/ay) · 2 TB (1.500 TL/ay), 12 ay taahhüt
 - **Superbox 4.5G** — 100 GB→150 GB (790 TL/ay) · 300 GB→350 GB (1.000 TL/ay) · 1 TB (1.500 TL/ay)
   (+50 GB hediye internet gösterilen kotaya dahil)
 - Ortak vaatler: Alt yapı derdi yok · Tek priz yeterli · 12 ay sabit fiyat · Aşım derdi yok
-- **WhatsApp ile Başvur** butonları (wa.me) + **Akıllı Yönlendirme sihirbazı**
+- Her kartta **Hemen Başvur** (online form) + **Akıllı Yönlendirme sihirbazı**
   (il/ilçe + kullanım profili + 5G kapsama → paket önerisi)
+- Mobilde ilk açılışta tarifeler görünür; tanıtım metni (Hero) alta iner
 - **Başvuru akışı** — LeadModal (2 adımlı) + Wizard, `/api/lead` üzerinden backend'e proxy
 - KVKK uyumlu çerez onayı, GA4/Ads altyapısı, JSON-LD (LocalBusiness + WebSite + FAQPage), PWA manifest
 

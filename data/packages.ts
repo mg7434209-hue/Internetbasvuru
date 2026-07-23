@@ -67,16 +67,6 @@ export const packages45G: Package[] = [
 
 export const allPackages: Package[] = [...packages5G, ...packages45G];
 
-// ============ WHATSAPP BAŞVURU ============
-export const WHATSAPP_PHONE = '905349777000'; // 0534 977 70 00
-
-export function whatsappLink(pkg?: Package): string {
-  const text = pkg
-    ? `Merhaba, ${pkg.name} (${pkg.quota}, ${new Intl.NumberFormat('tr-TR').format(pkg.priceMonthly)} TL/ay) paketi için başvuru yapmak istiyorum.`
-    : 'Merhaba, Turkcell Superbox paketleri hakkında bilgi almak istiyorum.';
-  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
-}
-
 // ============ YARDIMCI FONKSİYONLAR ============
 
 export function getPackageById(id: string): Package | undefined {

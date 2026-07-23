@@ -86,7 +86,7 @@ export default function Wizard() {
       if (!res.ok || !ok) {
         console.error('Wizard lead submit failed:', res.status, data);
         setError(
-          'Başvurunuz alınamadı. Lütfen birkaç dakika sonra tekrar deneyin veya WhatsApp\'tan yazın.'
+          'Başvurunuz alınamadı. Lütfen birkaç dakika sonra tekrar deneyin.'
         );
         setSubmitting(false);
         return;
@@ -266,7 +266,7 @@ export default function Wizard() {
                 type="text"
                 value={ad}
                 onChange={e => setAd(e.target.value)}
-                placeholder="Mustafa Göksoy"
+                placeholder="Adınız Soyadınız"
                 autoComplete="name"
                 autoCapitalize="words"
                 className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold mb-3 focus:outline-none focus:border-accent-500 transition placeholder-white/40"

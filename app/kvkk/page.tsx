@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'KVKK Aydınlatma Metni',
   description:
-    'Göksoylar İletişim Ltd. Şti. KVKK aydınlatma metni. 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında veri sahibi haklarınız ve verilerin işlenme amaçları.',
+    'internetbasvuru.com KVKK aydınlatma metni. 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında veri sahibi haklarınız ve verilerin işlenme amaçları.',
   alternates: { canonical: 'https://internetbasvuru.com/kvkk' },
   robots: { index: true, follow: true },
 };
@@ -26,7 +26,7 @@ export default function KVKKPage() {
           <p>
             6698 Sayılı Kişisel Verilerin Korunması Kanunu (&quot;KVKK&quot;) uyarınca,
             kişisel verileriniz; veri sorumlusu sıfatıyla{' '}
-            <strong className="text-ink-900">Göksoylar İletişim Ltd. Şti.</strong>{' '}
+            <strong className="text-ink-900">internetbasvuru.com işletmecisi</strong>{' '}
             (&quot;Şirket&quot;) tarafından aşağıda açıklanan kapsamda işlenmektedir.
           </p>
         </div>

@@ -8,7 +8,7 @@ export default function Header() {
       <Link
         href="/"
         className="flex items-center gap-4 no-underline group"
-        aria-label="Turkcell Superbox Yetkili Satış Noktası · Göksoylar İletişim · Anasayfa"
+        aria-label="Turkcell Superbox Yetkili Satış Noktası · Anasayfa"
       >
         <TurkcellLogo
           variant="cobrand"
@@ -24,7 +24,7 @@ export default function Header() {
             Yetkili Satış Noktası
           </span>
           <span className="text-sm font-bold text-white mt-0.5 tracking-tight">
-            Göksoylar İletişim Ltd. Şti.
+            internetbasvuru.com
           </span>
         </span>
       </Link>

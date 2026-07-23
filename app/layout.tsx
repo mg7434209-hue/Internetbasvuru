@@ -16,8 +16,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#0A2540' },
-    { media: '(prefers-color-scheme: dark)', color: '#0A2540' },
+    { media: '(prefers-color-scheme: light)', color: '#2856A5' },
+    { media: '(prefers-color-scheme: dark)', color: '#2856A5' },
   ],
   colorScheme: 'light',
   interactiveWidget: 'resizes-content',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: '%s | internetbasvuru.com',
   },
   description:
-    'Turkcell Superbox kablosuz evde internet paketleri için online başvuru. 5G Hazır 500 GB / 1 TB / 2 TB ve 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok. Göksoylar İletişim Yetkili Satış Noktası.',
+    'Turkcell Superbox kablosuz evde internet paketleri için online başvuru. 5G Hazır 500 GB / 1 TB / 2 TB ve 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok. Yetkili satış noktası.',
   keywords: [
     'turkcell',
     'turkcell superbox',
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
     'antalya superbox',
     'sabit fiyat internet',
   ],
-  authors: [{ name: 'Göksoylar İletişim Ltd. Şti.' }],
-  creator: 'Göksoylar İletişim Ltd. Şti.',
-  publisher: 'Göksoylar İletişim Ltd. Şti.',
+  authors: [{ name: 'internetbasvuru.com' }],
+  creator: 'internetbasvuru.com',
+  publisher: 'internetbasvuru.com',
   applicationName: 'internetbasvuru.com',
   category: 'telecommunications',
   formatDetection: {
@@ -110,7 +110,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     '@id': 'https://internetbasvuru.com#organization',
-    name: 'Göksoylar İletişim - Turkcell Superbox Yetkili Satış Noktası',
+    name: 'internetbasvuru.com - Turkcell Superbox Yetkili Satış Noktası',
     alternateName: 'internetbasvuru.com',
     description:
       'Turkcell Superbox kablosuz evde internet yetkili satış noktası. 5G Hazır ve 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok, tek priz yeterli.',
@@ -171,7 +171,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Turkcell Superbox başvurusu nasıl yapılır?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'internetbasvuru.com üzerinden online başvuru formunu doldurabilir veya WhatsApp üzerinden bizimle iletişime geçebilirsiniz. Yetkili satış noktamız 15 dakika içinde sizi arar ve adresinizdeki şebeke kapsamasını teyit eder.',
+          text: 'internetbasvuru.com üzerinden online başvuru formunu doldurmanız yeterlidir. Yetkili satış noktamız 15 dakika içinde sizi arar ve adresinizdeki şebeke kapsamasını teyit eder.',
         },
       },
       {

@@ -90,7 +90,7 @@ export default function OgImage() {
             color: 'rgba(255,255,255,0.6)',
           }}
         >
-          Göksoylar İletişim · Yetkili Satış Noktası
+          Yetkili Satış Noktası · Türkiye Geneli Online Başvuru
         </div>
       </div>
     ),

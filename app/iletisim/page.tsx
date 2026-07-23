@@ -5,7 +5,7 @@ import { Mail, MapPin, Award, Clock, ArrowRight } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'İletişim',
   description:
-    'Göksoylar İletişim Ltd. Şti. — Turkcell Superbox yetkili satış noktası. E-posta ve online başvuru ile bize ulaşın.',
+    'Turkcell Superbox yetkili satış noktası. E-posta ve online başvuru ile bize ulaşın.',
   alternates: { canonical: 'https://internetbasvuru.com/iletisim' },
 };
  
@@ -72,7 +72,7 @@ export default function IletisimPage() {
                 Adres
               </p>
               <p className="text-sm text-ink-900 font-semibold">Manavgat / Antalya</p>
-              <p className="text-xs text-ink-500 mt-0.5">Göksoylar İletişim Ltd. Şti.</p>
+              <p className="text-xs text-ink-500 mt-0.5">Yetkili Satış Noktası</p>
             </div>
           </div>
  

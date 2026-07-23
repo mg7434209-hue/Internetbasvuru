@@ -1,10 +1,9 @@
 'use client';
 
-import { Wifi, CheckCircle2, MessageCircle } from 'lucide-react';
+import { Wifi, CheckCircle2, ArrowRight } from 'lucide-react';
 import {
   packages5G,
   packages45G,
-  whatsappLink,
   type Package,
 } from '@/data/packages';
 
@@ -91,24 +90,14 @@ function PackageCard({
         </p>
       </div>
 
-      {/* CTA'lar */}
-      <div className="px-6 pt-4 pb-6 mt-auto space-y-2.5">
-        <a
-          href={whatsappLink(pkg)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`flex items-center justify-center gap-2 w-full py-3.5 rounded-full font-bold text-[15px] text-white transition-all hover:-translate-y-0.5 hover:shadow-lg ${
-            is5G ? 'bg-wa-500 hover:bg-wa-600' : 'bg-brand-600 hover:bg-brand-700'
-          }`}
-        >
-          <MessageCircle className="w-4.5 h-4.5 w-[18px] h-[18px]" />
-          WhatsApp ile Başvur
-        </a>
+      {/* CTA */}
+      <div className="px-6 pt-4 pb-6 mt-auto">
         <button
           onClick={() => onSelect(pkg)}
-          className="w-full py-3 rounded-full font-bold text-sm border-[1.5px] border-brand-500 text-brand-600 hover:bg-brand-50 transition"
+          className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full font-bold text-[15px] bg-accent-500 hover:bg-accent-400 text-tc-navy transition-all hover:-translate-y-0.5 hover:shadow-lg"
         >
-          Online Başvuru Formu
+          Hemen Başvur
+          <ArrowRight className="w-[18px] h-[18px]" />
         </button>
       </div>
     </div>
@@ -117,7 +106,7 @@ function PackageCard({
 
 export default function PackageGrid({ onSelectPackage }: PackageGridProps) {
   return (
-    <section id="paketler" className="px-[5%] py-4 pb-16 max-w-[1300px] mx-auto">
+    <section id="paketler" className="px-[5%] pt-8 md:pt-4 pb-16 max-w-[1300px] mx-auto">
       {/* ============ SUPERBOX 5G HAZIR ============ */}
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 mb-2">

@@ -22,14 +22,13 @@ export default function Footer() {
             <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1.5 mb-4">
               <Award className="w-3.5 h-3.5 text-accent-500" />
               <span className="text-[11px] font-bold tracking-wide text-white/80">
-                Göksoylar İletişim
+                Yetkili Satış Noktası
               </span>
             </div>
 
             <p className="text-sm text-white/60 leading-relaxed">
-              Göksoylar İletişim Ltd. Şti. — Turkcell Superbox yetkili satış
-              noktası olarak Türkiye geneli kablosuz evde internet
-              başvurularını alıyoruz.
+              Turkcell Superbox yetkili satış noktası olarak Türkiye geneli
+              kablosuz evde internet başvurularını alıyoruz.
             </p>
           </div>
 
@@ -69,7 +68,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
           <p className="text-xs text-white/40">
-            © {year} Göksoylar İletişim Ltd. Şti. Tüm hakları saklıdır.
+            © {year} internetbasvuru.com — Tüm hakları saklıdır.
           </p>
           <p className="text-xs text-white/40 leading-relaxed">
             Turkcell, Superbox ve TV+ marka adları, Turkcell İletişim Hizmetleri

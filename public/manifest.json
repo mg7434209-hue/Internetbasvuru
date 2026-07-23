@@ -1,7 +1,7 @@
 {
   "name": "Turkcell Superbox Başvurusu",
   "short_name": "Superbox Başvuru",
-  "description": "Turkcell Superbox kablosuz evde internet yetkili satış noktası - Göksoylar İletişim",
+  "description": "Turkcell Superbox kablosuz evde internet yetkili satış noktası",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFFFFF",

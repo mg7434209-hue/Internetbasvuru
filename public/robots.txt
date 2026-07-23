@@ -1,5 +1,5 @@
 # robots.txt for internetbasvuru.com
-# Turkcell Superbox Yetkili Satış Noktası - Göksoylar İletişim
+# Turkcell Superbox Yetkili Satış Noktası
 
 User-agent: *
 Allow: /
