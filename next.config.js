@@ -16,8 +16,7 @@ const nextConfig = {
       // Eski paket detay sayfaları → ana sayfa
       { source: '/paketler/:slug*', destination: '/', permanent: true },
       { source: '/paketler', destination: '/', permanent: true },
-      // Silinen KVKK → çerez politikası (KVKK içeriği orada)
-      { source: '/kvkk', destination: '/cerez-politikasi', permanent: true },
+      // /kvkk yönlendirmesi kaldırıldı — KVKK aydınlatma metni artık kendi sayfasında
 
       // ============ YENİ: Çürük kampanya URL'leri → wizard ============
       // Google indexinde duran eski Bölgesel Fırsat sayfaları
