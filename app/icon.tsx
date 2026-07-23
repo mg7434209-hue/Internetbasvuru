@@ -1,8 +1,10 @@
 import { ImageResponse } from 'next/og';
 
-// Turkcell Superbox favicon — sarı zemin, lacivert sinyal amblemi (kod ile üretilir)
+// Favicon — parlament mavisi zemin üzerinde stilize sarı Turkcell amblemi (kod ile üretilir)
 export const size = { width: 64, height: 64 };
 export const contentType = 'image/png';
+
+const HOLE = '#2856A5';
 
 export default function Icon() {
   return new ImageResponse(
@@ -14,27 +16,18 @@ export default function Icon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#FFC900',
+          background: HOLE,
           borderRadius: 14,
         }}
       >
-        <svg width="48" height="48" viewBox="0 0 48 48">
-          <path
-            d="M14 30a10 10 0 0 1 20 0"
-            fill="none"
-            stroke="#17356C"
-            strokeWidth="3.6"
-            strokeLinecap="round"
-          />
-          <path
-            d="M9 30a15 15 0 0 1 30 0"
-            fill="none"
-            stroke="#17356C"
-            strokeWidth="3.6"
-            strokeLinecap="round"
-            opacity="0.45"
-          />
-          <circle cx="24" cy="34" r="4.2" fill="#17356C" />
+        <svg width="52" height="52" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="46" fill="#FFC900" />
+          <g fill={HOLE}>
+            <circle cx="41" cy="28" r="9" />
+            <path d="M35,34 C27,46 17,58 4,68 C7,58 12,49 18,41 C23,34 28,30 33,27 Z" />
+            <circle cx="66" cy="44" r="9" />
+            <path d="M60,50 C50,64 34,78 15,88 C21,77 30,66 41,56 C47,51 53,47 59,44 Z" />
+          </g>
         </svg>
       </div>
     ),

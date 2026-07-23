@@ -8,6 +8,7 @@ import {
   type Package,
   type Network,
 } from '@/data/packages';
+import TurkcellLogo from './TurkcellLogo';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 type Usage = 'hafif' | 'orta' | 'yogun';
@@ -136,6 +137,9 @@ export default function Wizard() {
       }}
     >
       <div className="max-w-[800px] mx-auto text-center">
+        <div className="flex justify-center mb-5">
+          <TurkcellLogo variant="mini" />
+        </div>
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-500/15 text-accent-500 text-[13px] font-bold mb-5 tracking-wide border border-accent-500/30">
           🧭 Akıllı Yönlendirme
         </div>

@@ -71,7 +71,8 @@ export default function Footer() {
             © {year} internetbasvuru.com — Tüm hakları saklıdır.
           </p>
           <p className="text-xs text-white/40 leading-relaxed">
-            Turkcell, Superbox ve TV+ marka adları, Turkcell İletişim Hizmetleri
+            Turkcell, Turkcell Superonline, Superbox ve TV+ marka adları, Turkcell
+            İletişim Hizmetleri A.Ş. ve Turkcell Superonline İletişim Hizmetleri
             A.Ş.&apos;ye aittir. Yetkili satış noktası sıfatıyla hizmet vermekteyiz.
           </p>
         </div>
