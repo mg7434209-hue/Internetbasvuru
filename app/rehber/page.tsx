@@ -66,7 +66,7 @@ const articles: Article[] = [
   },
   {
     slug: 'hangi-kota-yeterli',
-    title: 'Hangi Superbox Kotası Yeterli? 150 GB, 500 GB, 1 TB, 2 TB?',
+    title: 'Hangi Superbox Kotası Yeterli? 250 GB\'dan 2 TB\'a Seçim Rehberi',
     excerpt:
       'Hane halkı sayısı, kullanım alışkanlıkları ve cihaz sayısına göre size uygun aylık kota seçimi.',
     category: 'Teknoloji',

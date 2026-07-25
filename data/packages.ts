@@ -35,6 +35,11 @@ export const STANDARD_FEATURES = [
 // ============ SUPERBOX 5G HAZIR — Sabit Evde İnternet ============
 export const packages5G: Package[] = [
   {
+    type: 'superbox', id: 'sb5g-250', name: 'Superbox 5G Hazır 250 GB',
+    network: '5G', portable: false, quota: '250 GB', priceMonthly: 790, commitmentMonths: 12,
+    features: STANDARD_FEATURES,
+  },
+  {
     type: 'superbox', id: 'sb5g-500', name: 'Superbox 5G Hazır 500 GB',
     network: '5G', portable: false, quota: '500 GB', priceMonthly: 900, commitmentMonths: 12,
     isPopular: true, badge: 'En Popüler', features: STANDARD_FEATURES,
@@ -82,15 +87,17 @@ export function getPackageById(id: string): Package | undefined {
 /**
  * Kullanım profili + şebeke durumuna göre önerilen paket
  * hafif → 500 GB / 150 GB · orta → 1 TB / 350 GB · yoğun → 2 TB / 1 TB
+ * (250 GB giriş paketi öneri dışıdır; kartlardan manuel seçilebilir.)
  */
+const RECOMMENDATION: Record<Network, Record<'hafif' | 'orta' | 'yogun', string>> = {
+  '5G':   { hafif: 'sb5g-500',  orta: 'sb5g-1tb',  yogun: 'sb5g-2tb' },
+  '4.5G': { hafif: 'sb45g-100', orta: 'sb45g-300', yogun: 'sb45g-1tb' },
+};
+
 export function recommendPackage(
   usage: 'hafif' | 'orta' | 'yogun',
   network: Network
 ): Package {
   const list = network === '5G' ? packages5G : packages45G;
-  switch (usage) {
-    case 'hafif': return list[0];
-    case 'orta':  return list[1];
-    case 'yogun': return list[2];
-  }
+  return getPackageById(RECOMMENDATION[network][usage]) ?? list[0];
 }

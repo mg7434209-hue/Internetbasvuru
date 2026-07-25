@@ -9,8 +9,8 @@ Superbox** sürümüne tam dönüşüm. Eski sürümün birebir yedeği:
 Turkcell Superbox (kablosuz 4.5G/5G evde internet) başvuru sitesi.
 Yetkili satış noktası sitesi olarak çalışır.
 
-- **Superbox 5G Hazır** — 500 GB (900 TL/ay) · 1 TB (1.200 TL/ay) · 2 TB (1.500 TL/ay), 12 ay taahhüt
-- **Superbox 4.5G** — 100 GB→150 GB (790 TL/ay) · 300 GB→350 GB (1.000 TL/ay) · 1 TB (1.500 TL/ay)
+- **Superbox 5G Hazır (sabit evde)** — 250 GB (790 TL/ay) · 500 GB (900 TL/ay) · 1 TB (1.200 TL/ay) · 2 TB (1.500 TL/ay), 12 ay taahhüt
+- **Superbox 4.5G (taşınabilir)** — 100 GB→150 GB (790 TL/ay) · 300 GB→350 GB (1.000 TL/ay) · 1 TB (1.500 TL/ay)
   (+50 GB hediye internet gösterilen kotaya dahil)
 - Ortak vaatler: Alt yapı derdi yok · Tek priz yeterli · 12 ay sabit fiyat · Aşım derdi yok
 - Her kartta **Hemen Başvur** (online form) + **Akıllı Yönlendirme sihirbazı**

@@ -132,7 +132,7 @@ export default function PackageGrid({ onSelectPackage }: PackageGridProps) {
         </p>
       </div>
 
-      <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch mb-14">
+      <div className="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 items-stretch mb-14">
         {packages5G.map(pkg => (
           <PackageCard key={pkg.id} pkg={pkg} onSelect={onSelectPackage} />
         ))}

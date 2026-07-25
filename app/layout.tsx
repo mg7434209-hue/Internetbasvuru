@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: '%s | internetbasvuru.com',
   },
   description:
-    'Turkcell Superbox kablosuz evde internet paketleri için online başvuru. 5G Hazır 500 GB / 1 TB / 2 TB ve 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok. Yetkili satış noktası.',
+    'Turkcell Superbox kablosuz evde internet paketleri için online başvuru. 5G Hazır 250 GB / 500 GB / 1 TB / 2 TB ve taşınabilir 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok. Yetkili satış noktası.',
   keywords: [
     'turkcell',
     'turkcell superbox',
@@ -114,7 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     name: 'internetbasvuru.com - Turkcell Superbox Yetkili Satış Noktası',
     alternateName: 'internetbasvuru.com',
     description:
-      'Turkcell Superbox kablosuz evde internet yetkili satış noktası. 5G Hazır ve 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok, tek priz yeterli.',
+      'Turkcell Superbox kablosuz evde internet yetkili satış noktası. Sabit 5G Hazır ve taşınabilir 4.5G paketleri, 12 ay sabit fiyat, aşım derdi yok, tek priz yeterli.',
     url: 'https://internetbasvuru.com',
     logo: 'https://internetbasvuru.com/icon',
     image: 'https://internetbasvuru.com/opengraph-image',
@@ -188,7 +188,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Superbox paketlerinde fiyat ve kota nasıl işler?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Tüm Superbox paketleri 12 ay taahhütlüdür ve fiyat taahhüt süresince sabit kalır. Aşım derdi yoktur: aylık kota tamamlandığında ek ücret yansıtılmaz. 5G Hazır paketler 500 GB, 1 TB ve 2 TB; 4.5G paketler 150 GB, 350 GB ve 1 TB seçenekleriyle sunulur.',
+          text: 'Tüm Superbox paketleri 12 ay taahhütlüdür ve fiyat taahhüt süresince sabit kalır. Aşım derdi yoktur: aylık kota tamamlandığında ek ücret yansıtılmaz. 5G Hazır paketler 250 GB, 500 GB, 1 TB ve 2 TB; taşınabilir 4.5G paketler 150 GB, 350 GB ve 1 TB seçenekleriyle sunulur.',
         },
       },
       {
