@@ -1,9 +1,10 @@
 'use client';
 
-import { Wifi, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Wifi, CheckCircle2, ArrowRight, Home, Briefcase } from 'lucide-react';
 import {
   packages5G,
   packages45G,
+  mobilityLabel,
   type Package,
 } from '@/data/packages';
 
@@ -51,6 +52,14 @@ function PackageCard({
         <Wifi className="w-8 h-8 mx-auto mb-3 opacity-95" strokeWidth={2.2} />
         <h3 className="text-xl font-extrabold leading-snug mb-1 text-white">{pkg.name}</h3>
         <p className="text-sm text-white/75 font-semibold">{pkg.network} Hızında</p>
+        <span className="inline-flex items-center gap-1.5 mt-2.5 bg-white/15 text-white text-[11px] font-bold px-3 py-1 rounded-full">
+          {pkg.portable ? (
+            <Briefcase className="w-3.5 h-3.5" strokeWidth={2.5} />
+          ) : (
+            <Home className="w-3.5 h-3.5" strokeWidth={2.5} />
+          )}
+          {mobilityLabel(pkg)}
+        </span>
       </div>
 
       {/* Kota rozeti — başlık bloğunun üzerine biner */}
@@ -111,15 +120,15 @@ export default function PackageGrid({ onSelectPackage }: PackageGridProps) {
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 mb-2">
           <span className="bg-brand-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
-            5G Hazır
+            5G Hazır · Sabit
           </span>
-          <span className="text-xs text-ink-500 font-semibold">5G Hızında · Kota aşım derdi yok</span>
+          <span className="text-xs text-ink-500 font-semibold">Evinize tanımlı sabit internet · 5G hızında</span>
         </div>
         <h2 className="text-2xl font-extrabold tracking-tight text-ink-900">
-          Superbox 5G Hazır paketler
+          Superbox 5G Hazır — Sabit Evde İnternet
         </h2>
         <p className="text-sm text-ink-500 mt-1">
-          Tüm fiyatlar 12 ay taahhüt süresince sabittir; taahhüt boyunca zam yapılmaz.
+          Kurulum adresinizde kullanılır. Tüm fiyatlar 12 ay taahhüt süresince sabittir; taahhüt boyunca zam yapılmaz.
         </p>
       </div>
 
@@ -133,15 +142,16 @@ export default function PackageGrid({ onSelectPackage }: PackageGridProps) {
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 mb-2">
           <span className="bg-sb-green-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
-            4.5G
+            4.5G · Taşınabilir
           </span>
-          <span className="text-xs text-ink-500 font-semibold">Ekonomik · 5G kapsaması olmayan adresler için</span>
+          <span className="text-xs text-ink-500 font-semibold">Evde ve yanında · dilediğiniz adreste kullanın</span>
         </div>
         <h2 className="text-2xl font-extrabold tracking-tight text-ink-900">
-          Superbox 4.5G paketler
+          Superbox 4.5G — Taşınabilir İnternet
         </h2>
         <p className="text-sm text-ink-500 mt-1">
-          100 GB ve 300 GB paketlerinde +50 GB hediye internet, kartlarda gösterilen toplam kotaya dahildir.
+          Cihazınızı yanınıza alın; evde, iş yerinde, yazlıkta kullanın. 100 GB ve 300 GB paketlerinde +50 GB hediye
+          internet, kartlarda gösterilen toplam kotaya dahildir.
         </p>
       </div>
 
@@ -158,9 +168,13 @@ export default function PackageGrid({ onSelectPackage }: PackageGridProps) {
         <strong className="text-ink-900">Aşım derdi yok:</strong> aylık kota tamamlandığında ek ücret
         yansıtılmaz. <strong className="text-ink-900">Alt yapı derdi yok:</strong> Superbox kablosuz
         çalışır; cihazı prize takmanız yeterlidir, kablo çekimi ve altyapı randevusu gerekmez.
-        5G paketleri 5G kapsama alanındaki adreslerde geçerlidir; kapsama durumu telefon
-        görüşmesinde teyit edilir. 4.5G 100 GB ve 300 GB paketlerindeki +50 GB hediye internet
-        kampanya koşullarına tabidir.
+        <strong className="text-ink-900">Superbox 5G Hazır paketleri sabit evde internettir:</strong>{' '}
+        kurulum adresinize tanımlanır ve o adreste kullanılır; adresinizdeki 5G kapsaması telefon
+        görüşmesinde teyit edilir.{' '}
+        <strong className="text-ink-900">Superbox 4.5G paketleri taşınabilirdir:</strong>{' '}
+        cihazı yanınıza alarak Türkiye genelinde 4.5G kapsama alanındaki dilediğiniz adreste
+        kullanabilirsiniz. 4.5G 100 GB ve 300 GB paketlerindeki +50 GB hediye internet kampanya
+        koşullarına tabidir.
       </div>
     </section>
   );

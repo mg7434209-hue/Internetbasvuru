@@ -167,7 +167,7 @@ export default function LeadModal({ pkg, onClose }: LeadModalProps) {
         kvkk_consent: kvkk,
         package_id: pkg.id,
         package_name: `${pkg.name} (${pkg.quota})`,
-        message: `Modal başvuru. Mevcut Turkcell hattı: ${line}. Şebeke: ${pkg.network}.`,
+        message: `Modal başvuru. Mevcut Turkcell hattı: ${line}. Şebeke: ${pkg.network} (${pkg.portable ? 'taşınabilir' : 'sabit evde'}).`,
         source: 'package-modal',
         source_path: 'modal',
         package_type: 'superbox',
@@ -483,7 +483,7 @@ export default function LeadModal({ pkg, onClose }: LeadModalProps) {
                   {pkg.name}
                 </span>
                 <span className="text-[10px] font-extrabold bg-white/15 px-2 py-1 rounded-full uppercase tracking-wider">
-                  {pkg.network} Hızında
+                  {pkg.network} · {pkg.portable ? 'Taşınabilir' : 'Sabit Evde'}
                 </span>
               </div>
               <div className="flex justify-between items-baseline bg-black/20 rounded-lg px-3.5 py-2.5">

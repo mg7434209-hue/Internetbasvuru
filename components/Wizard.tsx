@@ -12,7 +12,7 @@ import TurkcellLogo from './TurkcellLogo';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 type Usage = 'hafif' | 'orta' | 'yogun';
-type Coverage = 'var' | 'yok' | 'bilmiyorum';
+type UsePlace = 'sabit' | 'tasinir';
 type LineStatus = 'yok' | 'var';
 
 export default function Wizard() {
@@ -20,7 +20,7 @@ export default function Wizard() {
   const [il, setIl] = useState('');
   const [ilce, setIlce] = useState('');
   const [usage, setUsage] = useState<Usage | ''>('');
-  const [coverage, setCoverage] = useState<Coverage | ''>('');
+  const [usePlace, setUsePlace] = useState<UsePlace | ''>('');
   const [pkg, setPkg] = useState<Package | null>(null);
   const [ad, setAd] = useState('');
   const [tel, setTel] = useState('');
@@ -31,20 +31,20 @@ export default function Wizard() {
 
   const districts = useMemo(() => (il ? getDistricts(il) : []), [il]);
 
-  // 5G kapsaması yoksa 4.5G önerilir; "bilmiyorum" için 5G önerilir (teyit aramada)
-  const network: Network = coverage === 'yok' ? '4.5G' : '5G';
+  // Sabit evde kullanım = 5G Hazır · Taşınabilir kullanım = 4.5G
+  const network: Network = usePlace === 'tasinir' ? '4.5G' : '5G';
 
   const recommendedPackage = useMemo(() => {
-    if (!usage || !coverage) return null;
+    if (!usage || !usePlace) return null;
     return recommendPackage(usage, network);
-  }, [usage, coverage, network]);
+  }, [usage, usePlace, network]);
 
   const fmt = (n: number) => new Intl.NumberFormat('tr-TR').format(Math.round(n));
 
   const canProceed = () => {
     if (step === 1) return !!il && !!ilce;
     if (step === 2) return !!usage;
-    if (step === 3) return !!coverage;
+    if (step === 3) return !!usePlace;
     if (step === 4) return pkg !== null;
     if (step === 5) return ad.trim().length >= 3 && tel.trim().replace(/\D/g, '').length >= 10 && !!line && kvkk;
     return true;
@@ -71,7 +71,7 @@ export default function Wizard() {
           kvkk_consent: kvkk,
           package_id: pkg.id,
           package_name: `${pkg.name} (${pkg.quota})`,
-          message: `Wizard başvurusu - ${usage} kullanım, 5G kapsama: ${coverage}, mevcut hat: ${line}`,
+          message: `Wizard başvurusu - ${usage} kullanım, kullanım şekli: ${usePlace === 'tasinir' ? 'taşınabilir (4.5G)' : 'sabit evde (5G)'}, mevcut hat: ${line}`,
           source: 'wizard',
           source_path: 'wizard',
         }),
@@ -104,7 +104,7 @@ export default function Wizard() {
   }
 
   function reset() {
-    setStep(1); setIl(''); setIlce(''); setUsage(''); setCoverage('');
+    setStep(1); setIl(''); setIlce(''); setUsage(''); setUsePlace('');
     setPkg(null); setAd(''); setTel(''); setLine(''); setKvkk(false);
     setError(null);
   }
@@ -203,22 +203,17 @@ export default function Wizard() {
 
           {step === 3 && (
             <div className="animate-fade-in">
-              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Adresinizde 5G var mı?</h3>
-              <p className="text-white/60 text-sm mb-5">5G kapsamasına göre 5G Hazır veya 4.5G paketi önerilir.</p>
-              <button onClick={() => setCoverage('var')}
-                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${coverage === 'var' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
-                <div className="font-bold text-[15px] mb-0.5">Evet, 5G var</div>
-                <div className="text-xs text-white/60 font-medium">Superbox 5G Hazır paketleri — 5G hızında</div>
+              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">İnterneti nasıl kullanacaksınız?</h3>
+              <p className="text-white/60 text-sm mb-5">Sabit evde kullanım için 5G Hazır, yanınızda taşımak için 4.5G önerilir.</p>
+              <button onClick={() => setUsePlace('sabit')}
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${usePlace === 'sabit' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
+                <div className="font-bold text-[15px] mb-0.5">🏠 Evde, sabit adreste</div>
+                <div className="text-xs text-white/60 font-medium">Superbox 5G Hazır — evinize tanımlı sabit internet, 5G hızında</div>
               </button>
-              <button onClick={() => setCoverage('yok')}
-                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${coverage === 'yok' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
-                <div className="font-bold text-[15px] mb-0.5">Hayır, 5G yok</div>
-                <div className="text-xs text-white/60 font-medium">Superbox 4.5G paketleri — ekonomik seçenekler</div>
-              </button>
-              <button onClick={() => setCoverage('bilmiyorum')}
-                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${coverage === 'bilmiyorum' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
-                <div className="font-bold text-[15px] mb-0.5">Bilmiyorum</div>
-                <div className="text-xs text-white/60 font-medium">5G Hazır önerilir; kapsama telefonda teyit edilir</div>
+              <button onClick={() => setUsePlace('tasinir')}
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${usePlace === 'tasinir' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
+                <div className="font-bold text-[15px] mb-0.5">🧳 Evde ve yanımda, taşınabilir</div>
+                <div className="text-xs text-white/60 font-medium">Superbox 4.5G — cihazı yanınıza alın, dilediğiniz adreste kullanın</div>
               </button>
             </div>
           )}
@@ -226,7 +221,7 @@ export default function Wizard() {
           {step === 4 && recommendedPackage && (
             <div className="animate-fade-in">
               <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Sizin için seçilen paket</h3>
-              <p className="text-white/60 text-sm mb-5">{il} / {ilce} · {network} şebekesi</p>
+              <p className="text-white/60 text-sm mb-5">{il} / {ilce} · {network === '5G' ? 'Sabit Evde İnternet (5G)' : 'Taşınabilir İnternet (4.5G)'}</p>
               {[recommendedPackage].map(p => {
                 const isSelected = pkg?.id === p.id;
                 return (
@@ -247,9 +242,9 @@ export default function Wizard() {
                   </div>
                 );
               })}
-              {coverage === 'bilmiyorum' && (
+              {usePlace === 'sabit' && (
                 <p className="text-[11px] text-white/50 leading-relaxed">
-                  Adresinizde 5G çıkmazsa çağrı merkezimiz 4.5G muadili paketi önerecektir.
+                  Adresinizdeki 5G kapsaması telefon görüşmesinde teyit edilir; kapsama yoksa taşınabilir 4.5G seçeneği önerilir.
                 </p>
               )}
             </div>

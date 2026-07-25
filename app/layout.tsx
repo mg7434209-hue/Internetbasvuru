@@ -42,6 +42,7 @@ export const metadata: Metadata = {
     'kablosuz evde internet',
     '5g evde internet',
     'evde internet başvuru',
+    'taşınabilir internet',
     'manavgat internet',
     'antalya superbox',
     'sabit fiyat internet',
@@ -200,10 +201,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       },
       {
         '@type': 'Question',
-        name: 'Superbox için 5G şart mı? Mevcut Turkcell hattım yoksa başvurabilir miyim?',
+        name: 'Superbox 5G ile 4.5G paketleri arasındaki fark nedir?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: '5G kapsaması olmayan adreslerde Superbox 4.5G muadili paketlerle hizmet verir. Mevcut Turkcell hattınız olmasa da yeni başvuru yapabilirsiniz; form üzerinde bunu seçebilirsiniz.',
+          text: 'Superbox 5G Hazır paketleri sabit evde internettir: kurulum adresinize tanımlanır ve 5G hızında çalışır. Superbox 4.5G paketleri taşınabilirdir: cihazı yanınıza alarak evde, iş yerinde veya yazlıkta dilediğiniz adreste kullanabilirsiniz. Mevcut Turkcell hattınız olmasa da başvurabilirsiniz.',
         },
       },
     ],

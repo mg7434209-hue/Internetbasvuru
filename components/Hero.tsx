@@ -18,8 +18,9 @@ export default function Hero() {
 
       {/* Sub */}
       <p className="text-ink-500 text-lg max-w-[640px] mx-auto mb-8 leading-relaxed">
-        Altyapı ve kablo beklemeden, tek prizle çalışan Superbox ile 5G hızında
-        evde internet. 12 ay sabit fiyat, aşım derdi yok — bugün başvurun.
+        Altyapı ve kablo beklemeden, tek prizle çalışan Superbox: 5G hızında
+        sabit evde internet veya taşınabilir 4.5G ile evde ve yanınızda.
+        12 ay sabit fiyat, aşım derdi yok — bugün başvurun.
       </p>
 
       {/* Trust badges */}
