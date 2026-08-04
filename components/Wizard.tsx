@@ -10,10 +10,21 @@ import {
 } from '@/data/packages';
 import TurkcellLogo from './TurkcellLogo';
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6;
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 type Usage = 'hafif' | 'orta' | 'yogun';
 type UsePlace = 'sabit' | 'tasinir';
 type LineStatus = 'yok' | 'var';
+type CallMode = 'hemen' | 'belirli';
+type CallSlot = '' | 'sabah' | 'oglen' | 'ogleden_sonra' | 'aksam';
+type CallTimeBackend = 'hemen' | 'sabah' | 'oglen' | 'ogleden_sonra' | 'aksam';
+
+const CALL_TIME_NATURAL: Record<CallTimeBackend, string> = {
+  hemen: 'en kısa sürede',
+  sabah: 'sabah saatlerinde',
+  oglen: 'öğlen saatlerinde',
+  ogleden_sonra: 'öğleden sonra',
+  aksam: 'akşam saatlerinde',
+};
 
 export default function Wizard() {
   const [step, setStep] = useState<Step>(1);
@@ -28,6 +39,19 @@ export default function Wizard() {
   const [kvkk, setKvkk] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // ----- 6. adım (opsiyonel ek bilgiler) state'leri — LeadModal 2. adımıyla aynı akış -----
+  const [token, setToken] = useState<string | null>(null);
+  const [address, setAddress] = useState('');
+  const [tcNumber, setTcNumber] = useState('');
+  const [birthDateInput, setBirthDateInput] = useState('');
+  const [birthDateIso, setBirthDateIso] = useState('');
+  const [birthDateError, setBirthDateError] = useState('');
+  const [callMode, setCallMode] = useState<CallMode>('hemen');
+  const [callSlot, setCallSlot] = useState<CallSlot>('');
+
+  const finalCallTime: CallTimeBackend =
+    callMode === 'belirli' && callSlot ? callSlot : 'hemen';
 
   const districts = useMemo(() => (il ? getDistricts(il) : []), [il]);
 
@@ -80,6 +104,7 @@ export default function Wizard() {
       const data = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
         success?: boolean;
+        token?: string;
         error?: string;
       };
 
@@ -93,9 +118,14 @@ export default function Wizard() {
         return;
       }
 
-      // Başarılı
+      // Başarılı: token varsa opsiyonel 2. adım (ek bilgiler), yoksa teşekkür
       setSubmitting(false);
-      setStep(6);
+      if (data.token) {
+        setToken(data.token);
+        setStep(6);
+      } else {
+        setStep(7);
+      }
     } catch (err) {
       console.error('Wizard lead submit error:', err);
       setError('Bağlantı hatası. İnternet bağlantınızı kontrol edip tekrar deneyin.');
@@ -106,7 +136,75 @@ export default function Wizard() {
   function reset() {
     setStep(1); setIl(''); setIlce(''); setUsage(''); setUsePlace('');
     setPkg(null); setAd(''); setTel(''); setLine(''); setKvkk(false);
+    setError(null); setToken(null); setAddress(''); setTcNumber('');
+    setBirthDateInput(''); setBirthDateIso(''); setBirthDateError('');
+    setCallMode('hemen'); setCallSlot('');
+  }
+
+  function handleTcInput(value: string) {
+    setTcNumber(value.replace(/\D/g, '').slice(0, 11));
+  }
+
+  function handleBirthDateChange(value: string) {
+    const cleaned = value.replace(/\D/g, '').slice(0, 8);
+    let formatted = cleaned;
+    if (cleaned.length > 4) {
+      formatted = `${cleaned.slice(0, 2)}.${cleaned.slice(2, 4)}.${cleaned.slice(4)}`;
+    } else if (cleaned.length > 2) {
+      formatted = `${cleaned.slice(0, 2)}.${cleaned.slice(2)}`;
+    }
+    setBirthDateInput(formatted);
+
+    if (cleaned.length < 8) {
+      setBirthDateIso('');
+      setBirthDateError('');
+      return;
+    }
+    const day = parseInt(cleaned.slice(0, 2), 10);
+    const month = parseInt(cleaned.slice(2, 4), 10);
+    const year = parseInt(cleaned.slice(4, 8), 10);
+    const currentYear = new Date().getFullYear();
+    if (month < 1 || month > 12) { setBirthDateIso(''); setBirthDateError('Geçersiz ay (01-12 arası)'); return; }
+    if (day < 1 || day > 31) { setBirthDateIso(''); setBirthDateError('Geçersiz gün (01-31 arası)'); return; }
+    if (year < currentYear - 100 || year > currentYear - 18) { setBirthDateIso(''); setBirthDateError('Yaş 18 ile 100 arasında olmalı'); return; }
+    const testDate = new Date(year, month - 1, day);
+    if (testDate.getFullYear() !== year || testDate.getMonth() !== month - 1 || testDate.getDate() !== day) {
+      setBirthDateIso(''); setBirthDateError('Bu tarih takvimde yok'); return;
+    }
+    setBirthDateIso(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+    setBirthDateError('');
+  }
+
+  // 6. adım: opsiyonel ek bilgileri /api/lead/extend'e gönder (LeadModal ile aynı uç)
+  async function handleExtendSubmit() {
+    if (submitting || !token) return;
+    if (tcNumber && (tcNumber.length !== 11 || tcNumber[0] === '0')) {
+      setError('TC kimlik numarası 11 haneli olmalı ve 0 ile başlamamalıdır.');
+      return;
+    }
+    if (birthDateInput && !birthDateIso) {
+      setError('Doğum tarihini geçerli formatta girin (örn. 15.06.1985).');
+      return;
+    }
+    setSubmitting(true);
     setError(null);
+    try {
+      await fetch('/api/lead/extend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token,
+          address: address.trim() || undefined,
+          tc_number: tcNumber || undefined,
+          birth_date: birthDateIso || undefined,
+          preferred_call_time: finalCallTime,
+        }),
+      });
+    } catch (err) {
+      console.error('Wizard extend error:', err);
+    }
+    setSubmitting(false);
+    setStep(7);
   }
 
   function handleNext() {
@@ -151,6 +249,7 @@ export default function Wizard() {
         </p>
 
         <div className="bg-white/5 p-6 sm:p-9 rounded-2xl border border-white/10 mt-8 backdrop-blur-md text-left">
+          {step <= 5 && (
           <div className="flex items-center mb-7 gap-1.5">
             {[1, 2, 3, 4, 5].map(n => (
               <div key={n} className="flex items-center gap-1.5 flex-1 last:flex-none">
@@ -163,6 +262,7 @@ export default function Wizard() {
               </div>
             ))}
           </div>
+          )}
 
           {step === 1 && (
             <div className="animate-fade-in">
@@ -305,13 +405,106 @@ export default function Wizard() {
           )}
 
           {step === 6 && (
+            <div className="animate-fade-in">
+              <div className="bg-success/15 border border-success/40 text-prime-100 text-xs font-semibold p-3 rounded-xl mb-4 flex gap-2 items-start">
+                <Check className="w-4 h-4 mt-0.5 flex-shrink-0" strokeWidth={3} />
+                <span>Başvurunuz kayıt altına alındı. Aşağıdaki bilgiler süreci hızlandırır — opsiyoneldir.</span>
+              </div>
+              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Süreci hızlandıralım</h3>
+              <p className="text-white/60 text-sm mb-5">2. adım — dilerseniz atlayabilirsiniz.</p>
+
+              <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">Açık Adres</label>
+              <textarea
+                value={address}
+                onChange={e => setAddress(e.target.value)}
+                placeholder="Mahalle, sokak, bina no, daire no"
+                rows={3}
+                maxLength={500}
+                className="w-full px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold mb-1 focus:outline-none focus:border-accent-500 transition placeholder-white/40 resize-none"
+              />
+              <p className="text-[11px] text-white/40 mb-3">Turkcell şebeke kapsama sorgusu için kullanılır.</p>
+
+              <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">TC Kimlik No</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={tcNumber}
+                onChange={e => handleTcInput(e.target.value)}
+                placeholder="11 haneli"
+                maxLength={11}
+                autoComplete="off"
+                className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold mb-3 focus:outline-none focus:border-accent-500 transition placeholder-white/40"
+              />
+
+              <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">Doğum Tarihi</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={birthDateInput}
+                onChange={e => handleBirthDateChange(e.target.value)}
+                placeholder="GG.AA.YYYY"
+                maxLength={10}
+                autoComplete="bday"
+                className={`w-full min-h-[48px] px-4 py-3.5 rounded-xl border bg-white/[.07] text-white text-[15px] font-semibold mb-1 focus:outline-none transition placeholder-white/40 ${birthDateError ? 'border-red-400 focus:border-red-400' : 'border-white/15 focus:border-accent-500'}`}
+              />
+              {birthDateError ? (
+                <p className="text-[11px] text-red-300 mb-3 font-semibold">{birthDateError}</p>
+              ) : (
+                <p className="text-[11px] text-white/40 mb-3">Örnek: 15.06.1985 — sadece rakamla yazın</p>
+              )}
+
+              <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">Sizi ne zaman arayalım?</label>
+              <div className="flex flex-col gap-1.5 mb-3">
+                <button type="button" onClick={() => { setCallMode('hemen'); setCallSlot(''); }}
+                  className={`block w-full text-left rounded-xl border p-3.5 transition min-h-[48px] text-sm font-semibold ${callMode === 'hemen' ? 'border-2 border-accent-500 bg-accent-500/15 px-[13px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08]'}`}>
+                  En kısa zamanda arayın
+                </button>
+                <button type="button" onClick={() => setCallMode('belirli')}
+                  className={`block w-full text-left rounded-xl border p-3.5 transition min-h-[48px] text-sm font-semibold ${callMode === 'belirli' ? 'border-2 border-accent-500 bg-accent-500/15 px-[13px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08]'}`}>
+                  Belirli bir saatte
+                </button>
+                {callMode === 'belirli' && (
+                  <select value={callSlot} onChange={e => setCallSlot(e.target.value as CallSlot)}
+                    className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold focus:outline-none focus:border-accent-500 transition">
+                    <option value="" className="bg-tc-navy">Müsait saatinizi seçin...</option>
+                    <option value="sabah" className="bg-tc-navy">Sabah (09:00 - 12:00)</option>
+                    <option value="oglen" className="bg-tc-navy">Öğlen (12:00 - 15:00)</option>
+                    <option value="ogleden_sonra" className="bg-tc-navy">Öğleden sonra (15:00 - 18:00)</option>
+                    <option value="aksam" className="bg-tc-navy">Akşam (18:00 - 21:00)</option>
+                  </select>
+                )}
+              </div>
+
+              {error && (
+                <div className="bg-red-500/15 border border-red-500/40 text-red-200 text-xs font-semibold p-3 rounded-xl mb-3 flex gap-2 items-start">
+                  <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="flex gap-2.5 mt-4">
+                <button onClick={() => setStep(7)} disabled={submitting}
+                  className="flex-1 min-h-[48px] py-3.5 px-5 rounded-full font-bold text-[15px] border border-white/15 bg-white/5 hover:bg-white/10 transition disabled:opacity-50">
+                  Daha Sonra
+                </button>
+                <button onClick={handleExtendSubmit} disabled={submitting}
+                  className={`flex-[1.4] min-h-[48px] py-3.5 px-5 rounded-full font-bold text-[15px] border transition flex items-center justify-center gap-2 ${!submitting ? 'bg-accent-500 border-accent-500 text-tc-navy hover:bg-accent-400' : 'bg-accent-500/30 border-accent-500/30 text-white/60 cursor-not-allowed'}`}>
+                  {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Kaydediliyor</> : 'Başvuruyu Tamamla'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 7 && (
             <div className="text-center py-4 animate-fade-in">
               <div className="w-16 h-16 rounded-full bg-success/20 mx-auto mb-5 flex items-center justify-center">
                 <Check className="w-8 h-8 text-success" strokeWidth={3} />
               </div>
               <h3 className="text-xl font-bold mb-2 text-white">Başvurunuz alındı</h3>
               <p className="text-white/70 text-sm leading-relaxed max-w-[400px] mx-auto mb-6">
-                15 dakika içinde yetkili satış noktamız sizi arayacak.
+                {finalCallTime === 'hemen'
+                  ? '15 dakika içinde yetkili satış noktamız sizi arayacak.'
+                  : `Sizi ${CALL_TIME_NATURAL[finalCallTime]} arıyoruz.`}
               </p>
               <button onClick={reset} className="bg-white/10 hover:bg-white/15 active:bg-white/20 border border-white/20 px-6 py-2.5 rounded-full font-bold transition min-h-[44px]">
                 Yeni başvuru
@@ -319,7 +512,7 @@ export default function Wizard() {
             </div>
           )}
 
-          {step !== 6 && (
+          {step <= 5 && (
             <div className="flex gap-2.5 mt-5">
               <button onClick={() => step > 1 && setStep((step - 1) as Step)}
                 className={`flex-1 min-h-[48px] py-3.5 px-5 rounded-full font-bold text-[15px] border border-white/15 bg-white/5 hover:bg-white/10 active:bg-white/15 transition ${step === 1 ? 'invisible' : ''}`}>
