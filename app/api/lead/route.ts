@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { notifyTelegram, formatLeadMessage } from '@/lib/notify';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -58,6 +59,10 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await upstream.json();
+
+    // Bayi telefonuna anlık Telegram bildirimi (env tanımlıysa; akışı bloklamaz)
+    notifyTelegram(formatLeadMessage(body));
+
     return NextResponse.json({
       ok: true,
       token: data.token,

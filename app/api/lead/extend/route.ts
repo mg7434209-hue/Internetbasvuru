@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { notifyTelegram, formatExtendMessage } from '@/lib/notify';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,6 +26,9 @@ export async function POST(req: NextRequest) {
     if (!upstream.ok) {
       return NextResponse.json({ ok: false }, { status: 502 });
     }
+
+    // Ek bilgiler için de Telegram bildirimi (env tanımlıysa; akışı bloklamaz)
+    notifyTelegram(formatExtendMessage(body));
 
     return NextResponse.json({ ok: true });
   } catch {
