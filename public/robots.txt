@@ -34,6 +34,13 @@ User-agent: PerplexityBot
 Allow: /
 Disallow: /api/
 
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /api/
+
 # Block scrapers and SEO tools
 User-agent: AhrefsBot
 Disallow: /

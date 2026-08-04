@@ -13,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      url: `${BASE_URL}/rehber`,
+      lastModified: lastMod,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
       url: `${BASE_URL}/iletisim`,
       lastModified: lastMod,
       changeFrequency: 'monthly',

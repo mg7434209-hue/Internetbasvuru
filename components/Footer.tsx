@@ -11,10 +11,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
           {/* Brand + satış noktası badge */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
               <TurkcellLogo variant="footer" />
-              <div className="border-l border-white/15 pl-3">
-                <p className="font-extrabold text-base">internetbasvuru.com</p>
+              <div className="border-l border-white/15 pl-3 min-w-0">
+                <p className="font-extrabold text-base break-words">internetbasvuru.com</p>
                 <p className="text-xs text-white/60">Turkcell Superbox Yetkili Satış Noktası</p>
               </div>
             </div>

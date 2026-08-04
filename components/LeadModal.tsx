@@ -192,7 +192,7 @@ export default function LeadModal({ pkg, onClose }: LeadModalProps) {
         console.error('Lead step 1 failed:', res.status, data);
         setSubmitting(false);
         setError(
-          'Başvurunuz alınamadı. Lütfen birkaç dakika sonra tekrar deneyin veya 0534 977 70 00 numarasından arayın.'
+          'Başvurunuz alınamadı. Lütfen birkaç dakika sonra tekrar deneyin veya iletişim sayfamızdan bize ulaşın.'
         );
         return;
       }

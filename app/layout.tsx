@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Analytics from '@/components/Analytics';
 import CookieConsent from '@/components/CookieConsent';
+import { allPackages, mobilityLabel } from '@/data/packages';
 // 1. Next.js Script bileşenini import ediyoruz
 import Script from 'next/script';
 
@@ -151,6 +152,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     ],
   };
 
+  // Paket kataloğu — arama motorları ve AI asistanları için ürün/fiyat verisi
+  const packagesLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': 'https://internetbasvuru.com#paketler',
+    name: 'Turkcell Superbox Paketleri',
+    itemListElement: allPackages.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Product',
+        name: p.name,
+        description: `${p.quota} aylık kota · ${p.network} hızında · ${mobilityLabel(p)} · ${p.commitmentMonths} ay taahhüt, taahhüt süresince sabit fiyat, kota aşımında ek ücret yok.`,
+        brand: { '@type': 'Brand', name: 'Turkcell Superbox' },
+        offers: {
+          '@type': 'Offer',
+          price: p.priceMonthly,
+          priceCurrency: 'TRY',
+          availability: 'https://schema.org/InStock',
+          url: 'https://internetbasvuru.com/#paketler',
+          seller: { '@id': 'https://internetbasvuru.com#organization' },
+        },
+      },
+    })),
+  };
+
   const webSiteLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -248,6 +275,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(packagesLd) }}
         />
       </head>
       <body>

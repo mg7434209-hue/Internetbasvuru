@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { BookOpen, Clock, ArrowRight, Phone } from 'lucide-react';
+import { BookOpen, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Rehber',
@@ -162,22 +162,23 @@ export default function RehberPage() {
             Hâlâ Karar Veremediniz mi?
           </h3>
           <p className="text-white/70 mb-6 max-w-md mx-auto leading-relaxed">
-            Yetkili satış noktamızı arayın, ihtiyacınıza uygun Superbox paketi
-            konusunda ücretsiz danışmanlık alın.
+            Online başvurunuzu bırakın, yetkili satış noktamız 15 dakika içinde
+            sizi arayıp ihtiyacınıza uygun Superbox paketi konusunda ücretsiz
+            danışmanlık versin.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href="tel:+905349777000"
+            <Link
+              href="/#paketler"
               className="inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-tc-navy px-6 py-3 rounded-full font-bold transition-all hover:-translate-y-0.5"
             >
-              <Phone className="w-4 h-4" />
-              0534 977 70 00
-            </a>
+              Online Başvur
+              <ArrowRight className="w-4 h-4" />
+            </Link>
             <Link
-              href="/#wizard"
+              href="/iletisim"
               className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 border border-white/20 text-white px-6 py-3 rounded-full font-bold transition"
             >
-              Online Başvur
+              İletişim
             </Link>
           </div>
         </div>

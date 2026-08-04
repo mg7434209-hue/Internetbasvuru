@@ -13,13 +13,13 @@ export default function HomePage() {
   return (
     <>
       {/* Mobilde tarifeler ilk açılışta görünür; açıklama (Hero) alta iner.
-          Desktop'ta klasik sıra: önce Hero, sonra paketler. */}
+          DOM sırası SEO için Hero (h1) önce; görsel sıra CSS order ile değişir. */}
       <div className="flex flex-col">
-        <div className="order-1 md:order-2">
-          <PackageGrid onSelectPackage={setSelectedPkg} />
-        </div>
         <div className="order-2 md:order-1">
           <Hero />
+        </div>
+        <div className="order-1 md:order-2">
+          <PackageGrid onSelectPackage={setSelectedPkg} />
         </div>
       </div>
       <Wizard />
