@@ -87,11 +87,11 @@ export const metadata: Metadata = {
     canonical: 'https://internetbasvuru.com',
   },
   manifest: '/manifest.json',
-  ...(process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION && {
-    verification: {
-      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
-    },
-  }),
+  verification: {
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ||
+      'SlafSkYmKtezliRU0m2yk5pasNK-xVPBmp2p4We5NBU',
+  },
   other: {
     'geo.region': 'TR-07',
     'geo.placename': 'Manavgat, Antalya',
