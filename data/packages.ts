@@ -5,6 +5,13 @@
 
 export type Network = '5G' | '4.5G';
 
+// Hizmet bölgesi — başvurular YALNIZCA bu bölgeden alınır (bayi satış izni)
+export const SERVICE_REGION = {
+  il: 'Antalya',
+  ilce: 'Manavgat',
+  label: 'Antalya / Manavgat',
+} as const;
+
 export interface Package {
   type: 'superbox';
   id: string;

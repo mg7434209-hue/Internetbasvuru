@@ -27,8 +27,8 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-white/60 leading-relaxed">
-              Turkcell Superbox yetkili satış noktası olarak Türkiye geneli
-              kablosuz evde internet başvurularını alıyoruz.
+              Turkcell Superbox yetkili satış noktası olarak Antalya / Manavgat
+              bölgesinden kablosuz evde internet başvurularını alıyoruz.
             </p>
           </div>
 

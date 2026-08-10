@@ -172,8 +172,9 @@ export default function PackageGrid({ onSelectPackage }: PackageGridProps) {
         kurulum adresinize tanımlanır ve o adreste kullanılır; adresinizdeki 5G kapsaması telefon
         görüşmesinde teyit edilir.{' '}
         <strong className="text-ink-900">Superbox 4.5G paketleri taşınabilirdir:</strong>{' '}
-        cihazı yanınıza alarak Türkiye genelinde 4.5G kapsama alanındaki dilediğiniz adreste
-        kullanabilirsiniz. 4.5G 100 GB ve 300 GB paketlerindeki +50 GB hediye internet kampanya
+        cihazı yanınıza alarak 4.5G kapsama alanındaki dilediğiniz adreste kullanabilirsiniz.
+        <strong className="text-ink-900"> Hizmet bölgesi:</strong> yetkili satış noktası kuralları
+        gereği başvurular yalnızca Antalya / Manavgat bölgesindeki adreslerden alınır. 4.5G 100 GB ve 300 GB paketlerindeki +50 GB hediye internet kampanya
         koşullarına tabidir.
       </div>
     </section>

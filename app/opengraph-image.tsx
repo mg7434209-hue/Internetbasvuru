@@ -71,7 +71,7 @@ export default function OgImage() {
             color: 'rgba(255,255,255,0.6)',
           }}
         >
-          Yetkili Satış Noktası · Türkiye Geneli Online Başvuru
+          Yetkili Satış Noktası · Antalya / Manavgat Bölgesi
         </div>
       </div>
     ),

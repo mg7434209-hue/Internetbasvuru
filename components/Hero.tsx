@@ -6,7 +6,7 @@ export default function Hero() {
       {/* Eyebrow */}
       <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-100 text-tc-navy text-[13px] font-bold mb-5 tracking-wide">
         <Zap className="w-3.5 h-3.5" />
-        Türkiye geneli · Turkcell yetkili satış noktası
+        Antalya · Manavgat · Turkcell yetkili satış noktası
       </div>
 
       {/* Heading */}

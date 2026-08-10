@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { X, Check, Loader2, AlertCircle, ArrowRight, Wifi } from 'lucide-react';
-import { ALL_CITIES, getDistricts } from '@/data/turkey';
-import { type Package } from '@/data/packages';
+import { useState, useEffect } from 'react';
+import { X, Check, Loader2, AlertCircle, ArrowRight, Wifi, MapPin } from 'lucide-react';
+import { SERVICE_REGION, type Package } from '@/data/packages';
 
 interface LeadModalProps {
   pkg: Package | null;
@@ -29,8 +28,7 @@ const CALL_TIME_NATURAL: Record<CallTimeBackend, string> = {
 
 export default function LeadModal({ pkg, onClose }: LeadModalProps) {
   // ----- Step 1 state -----
-  const [il, setIl] = useState('');
-  const [ilce, setIlce] = useState('');
+  const [inRegion, setInRegion] = useState(false);
   const [ad, setAd] = useState('');
   const [tel, setTel] = useState('');
   const [line, setLine] = useState<'yok' | 'var' | ''>('');
@@ -51,8 +49,6 @@ export default function LeadModal({ pkg, onClose }: LeadModalProps) {
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  const districts = useMemo(() => (il ? getDistricts(il) : []), [il]);
-
   useEffect(() => {
     if (pkg) {
       const handleEsc = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -67,8 +63,7 @@ export default function LeadModal({ pkg, onClose }: LeadModalProps) {
   const is5G = pkg.network === '5G';
 
   const canSubmitStep1 =
-    !!il &&
-    !!ilce &&
+    inRegion &&
     ad.trim().length >= 3 &&
     tel.replace(/\D/g, '').length >= 10 &&
     !!line &&
@@ -162,8 +157,8 @@ export default function LeadModal({ pkg, onClose }: LeadModalProps) {
       const payload = {
         name: ad.trim(),
         phone: phoneClean.startsWith('0') ? phoneClean : '0' + phoneClean,
-        il,
-        ilce,
+        il: SERVICE_REGION.il,
+        ilce: SERVICE_REGION.ilce,
         kvkk_consent: kvkk,
         package_id: pkg.id,
         package_name: `${pkg.name} (${pkg.quota})`,
@@ -498,42 +493,32 @@ export default function LeadModal({ pkg, onClose }: LeadModalProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 mb-3">
-              <div>
-                <label className="field-label">İl</label>
-                <select
-                  value={il}
-                  onChange={(e) => {
-                    setIl(e.target.value);
-                    setIlce('');
-                  }}
-                  className="select"
-                >
-                  <option value="">İl seçin</option>
-                  {ALL_CITIES.map((c) => (
-                    <option key={c.plate} value={c.name}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
+            {/* Hizmet bölgesi — kilitli */}
+            <div className="flex items-center justify-between bg-brand-50 border border-brand-500/30 rounded-xl px-4 py-3 mb-2">
+              <div className="flex items-center gap-2.5">
+                <MapPin className="w-4 h-4 text-brand-600 flex-shrink-0" strokeWidth={2.5} />
+                <div>
+                  <div className="text-[10px] font-bold text-ink-500 uppercase tracking-wider">İl / İlçe</div>
+                  <div className="text-sm font-bold text-ink-900">{SERVICE_REGION.label}</div>
+                </div>
               </div>
-              <div>
-                <label className="field-label">İlçe</label>
-                <select
-                  value={ilce}
-                  onChange={(e) => setIlce(e.target.value)}
-                  disabled={!il}
-                  className="select"
-                >
-                  <option value="">{il ? 'İlçe seçin' : 'Önce il seçin'}</option>
-                  {districts.map((d) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <span className="text-[9px] font-extrabold bg-brand-500 text-white px-2 py-1 rounded-full uppercase tracking-wider">
+                Hizmet Bölgesi
+              </span>
             </div>
+            <label className="flex gap-2.5 items-start text-xs text-ink-500 mb-3 leading-relaxed cursor-pointer">
+              <input
+                type="checkbox"
+                checked={inRegion}
+                onChange={(e) => setInRegion(e.target.checked)}
+                className="checkbox mt-0.5 flex-shrink-0"
+              />
+              <span>
+                Kurulum adresim <strong className="text-ink-900">{SERVICE_REGION.label}</strong>{' '}
+                bölgesinde. (Yetkili satış noktası kuralları gereği yalnızca bu bölgeden başvuru
+                alabiliyoruz.)
+              </span>
+            </label>
 
             <div className="mb-3">
               <label className="field-label">Ad Soyad</label>

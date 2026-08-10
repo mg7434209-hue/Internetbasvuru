@@ -65,12 +65,12 @@ export const metadata: Metadata = {
     siteName: 'internetbasvuru.com',
     title: 'Turkcell Superbox Başvurusu | Yetkili Satış Noktası',
     description:
-      'Türkiye geneli yetkili satış noktasından Superbox kablosuz evde internet. 5G hızı, 12 ay sabit fiyat, tek priz yeterli, KVKK uyumlu.',
+      'Antalya / Manavgat bölgesine hizmet veren yetkili satış noktasından Superbox kablosuz evde internet. 5G hızı, 12 ay sabit fiyat, tek priz yeterli.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Turkcell Superbox Başvurusu',
-    description: 'Türkiye geneli yetkili satış noktasından Superbox kablosuz evde internet. 12 ay sabit fiyat.',
+    description: 'Antalya / Manavgat bölgesinde Superbox kablosuz evde internet. 12 ay sabit fiyat.',
   },
   robots: {
     index: true,
@@ -131,8 +131,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       longitude: 31.4374,
     },
     areaServed: {
-      '@type': 'Country',
-      name: 'Türkiye',
+      '@type': 'City',
+      name: 'Manavgat',
+      containedInPlace: { '@type': 'State', name: 'Antalya' },
     },
     priceRange: '₺₺',
     knowsAbout: [
@@ -199,7 +200,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Turkcell Superbox başvurusu nasıl yapılır?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'internetbasvuru.com üzerinden online başvuru formunu doldurmanız yeterlidir. Yetkili satış noktamız 15 dakika içinde sizi arar ve adresinizdeki şebeke kapsamasını teyit eder.',
+          text: 'internetbasvuru.com üzerinden online başvuru formunu doldurmanız yeterlidir. Başvurular yalnızca Antalya / Manavgat bölgesinden alınır; yetkili satış noktamız 15 dakika içinde sizi arar ve adresinizdeki şebeke kapsamasını teyit eder.',
         },
       },
       {
@@ -220,10 +221,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       },
       {
         '@type': 'Question',
-        name: 'Hangi şehirlerde hizmet veriyorsunuz?',
+        name: 'Hangi bölgeye hizmet veriyorsunuz?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Türkiye geneli 81 ilde Turkcell Superbox başvurusu kabul ediyoruz. Paket fiyatları tüm Türkiye\'de aynıdır; adresinizdeki 5G/4.5G kapsaması telefon görüşmesinde teyit edilir.',
+          text: 'Yetkili satış noktası kuralları gereği yalnızca Antalya / Manavgat bölgesindeki adreslerden başvuru alıyoruz. Adresinizdeki 5G/4.5G kapsaması telefon görüşmesinde teyit edilir. Bölge dışı başvurular için turkcell.com.tr üzerinden işlem yapabilirsiniz.',
         },
       },
       {

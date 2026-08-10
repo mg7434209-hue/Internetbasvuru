@@ -2,9 +2,9 @@
 
 import { useState, useMemo } from 'react';
 import { Check, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
-import { ALL_CITIES, getDistricts } from '@/data/turkey';
 import {
   recommendPackage,
+  SERVICE_REGION,
   type Package,
   type Network,
 } from '@/data/packages';
@@ -14,6 +14,7 @@ type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 type Usage = 'hafif' | 'orta' | 'yogun';
 type UsePlace = 'sabit' | 'tasinir';
 type LineStatus = 'yok' | 'var';
+type RegionAnswer = 'icinde' | 'disinda';
 type CallMode = 'hemen' | 'belirli';
 type CallSlot = '' | 'sabah' | 'oglen' | 'ogleden_sonra' | 'aksam';
 type CallTimeBackend = 'hemen' | 'sabah' | 'oglen' | 'ogleden_sonra' | 'aksam';
@@ -28,8 +29,7 @@ const CALL_TIME_NATURAL: Record<CallTimeBackend, string> = {
 
 export default function Wizard() {
   const [step, setStep] = useState<Step>(1);
-  const [il, setIl] = useState('');
-  const [ilce, setIlce] = useState('');
+  const [region, setRegion] = useState<RegionAnswer | ''>('');
   const [usage, setUsage] = useState<Usage | ''>('');
   const [usePlace, setUsePlace] = useState<UsePlace | ''>('');
   const [pkg, setPkg] = useState<Package | null>(null);
@@ -53,8 +53,6 @@ export default function Wizard() {
   const finalCallTime: CallTimeBackend =
     callMode === 'belirli' && callSlot ? callSlot : 'hemen';
 
-  const districts = useMemo(() => (il ? getDistricts(il) : []), [il]);
-
   // Sabit evde kullanım = 5G Hazır · Taşınabilir kullanım = 4.5G
   const network: Network = usePlace === 'tasinir' ? '4.5G' : '5G';
 
@@ -66,7 +64,7 @@ export default function Wizard() {
   const fmt = (n: number) => new Intl.NumberFormat('tr-TR').format(Math.round(n));
 
   const canProceed = () => {
-    if (step === 1) return !!il && !!ilce;
+    if (step === 1) return region === 'icinde';
     if (step === 2) return !!usage;
     if (step === 3) return !!usePlace;
     if (step === 4) return pkg !== null;
@@ -91,7 +89,8 @@ export default function Wizard() {
         body: JSON.stringify({
           name: ad.trim(),
           phone: phoneClean.startsWith('0') ? phoneClean : '0' + phoneClean,
-          il, ilce,
+          il: SERVICE_REGION.il,
+          ilce: SERVICE_REGION.ilce,
           kvkk_consent: kvkk,
           package_id: pkg.id,
           package_name: `${pkg.name} (${pkg.quota})`,
@@ -134,7 +133,7 @@ export default function Wizard() {
   }
 
   function reset() {
-    setStep(1); setIl(''); setIlce(''); setUsage(''); setUsePlace('');
+    setStep(1); setRegion(''); setUsage(''); setUsePlace('');
     setPkg(null); setAd(''); setTel(''); setLine(''); setKvkk(false);
     setError(null); setToken(null); setAddress(''); setTcNumber('');
     setBirthDateInput(''); setBirthDateIso(''); setBirthDateError('');
@@ -266,20 +265,43 @@ export default function Wizard() {
 
           {step === 1 && (
             <div className="animate-fade-in">
-              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Konumunuz</h3>
-              <p className="text-white/60 text-sm mb-5">Hangi şehirde Superbox kullanmak istiyorsunuz?</p>
-              <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5">İl</label>
-              <select value={il} onChange={e => { setIl(e.target.value); setIlce(''); }}
-                className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold focus:outline-none focus:border-accent-500 transition mb-3">
-                <option value="" className="bg-tc-navy">İl seçin</option>
-                {ALL_CITIES.map(c => <option key={c.plate} value={c.name} className="bg-tc-navy">{c.name}</option>)}
-              </select>
-              <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1.5 mt-1.5">İlçe</label>
-              <select value={ilce} onChange={e => setIlce(e.target.value)} disabled={!il}
-                className="w-full min-h-[48px] px-4 py-3.5 rounded-xl border border-white/15 bg-white/[.07] text-white text-[15px] font-semibold focus:outline-none focus:border-accent-500 transition disabled:opacity-50">
-                <option value="" className="bg-tc-navy">{il ? 'İlçe seçin' : 'Önce il seçin'}</option>
-                {districts.map(d => <option key={d} value={d} className="bg-tc-navy">{d}</option>)}
-              </select>
+              <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Hizmet Bölgesi</h3>
+              <p className="text-white/60 text-sm mb-5">
+                Yetkili satış noktamız yalnızca kendi bölgesinden başvuru alabilir.
+              </p>
+
+              {/* Kilitli bölge kartı */}
+              <div className="flex items-center justify-between rounded-xl border border-accent-500/30 bg-accent-500/10 p-4 mb-4">
+                <div>
+                  <div className="text-[11px] font-bold text-white/50 uppercase tracking-wider mb-1">İl / İlçe</div>
+                  <div className="font-bold text-[17px] text-white">📍 {SERVICE_REGION.label}</div>
+                </div>
+                <span className="text-[10px] font-extrabold bg-accent-500 text-tc-navy px-2.5 py-1 rounded-full uppercase tracking-wider">
+                  Hizmet Bölgesi
+                </span>
+              </div>
+
+              <label className="block text-[11px] font-bold text-white/50 uppercase tracking-wider mb-2">
+                Kurulum adresiniz bu bölgede mi?
+              </label>
+              <button onClick={() => setRegion('icinde')}
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${region === 'icinde' ? 'border-2 border-accent-500 bg-accent-500/15 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
+                <div className="font-bold text-[15px] mb-0.5">✓ Evet, adresim Manavgat / Antalya bölgesinde</div>
+                <div className="text-xs text-white/60 font-medium">Başvuruya devam edebilirsiniz</div>
+              </button>
+              <button onClick={() => setRegion('disinda')}
+                className={`block w-full text-left rounded-xl border p-4 mb-2.5 transition min-h-[60px] ${region === 'disinda' ? 'border-2 border-white/40 bg-white/10 px-[15px]' : 'border-white/15 bg-white/5 hover:bg-white/[.08] active:bg-white/[.12]'}`}>
+                <div className="font-bold text-[15px] mb-0.5">✗ Hayır, başka bir bölgedeyim</div>
+                <div className="text-xs text-white/60 font-medium">Bölge dışına satış yapamıyoruz</div>
+              </button>
+
+              {region === 'disinda' && (
+                <div className="bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs font-semibold p-3.5 rounded-xl mt-3 leading-relaxed">
+                  Üzgünüz — yetkili satış noktası kuralları gereği yalnızca{' '}
+                  <strong>{SERVICE_REGION.label}</strong> bölgesindeki adreslere başvuru alabiliyoruz.
+                  Bölge dışı başvurular için turkcell.com.tr üzerinden işlem yapabilirsiniz.
+                </div>
+              )}
             </div>
           )}
 
@@ -321,7 +343,7 @@ export default function Wizard() {
           {step === 4 && recommendedPackage && (
             <div className="animate-fade-in">
               <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Sizin için seçilen paket</h3>
-              <p className="text-white/60 text-sm mb-5">{il} / {ilce} · {network === '5G' ? 'Sabit Evde İnternet (5G)' : 'Taşınabilir İnternet (4.5G)'}</p>
+              <p className="text-white/60 text-sm mb-5">{SERVICE_REGION.label} · {network === '5G' ? 'Sabit Evde İnternet (5G)' : 'Taşınabilir İnternet (4.5G)'}</p>
               {[recommendedPackage].map(p => {
                 const isSelected = pkg?.id === p.id;
                 return (
@@ -355,7 +377,7 @@ export default function Wizard() {
               <h3 className="text-[1.4rem] font-bold mb-1.5 -tracking-[0.5px] text-white">Bilgileriniz</h3>
               <p className="text-white/60 text-sm mb-5">15 dakika içinde sizi arıyoruz.</p>
               <div className="bg-accent-500/10 border border-accent-500/30 p-3.5 rounded-xl mb-3.5 space-y-1">
-                <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Bölge</span><span className="font-bold">{il} / {ilce}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Bölge</span><span className="font-bold">{SERVICE_REGION.label}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Paket</span><span className="font-bold">{pkg.name}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Kota</span><span className="font-bold">{pkg.quota}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-white/60 font-semibold">Aylık ücret</span><span className="font-bold">{fmt(pkg.priceMonthly)} TL/ay · {pkg.commitmentMonths} ay taahhüt</span></div>
