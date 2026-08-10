@@ -35,3 +35,6 @@ next-env.d.ts.bak
 
 # build artifacts
 *.zip
+
+# ziyaretçi sayacı kalıcı verisi (app/api/visitors üretir; Railway'de DATA_DIR/Volume)
+.data/

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Award } from 'lucide-react';
 import TurkcellLogo from './TurkcellLogo';
+import VisitorCounter from './VisitorCounter';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -67,9 +68,12 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-          <p className="text-xs text-white/40">
-            © {year} internetbasvuru.com — Tüm hakları saklıdır.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <p className="text-xs text-white/40">
+              © {year} internetbasvuru.com — Tüm hakları saklıdır.
+            </p>
+            <VisitorCounter />
+          </div>
           <p className="text-xs text-white/40 leading-relaxed">
             Turkcell, Turkcell Superonline, Superbox ve TV+ marka adları, Turkcell
             İletişim Hizmetleri A.Ş. ve Turkcell Superonline İletişim Hizmetleri
