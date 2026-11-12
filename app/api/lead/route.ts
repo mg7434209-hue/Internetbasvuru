@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { notifyTelegram, formatLeadMessage } from '@/lib/notify';
+import { notifyOs } from '@/lib/os';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -62,6 +63,9 @@ export async function POST(req: NextRequest) {
 
     // Bayi telefonuna anlık Telegram bildirimi (env tanımlıysa; akışı bloklamaz)
     notifyTelegram(formatLeadMessage(body));
+
+    // Gespa OS başvuru defteri: kişisel veri olmadan (env tanımlıysa; akışı bloklamaz)
+    notifyOs(body, data);
 
     return NextResponse.json({
       ok: true,
